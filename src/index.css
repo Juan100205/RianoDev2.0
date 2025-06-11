@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import "tailwindcss";
+@theme {
+  --font-display: "JetBrains Mono";
+  --font-banner:"Poppins"
+}
+
+
+
+body {
+  background-color: #F2F2F2;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@layer utilities{
+  .scrollbar_exp::-webkit-scrollbar{
+    width:0px;
+    height:0px;
+  }
+  .scrollbar_exp:hover::-webkit-scrollbar{
+    width:3px;
+    height:3px;
+  }
+  .scrollbar_exp::-webkit-scrollbar-track {
+  background: transparent;
+  }
+
+  .scrollbar_exp::-webkit-scrollbar-thumb {
+    background-color: #928F8F;
+  }
+  .scroll_snap{
+    scroll-snap-type: y proximity;
+    scroll-padding-top: 30px;
+    height: 100vh;
+    overflow-y: scroll;
+  }
+  .scroll_snap_per_comp{
+    scroll-snap-align:start;
+    min-height: 10vh;
+  }
+    .scroll_snap_per_comp_project{
+    scroll-snap-align:center;
+    min-height: 10vh;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
