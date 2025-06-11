@@ -1,6 +1,5 @@
 import Edu from "./Edu";
 import Education_resp from "./Education_responsive";
-import Experience from "./Experience";
 function Education() {
   const eduBlocks = [
     {

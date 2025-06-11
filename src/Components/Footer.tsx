@@ -7,7 +7,8 @@ const Footer = () =>{
                 <div className="md:w-full w-1/2 text-center">
                     <h1 className="font-bold text-center">Attachments</h1>
                     <a onClick={()=>window.open("https://drive.google.com/drive/folders/1OKmfIBey0vfV6QiR2QMvXtKVe1u2qP_7?usp=sharing",'_blank')} className=" transition-all text-gray-500 block mt-5 hover:text-black cursor-pointer">Certificates</a>
-                    <a onClick={()=>window.open("https://drive.google.com/file/d/17kh4o2_hp7jNY9GTOlBQ25xzmY1TPm6R/view",'_blank')} className=" transition-all text-gray-500 block mt-5 hover:text-black cursor-pointer">Resume CV</a>
+                    <a onClick={()=>window.open("https://drive.google.com/file/d/17ugZAIEIP7au6lPodQTcukQvqu5n3M3d/view",'_blank')} className=" transition-all text-gray-500 block mt-5 hover:text-black cursor-pointer">Resume</a>
+                    <a onClick={()=>window.open("https://drive.google.com/file/d/17kh4o2_hp7jNY9GTOlBQ25xzmY1TPm6R/view",'_blank')} className=" transition-all text-gray-500 block mt-5 hover:text-black cursor-pointer">CV</a>
                 </div>
                 <div className="md:w-full w-1/2 text-center">
                     <h1 className="font-bold text-center">Contact me</h1>

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Logo_GitHub from "./Logos_comp/Logo_GitHub";
-import { PlayCircleIcon, PlayIcon } from "@heroicons/react/24/solid";
+import {  PlayIcon } from "@heroicons/react/24/solid";
 
 interface Props {
     Index:ReactNode;
