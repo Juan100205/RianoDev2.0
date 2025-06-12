@@ -5,12 +5,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import Logo_GitHub_nav from "./Logos_comp/Logo_GitHub copy";
-
-const Header = ({
-  scrollRef,
-}: {
+interface Props {
+  languageState: boolean;
   scrollRef: React.RefObject<HTMLDivElement | null>;
-}) => {
+  setLanguageState: (val: boolean) => void;
+}
+function Header({ languageState, scrollRef, setLanguageState }: Props) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -41,6 +41,25 @@ const Header = ({
   const toggleNavbar = () => {
     setisOpen(!isOpen);
   };
+  const changeLanguage = () => {
+    setLanguageState(!languageState);
+  };
+  const [isHover, setisHover] = useState(false);
+
+  const headerContent = {
+    name: "Juan Jose Riaño",
+    title: {
+      en: "</Software and Mechanical Engineer>",
+      es: "</Ingeniero de Software y Mecánico>",
+    },
+    menuItems: [
+      { id: "home", en: "</Home>", es: "</Inicio>" },
+      { id: "about_me", en: "</About me>", es: "</Sobre mí>" },
+      { id: "resume", en: "</Resume>", es: "</Currículum>" },
+      { id: "projects", en: "</Projects>", es: "</Proyectos>" },
+      { id: "services", en: "</Services>", es: "</Servicios>" },
+    ],
+  };
   return (
     <header
       className="sticky top-0 transform transform-all border-b-2 border-gray-300 
@@ -61,10 +80,10 @@ const Header = ({
           <UserCircleIcon className="w-10" />
           <div className="md:flex flex-col justify center">
             <span className="md:text-3xl text-xl text-gray-500 ">
-              Juan Jose Riaño
+              {headerContent.name}
             </span>
             <span className="md:hidden flex text-[9px]">
-              &lt;/Software and Mechanical Engineer&gt;
+              {languageState ? headerContent.title.en : headerContent.title.es}
             </span>
           </div>
         </div>
@@ -87,61 +106,20 @@ const Header = ({
         <div className="w-4/10 ">
           <div className="md:flex hidden text-sm justify-between ">
             <>
-              <a
-                onClick={() => scrollToSelection("home")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer "
-              >
-                &lt;/Home&gt;
-                <span
-                  className="absolute -bottom-3.5 left-0 w-0 h-0.75 
+              {headerContent.menuItems.map((item) => (
+                <a
+                  key={item.id}
+                  onClick={() => scrollToSelection(item.id)}
+                  className="relative group transition-transform duration-300 
+                        ease-in-out cursor-pointer mb-2"
+                >
+                  {languageState ? item.en : item.es}
+                  <span
+                    className="absolute -bottom-0 left-0 w-0 h-0.5 
                              bg-gray-500 group-hover:w-full transition-all "
-                ></span>
-              </a>
-              <a
-                onClick={() => scrollToSelection("about_me")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer "
-              >
-                &lt;/About me&gt;
-                <span
-                  className="absolute -bottom-3.5 left-0 w-0 h-0.75 
-                             bg-gray-500 group-hover:w-full transition-all"
-                ></span>
-              </a>
-              <a
-                onClick={() => scrollToSelection("resume")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer "
-              >
-                &lt;/Resume&gt;
-                <span
-                  className="absolute -bottom-3.5 left-0 w-0 h-0.75 
-                             bg-gray-500 group-hover:w-full transition-all"
-                ></span>
-              </a>
-              <a
-                onClick={() => scrollToSelection("projects")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer "
-              >
-                &lt;/Projects&gt;
-                <span
-                  className="absolute -bottom-3.5 left-0 w-0 h-0.75  
-                            bg-gray-500 group-hover:w-full transition-all"
-                ></span>
-              </a>
-              <a
-                onClick={() => scrollToSelection("services")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer "
-              >
-                &lt;/Services&gt;
-                <span
-                  className="absolute -bottom-3.5 left-0 w-0 h-0.75 
-                             bg-gray-500 group-hover:w-full transition-all"
-                ></span>
-              </a>
+                  ></span>
+                </a>
+              ))}
             </>
           </div>
           <button onClick={toggleNavbar} className="w-full md:hidden flex ">
@@ -153,74 +131,59 @@ const Header = ({
           </button>
         </div>
         <div className="w-6/10 flex justify-end mb-1">
-          <div className="w-10 fill-black">
-            <Logo_GitHub_nav />
+          <div className="w-50 fill-black flex justify-end gap-5">
+            <div className="w-10">
+              <Logo_GitHub_nav />
+            </div>
+            <button
+              className="w-5 cursor-pointer"
+              onClick={() => {
+                changeLanguage();
+                setisHover(false);
+              }}
+              onMouseEnter={() => setisHover(true)}
+              onMouseLeave={() => setisHover(false)}
+            >
+              <span
+                className={`absolute top-3 transition-all duration-500 ease-in-out font-bold ${
+                  isHover ? "translate-x-7 opacity-0" : "translate-x-0"
+                }`}
+              >
+                {languageState ? "eng" : "esp"}
+              </span>
+              <span
+                className={`absolute top-3 transition-all duration-500 ease-in-out ${
+                  isHover ? "translate-x-0" : "-translate-x-7 opacity-0"
+                }`}
+              >
+                {languageState ? "esp" : "eng"}
+              </span>
+            </button>
           </div>
         </div>
         {isOpen && (
           <div className="flex flex-col justify-center text-sm w-full items-center py-10">
             <>
-              <a
-                onClick={() => scrollToSelection("home")}
-                className="relative group transition-transform duration-300 
+              {headerContent.menuItems.map((item) => (
+                <a
+                  key={item.id}
+                  onClick={() => scrollToSelection(item.id)}
+                  className="relative group transition-transform duration-300 
                         ease-in-out cursor-pointer mb-2"
-              >
-                &lt;/Home&gt;
-                <span
-                  className="absolute -bottom-0 left-0 w-0 h-0.5 
+                >
+                  {languageState ? item.en : item.es}
+                  <span
+                    className="absolute -bottom-0 left-0 w-0 h-0.5 
                              bg-gray-500 group-hover:w-full transition-all "
-                ></span>
-              </a>
-              <a
-                onClick={() => scrollToSelection("about_me")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer mb-2"
-              >
-                &lt;/About me&gt;
-                <span
-                  className="absolute -bottom-0 left-0 w-0 h-0.5 
-                             bg-gray-500 group-hover:w-full transition-all"
-                ></span>
-              </a>
-              <a
-                onClick={() => scrollToSelection("resume")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer mb-2"
-              >
-                &lt;/Resume&gt;
-                <span
-                  className="absolute -bottom-0 left-0 w-0 h-0.5 
-                             bg-gray-500 group-hover:w-full transition-all"
-                ></span>
-              </a>
-              <a
-                onClick={() => scrollToSelection("projects")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer mb-2"
-              >
-                &lt;/Projects&gt;
-                <span
-                  className="absolute -bottom-0 left-0 w-0 h-0.5  
-                            bg-gray-500 group-hover:w-full transition-all"
-                ></span>
-              </a>
-              <a
-                onClick={() => scrollToSelection("services")}
-                className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer "
-              >
-                &lt;/Services&gt;
-                <span
-                  className="absolute -bottom-0 left-0 w-0 h-0.5 
-                             bg-gray-500 group-hover:w-full transition-all"
-                ></span>
-              </a>
+                  ></span>
+                </a>
+              ))}
             </>
           </div>
         )}
       </div>
     </header>
   );
-};
+}
 
 export default Header;

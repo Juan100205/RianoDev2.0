@@ -1,5 +1,19 @@
 import { ArrowDownRightIcon } from "@heroicons/react/24/solid";
-const Home = () => {
+interface Props{
+  languageState:boolean;
+}
+const Home = ({languageState}:Props) => {
+  const homeContent = {
+  year: "2025",
+  tags: [
+    { en: "#3D Modeling", es: "#Modelado 3D" },
+    { en: "#Code Review", es: "#Revisión de Código" },
+    { en: "#Web Development", es: "#Desarrollo Web" },
+    { en: "#App Development", es: "#Desarrollo de Apps" },
+    { en: "#3D Animation", es: "#Animación 3D" },
+    { en: "#DataBase Review", es: "#Bases de Datos" }
+  ],
+};
   return (
     <div className="md:flex  w-3/4 mx-auto items-end">
       <div className="md:w-2/5 md:flex flex-col hidden w-full text-gray-400 pb-10 text-[1vw]">
@@ -7,16 +21,16 @@ const Home = () => {
           <ArrowDownRightIcon className="w-[15vw] text-black" />
         </div>
         <div className="flex mt-5 justify-end border-b-2 border-gray-300 w-5/6 gap-[3vw] pr-[1vw]">
-          <span>#3D Modeling</span>
-          <span>#Code Review</span>
+          <span>{languageState ? homeContent.tags[0].en:homeContent.tags[0].es}</span>
+          <span>{languageState ? homeContent.tags[1].en:homeContent.tags[1].es}</span>
         </div>
         <div className="flex mt-5 justify-end border-b-2 border-gray-300 w-5/6 gap-[3vw] pr-[1vw]">
-          <span>#Web Development</span>
-          <span>#App Development</span>
+          <span>{languageState ? homeContent.tags[2].en:homeContent.tags[2].es}</span>
+          <span>{languageState ? homeContent.tags[3].en:homeContent.tags[3].es}</span>
         </div>
         <div className="flex mt-5 justify-end border-b-2 border-gray-300 w-5/6 gap-[3vw] pr-[1vw]">
-          <span>#3D Animation</span>
-          <span>#DataBase Review</span>
+          <span>{languageState ? homeContent.tags[4].en:homeContent.tags[4].es}</span>
+          <span>{languageState ? homeContent.tags[5].en:homeContent.tags[5].es}</span>
         </div>
       </div>
       <div className="md:w-3/5 w-full md:h-[38vw] h-[60vw] rounded-2xl bg-[#111BFF] flex items-end p-5">
@@ -33,22 +47,22 @@ const Home = () => {
           <span className="absolute text-[17vw] md:text-[11vw] top-[-10%]   left-[70%]       ">O</span>
         </div>
       </div>
-      <div className="md:w-2/5 flex md:hidden w-full text-gray-400 pb-10">
+      <div className="md:pt-0 pt-15 md:w-2/5 flex md:hidden w-full text-gray-400 pb-10">
         <div className="flex justify-end mr-5">
           <ArrowDownRightIcon className="w-[15vw] text-black" />
         </div>
         <div className="flex-col text-[2vw] w-full pt-5">
         <div className="flex mt-5 justify-end border-b-2 border-gray-300  gap-[3vw] pr-[1vw]">
-          <span>#3D Modeling</span>
-          <span>#Code Review</span>
+          <span>{languageState ? homeContent.tags[0].en:homeContent.tags[0].es}</span>
+          <span>{languageState ? homeContent.tags[1].en:homeContent.tags[1].es}</span>
         </div>
         <div className="flex mt-5 justify-end border-b-2 border-gray-300  gap-[3vw] pr-[1vw]">
-          <span>#Web Development</span>
-          <span>#App Development</span>
+          <span>{languageState ? homeContent.tags[2].en:homeContent.tags[2].es}</span>
+          <span>{languageState ? homeContent.tags[3].en:homeContent.tags[3].es}</span>
         </div>
         <div className="flex mt-5 justify-end border-b-2 border-gray-300  gap-[3vw] pr-[1vw]">
-          <span>#3D Animation</span>
-          <span>#DataBase Review</span>
+          <span>{languageState ? homeContent.tags[4].en:homeContent.tags[4].es}</span>
+          <span>{languageState ? homeContent.tags[5].en:homeContent.tags[5].es}</span>
         </div>
         </div>
       </div>
