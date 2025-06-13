@@ -29,9 +29,6 @@ function App() {
       <div id="resume" className="scroll_snap_per_comp mt-20">
         <Resume languageState={isEnglish}/>
       </div>
-      <div id="education" className="scroll_snap_per_comp pt-20">
-        <Education languageState={isEnglish}/>
-      </div>
       <div id="projects" className="scroll_snap_per_comp pt-20">
         <Projects languageState={isEnglish}/>
       </div>
