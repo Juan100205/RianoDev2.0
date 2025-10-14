@@ -40,7 +40,7 @@ const Services = ({languageState}:Props) => {
   return (
     <div className=" w-[80%] mx-auto text-center">
       <div>
-        <div className="md:w-20 w-15 bg-[#D9D9D9] text-[#111BFF] rounded-full outline-2 outline-[#111BFF] mx-auto p-3">
+        <div className="md:w-20 w-15 bg-[#D9D9D9] text-[#10dffd] rounded-full outline-2 outline-[#10dffd] mx-auto p-3">
           <GlobeAltIcon />
         </div>
         <h1 className="md:text-3xl text-xl font-bold text-center mt-5">
@@ -49,24 +49,24 @@ const Services = ({languageState}:Props) => {
         {languageState ? (
   <p className="text-gray-500 text-center mt-15 md:px-40 md:text-base text-sm">
     I offer a diverse range of technology services. My expertise includes{" "}
-    <span className="text-[#111BFF]">3D modeling</span>,{" "}
-    <span className="text-[#111BFF]">animation</span>, and{" "}
-    <span className="text-[#111BFF]">VR/AR</span> development for immersive applications; 
+    <span className="text-[#10dffd]">3D modeling</span>,{" "}
+    <span className="text-[#10dffd]">animation</span>, and{" "}
+    <span className="text-[#10dffd]">VR/AR</span> development for immersive applications; 
     custom mobile and web app development using Python and modern frameworks;{" "}
-    <span className="text-[#111BFF]">AI and data analytics</span> for intelligent automation;
+    <span className="text-[#10dffd]">AI and data analytics</span> for intelligent automation;
     game and gamified experience design; strategic consulting to implement creative tech solutions;{" "}
-    <span className="text-[#111BFF]">DevOps</span> and operations development.
+    <span className="text-[#10dffd]">DevOps</span> and operations development.
   </p>
 ) : (
   <p className="text-gray-500 text-center mt-15 md:px-40 md:text-base text-sm">
     Ofrezco una amplia gama de servicios tecnológicos. Mi experiencia incluye{" "}
-    <span className="text-[#111BFF]">modelado 3D</span>,{" "}
-    <span className="text-[#111BFF]">animación</span> y desarrollo de{" "}
-    <span className="text-[#111BFF]">realidad virtual/aumentada</span> para aplicaciones inmersivas;
+    <span className="text-[#10dffd]">modelado 3D</span>,{" "}
+    <span className="text-[#10dffd]">animación</span> y desarrollo de{" "}
+    <span className="text-[#10dffd]">realidad virtual/aumentada</span> para aplicaciones inmersivas;
     desarrollo personalizado de aplicaciones móviles y web usando Python y frameworks modernos;{" "}
-    <span className="text-[#111BFF]">IA y análisis de datos</span> para automatización inteligente;
+    <span className="text-[#10dffd]">IA y análisis de datos</span> para automatización inteligente;
     diseño de experiencias lúdicas y gamificadas; consultoría estratégica para implementar soluciones tecnológicas creativas;{" "}
-    <span className="text-[#111BFF]">DevOps</span> y desarrollo de operaciones.
+    <span className="text-[#10dffd]">DevOps</span> y desarrollo de operaciones.
   </p>
 )}
 
@@ -94,13 +94,13 @@ const Services = ({languageState}:Props) => {
 
 <div className="text-sm md:flex flex-col hidden mt-15">
   <div className="flex gap-5 mt-5 justify-center">
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[0].en : hashtagList[0].es}
     </span>
     <span className="bg-gray-300 rounded-full p-2 px-3">
       {languageState ? hashtagList[1].en : hashtagList[1].es}
     </span>
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[2].en : hashtagList[2].es}
     </span>
     <span className="bg-gray-300 rounded-full p-2 px-3">
@@ -111,7 +111,7 @@ const Services = ({languageState}:Props) => {
     <span className="bg-gray-300 rounded-full p-2 px-3">
       {languageState ? hashtagList[4].en : hashtagList[4].es}
     </span>
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[5].en : hashtagList[5].es}
     </span>
     <span className="bg-gray-300 rounded-full p-2 px-3">
@@ -119,13 +119,13 @@ const Services = ({languageState}:Props) => {
     </span>
   </div>
   <div className="flex gap-5 justify-center mt-4">
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[7].en : hashtagList[7].es}
     </span>
     <span className="bg-gray-300 rounded-full p-2 px-3">
       {languageState ? hashtagList[8].en : hashtagList[8].es}
     </span>
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[9].en : hashtagList[9].es}
     </span>
   </div>
@@ -133,7 +133,7 @@ const Services = ({languageState}:Props) => {
 
 <div className="text-xs md:hidden flex-col flex mt-15">
   <div className="flex gap-5 mt-5 justify-center">
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[0].en : hashtagList[0].es}
     </span>
     <span className="bg-gray-300 rounded-full p-2 px-3">
@@ -144,12 +144,12 @@ const Services = ({languageState}:Props) => {
     <span className="bg-gray-300 rounded-full p-2 px-3">
       {languageState ? hashtagList[3].en : hashtagList[3].es}
     </span>
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[9].en : hashtagList[9].es}
     </span>
   </div>
   <div className="flex gap-5 mt-2 justify-center">
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[7].en : hashtagList[7].es}
     </span>
     <span className="bg-gray-300 rounded-full p-2 px-3">
@@ -162,7 +162,7 @@ const Services = ({languageState}:Props) => {
     </span>
   </div>
   <div className="flex gap-5 mt-2 justify-center">
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[1].en : hashtagList[1].es}
     </span>
   </div>
@@ -172,7 +172,7 @@ const Services = ({languageState}:Props) => {
     </span>
   </div>
   <div className="flex gap-5 mt-2 justify-center">
-    <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+    <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
       {languageState ? hashtagList[5].en : hashtagList[5].es}
     </span>
   </div>

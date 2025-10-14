@@ -19,7 +19,7 @@ interface Props {
             </div>
             <div className="md:w-5/7 w-full md:px-10 flex flex-col justify-center">
                 <div className="flex">
-                    <span className="w-3 h-5 bg-[#111BFF]"></span>
+                    <span className="w-3 h-5 bg-[#10dffd]"></span>
                     <span className="text-sm font-black ml-2">
                         {Index}
                     </span>

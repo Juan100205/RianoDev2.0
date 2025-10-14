@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-   "homepage": "https://github.com/Juan100205/RianoDev2.0/",
+  "homepage": "https://github.com/Juan100205/RianoDev2.0/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -33,6 +33,6 @@
     "globals": "^16.0.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.6"
   }
 }
