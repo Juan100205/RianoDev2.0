@@ -39,7 +39,7 @@ const resume = [
 
 const experiences = [
   {
-    place: [{ en: "Universidad de La Sabana" }, { en: "- Living Lab" }],
+    place: [{ en: "Universidad de La Sabana" }, { es: "- Living Lab" }],
     occ: { en: "Software Developer", es: "Desarrollador de Software" },
     date: { en: "06/2023 - 06/2024", es: "06/2023 - 06/2024" },
     s_skills: [
@@ -168,7 +168,7 @@ const experiences = [
           </h1>
           <div className="text-xs md:text-sm">
             <div className="flex gap-5 mt-5">
-              <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+              <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
                 {languageState ? resume[4].en:resume[4].es}
               </span>
               <span className="bg-gray-300 rounded-full p-2 px-3">
@@ -184,7 +184,7 @@ const experiences = [
               <span className="bg-gray-300 rounded-full p-2 px-3">
                 {languageState ? resume[7].en:resume[7].es}
               </span>
-              <span className="bg-[#111BFF] text-white rounded-full p-2 px-3">
+              <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
                 {languageState ? resume[8].en:resume[8].es}
               </span>
             </div>

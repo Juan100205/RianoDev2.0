@@ -32,14 +32,12 @@ const About_me = ({ languageState }: Props) => {
   return (
     <div className="w-4/5 mx-auto md:flex md:flex-row flex-col">
       <div className="relative bg-[url('/src/assets/About_me.jpg')] bg-cover bg-top rounded-xl md:w-2/6 w-full md:h-130 h-90">
-        <div className="absolute inset-0 bg-black h-full w-full rounded-xl opacity-40 "></div>
+        <div className="absolute inset-0 bg-black h-full w-full rounded-xl opacity-20 "></div>
         <div className="relative z-10 p-5 flex h-full flex-col justify-between">
           <div>
             <span className="block text-white ">Hello World; I’m</span>
-            <span className="block font-black text-3xl text-[#111BFF]">
-              {languageState
-                ? aboutContent.headerGreeting.en
-                : aboutContent.headerGreeting.es}
+            <span className="block font-black text-3xl text-[#10dffd]">
+              Juan José Riaño 
             </span>
           </div>
           <span className="block w-4/5 text-gray-300 opacity-80 md:text-base text-sm">
@@ -73,7 +71,7 @@ const About_me = ({ languageState }: Props) => {
             <div className="bg-black fill-white w-2/7 pr-[20%] pl-[1%] pt-[1%] rounded-xl">
               <Logo_LinkedIn />
             </div>
-            <div className="bg-[#111BFF] text-white w-2/7 pr-[20%] pl-[1%] pt-[1%] rounded-xl">
+            <div className="bg-[#10dffd] text-white w-2/7 pr-[20%] pl-[1%] pt-[1%] rounded-xl">
               <EnvelopeIcon
                 className="hover:scale-110 cursor-pointer transition-all"
                 onClick={() =>

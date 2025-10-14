@@ -35,7 +35,7 @@ const Footer = ({languageState}:Props) => {
           <a
             onClick={() =>
               window.open(
-                "https://drive.google.com/file/d/17kh4o2_hp7jNY9GTOlBQ25xzmY1TPm6R/view",
+                "https://drive.google.com/file/d/1ODM0-GfPv1NyTh7SWEO-2XOLCASJuKT3/view?usp=sharing",
                 "_blank"
               )
             }
@@ -81,7 +81,9 @@ const Footer = ({languageState}:Props) => {
       </div>
 
       <div className="w-full flex justify-between px-15 md:text-sm text-xs font-light text-gray-500">
-        <span className="w-50 md:flex hidden"></span>
+        <span className="w-50 md:flex hidden">
+          Isaías 43:19
+        </span>
         <span>
           © 2025 Juan Jose Riaño.{" "}
           {languageState
