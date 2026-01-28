@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   Bars3Icon,
   UserCircleIcon,
@@ -12,6 +13,8 @@ interface Props {
 }
 function Header({ languageState, scrollRef, setLanguageState }: Props) {
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const element = scrollRef.current;
@@ -24,17 +27,31 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
     element.addEventListener("scroll", handleScroll);
     return () => element.removeEventListener("scroll", handleScroll);
   }, [scrollRef]);
-  const scrollToSelection = (id: string) => {
-    const element = document.getElementById(id);
-    const container = scrollRef.current;
 
-    if (element && container) {
-      const offset =
-        id === "resume" ? element.offsetTop - 60 : element.offsetTop - 130;
-      container.scrollTo({
-        top: offset,
-        behavior: "smooth",
-      });
+  const scrollToSelection = (id: string) => {
+    if (location.pathname !== "/") {
+      navigate("/");
+      // Wait for navigation and then scroll
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        const container = scrollRef.current;
+        if (element && container) {
+          const offset = id === "resume" ? element.offsetTop - 60 : element.offsetTop - 130;
+          container.scrollTo({ top: offset, behavior: "smooth" });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(id);
+      const container = scrollRef.current;
+
+      if (element && container) {
+        const offset =
+          id === "resume" ? element.offsetTop - 60 : element.offsetTop - 130;
+        container.scrollTo({
+          top: offset,
+          behavior: "smooth",
+        });
+      }
     }
   };
   const [isOpen, setisOpen] = useState(false);
@@ -49,8 +66,8 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
   const headerContent = {
     name: "Juan Jose Riaño",
     title: {
-      en: "</Software and Mechanical Engineer>",
-      es: "</Ingeniero de Software y Mecánico>",
+      en: "</Innovation Engineer & Technology Consultant>",
+      es: "</Ingeniero en Innovación y Consultor Tecnológico>",
     },
     menuItems: [
       { id: "home", en: "</Home>", es: "</Inicio>" },
@@ -69,14 +86,13 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
       <div
         className={`absolute top-2.5 left-0 md:flex flex justify-between px-10 
                 w-full items-center transition-all duration-500 ease-in-out
-                    ${
-                      scrolled
-                        ? "opacity-0 -translate-y-10 pointer-events-none"
-                        : " opacity-100 translate-x-0"
-                    }
+                    ${scrolled
+            ? "opacity-0 -translate-y-10 pointer-events-none"
+            : " opacity-100 translate-x-0"
+          }
                     `}
       >
-        <div className="flex items-center gap-5 ">
+        <Link to="/" className="flex items-center gap-5 cursor-pointer">
           <UserCircleIcon className="w-10" />
           <div className="md:flex flex-col justify center">
             <span className="md:text-3xl text-xl text-gray-500 ">
@@ -86,9 +102,9 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
               {languageState ? headerContent.title.en : headerContent.title.es}
             </span>
           </div>
-        </div>
+        </Link>
         <span className="text-xs md:flex hidden">
-          &lt;/Software and Mechanical Engineer&gt;
+          {languageState ? headerContent.title.en : headerContent.title.es}
         </span>
       </div>
 
@@ -96,29 +112,28 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
         className={`absolute top-2.5 left-0 transition-all px-10 
                                 duration-500 ease-in-out flex justify-between w-full items-center
                                 bg-[#F2F2F2] border-b-2 border-gray-300 flex-wrap pt-1
-                                    ${
-                                      scrolled
-                                        ? " opacity-100 translate-x-0"
-                                        : "opacity-0 -translate-y-10 pointer-events-none"
-                                    }
+                                    ${scrolled
+            ? " opacity-100 translate-x-0"
+            : "opacity-0 -translate-y-10 pointer-events-none"
+          }
                                 `}
       >
         <div className="w-4/10 ">
           <div className="md:flex hidden text-sm justify-between ">
             <>
               {headerContent.menuItems.map((item) => (
-                <a
+                <button
                   key={item.id}
                   onClick={() => scrollToSelection(item.id)}
                   className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer mb-2"
+                        ease-in-out cursor-pointer mb-2 bg-transparent border-none p-0 font-display"
                 >
                   {languageState ? item.en : item.es}
                   <span
                     className="absolute -bottom-0 left-0 w-0 h-0.5 
                              bg-gray-500 group-hover:w-full transition-all "
                   ></span>
-                </a>
+                </button>
               ))}
             </>
           </div>
@@ -136,7 +151,7 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
               <Logo_GitHub_nav />
             </div>
             <button
-              className="w-5 cursor-pointer"
+              className="w-5 cursor-pointer border-none bg-transparent"
               onClick={() => {
                 changeLanguage();
                 setisHover(false);
@@ -145,16 +160,14 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
               onMouseLeave={() => setisHover(false)}
             >
               <span
-                className={`absolute top-3 transition-all duration-500 ease-in-out font-bold ${
-                  isHover ? "translate-x-7 opacity-0" : "translate-x-0"
-                }`}
+                className={`absolute top-3 transition-all duration-500 ease-in-out font-bold ${isHover ? "translate-x-7 opacity-0" : "translate-x-0"
+                  }`}
               >
                 {languageState ? "eng" : "esp"}
               </span>
               <span
-                className={`absolute top-3 transition-all duration-500 ease-in-out ${
-                  isHover ? "translate-x-0" : "-translate-x-7 opacity-0"
-                }`}
+                className={`absolute top-3 transition-all duration-500 ease-in-out ${isHover ? "translate-x-0" : "-translate-x-7 opacity-0"
+                  }`}
               >
                 {languageState ? "esp" : "eng"}
               </span>
@@ -165,18 +178,21 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
           <div className="flex flex-col justify-center text-sm w-full items-center py-10">
             <>
               {headerContent.menuItems.map((item) => (
-                <a
+                <button
                   key={item.id}
-                  onClick={() => scrollToSelection(item.id)}
+                  onClick={() => {
+                    scrollToSelection(item.id);
+                    setisOpen(false);
+                  }}
                   className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer mb-2"
+                        ease-in-out cursor-pointer mb-2 bg-transparent border-none p-0 font-display"
                 >
                   {languageState ? item.en : item.es}
                   <span
                     className="absolute -bottom-0 left-0 w-0 h-0.5 
                              bg-gray-500 group-hover:w-full transition-all "
                   ></span>
-                </a>
+                </button>
               ))}
             </>
           </div>
@@ -187,3 +203,4 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
 }
 
 export default Header;
+

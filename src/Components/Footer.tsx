@@ -1,8 +1,10 @@
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/24/solid";
+import { Link } from "react-router-dom";
+
 interface Props {
-  languageState:boolean;
+  languageState: boolean;
 }
-const Footer = ({languageState}:Props) => {
+const Footer = ({ languageState }: Props) => {
   return (
     <div className="w-full bg-[#D9D9D9]">
       <div className="border-b-1 h-75 border-gray-400 md:mx-5 flex justify-between items-center px-2 md:px-100">
@@ -80,24 +82,41 @@ const Footer = ({languageState}:Props) => {
         </div>
       </div>
 
-      <div className="w-full flex justify-between px-15 md:text-sm text-xs font-light text-gray-500">
-        <span className="w-50 md:flex hidden">
-          Isaías 43:19
-        </span>
-        <span>
-          © 2025 Juan Jose Riaño.{" "}
-          {languageState
-            ? "All rights reserved."
-            : "Todos los derechos reservados."}
-        </span>
-        <span>
-          {languageState
-            ? "Made with React & Three.js"
-            : "Hecho con React & Three.js"}
-        </span>
+      <div className="w-full flex flex-col items-center py-5 md:text-sm text-xs font-light text-gray-500 gap-2">
+        <div className="flex justify-between w-full px-15">
+          <span className="w-50 md:flex hidden">Isaías 43:19</span>
+          <span>
+            © 2025 Juan Jose Riaño.{" "}
+            {languageState
+              ? "All rights reserved."
+              : "Todos los derechos reservados."}
+          </span>
+          <span>
+            {languageState
+              ? "Made with React & Three.js"
+              : "Hecho con React & Three.js"}
+          </span>
+        </div>
+        <div className="flex gap-5 mt-2">
+          <Link
+            to="/privacy"
+            className="hover:text-black transition-all cursor-pointer"
+          >
+            {languageState ? "Privacy Policy" : "Política de Privacidad"}
+          </Link>
+          <Link
+            to="/terms"
+            className="hover:text-black transition-all cursor-pointer"
+          >
+            {languageState
+              ? "Terms of Service"
+              : "Condiciones del Servicio"}
+          </Link>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Footer;
+

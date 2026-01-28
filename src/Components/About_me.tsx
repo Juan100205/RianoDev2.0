@@ -12,20 +12,21 @@ const About_me = ({ languageState }: Props) => {
       es: "Hola Mundo; Soy",
     },
     roleTitle: {
-      en: "</Software and mechanical engineer>",
-      es: "</Ingeniero de software y mecánico>",
+      en: "</Innovation Engineer & Technology>",
+      es: "</Ingeniero en Innovación y tecnológia>",
     },
-    introduction: {
-      en: "I create innovative user experiences that blend functionality and creativity.",
-      es: "Creo experiencias de usuario innovadoras que combinan funcionalidad y creatividad.",
-    },
+introduction: {
+  en: "I guide entrepreneurs in strategically implementing technology to elevate their projects.",
+  es: "Guío a emprendedores en la implementación estratégica de tecnología para potenciar sus proyectos.",
+},
+
     description: {
-      en: "Experienced in leading the development of innovative 3D applications, websites, and web apps. Skilled at identifying and applying the right technologies to solve real-world problems with functional, visually engaging solutions.",
-      es: "Experto en liderar el desarrollo de aplicaciones 3D, sitios web y aplicaciones web innovadoras. Capaz de identificar y aplicar las tecnologías adecuadas para resolver problemas reales con soluciones funcionales y visualmente atractivas.",
+      en: "With a background in software and mechanical engineering, I bridge creativity and strategy to design scalable, human-centered solutions. My focus is on innovation, digital transformation, and the practical application of technology to empower early-stage ventures and educational projects.",
+      es: "Con una formación en ingeniería de software y mecánica, conecto creatividad y estrategia para diseñar soluciones escalables y centradas en las personas. Mi enfoque está en la innovación, la transformación digital y la aplicación práctica de la tecnología para potenciar emprendimientos iniciales y proyectos educativos.",
     },
     contactHeader: {
-      en: "</Get in touch>",
-      es: "</Contáctame>",
+      en: "</Let’s connect>",
+      es: "</Conectemos>",
     },
   };
 
@@ -40,7 +41,7 @@ const About_me = ({ languageState }: Props) => {
               Juan José Riaño 
             </span>
           </div>
-          <span className="block w-4/5 text-gray-300 opacity-80 md:text-base text-sm">
+          <span className="block w-4/5 text-white opacity-100 md:text-base text-sm">
             {" "}
             {languageState
               ? aboutContent.introduction.en

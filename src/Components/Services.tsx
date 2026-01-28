@@ -9,36 +9,38 @@ interface Props {
 }
 const Services = ({languageState}:Props) => {
   const serviceCards = [
-  {
-    icon: <CodeBracketIcon className="w-15 text-gray-400 mx-auto" />,
-    en: "Custom Software Development & AI",
-    es: "Desarrollo de Software a Medida e IA"
-  },
-  {
-    icon: <CubeIcon className="w-15 text-gray-400 mx-auto" />,
-    en: "3D, VR/AR & Immersive Experiences",
-    es: "Experiencias Inmersivas en 3D, RV/RA"
-  },
-  {
-    icon: <Cog8ToothIcon className="w-15 text-gray-400 mx-auto" />,
-    en: "Tech Strategy & DevOps Optimization",
-    es: "Estrategia Tecnológica y Optimización DevOps"
-  }
-];
+    {
+      icon: <CodeBracketIcon className="w-15 text-gray-400 mx-auto" />,
+      en: "Tech Consulting & Implementation",
+      es: "Consultoría e Implementación Tecnológica"
+    },
+    {
+      icon: <CubeIcon className="w-15 text-gray-400 mx-auto" />,
+      en: "Immersive & Emerging Technologies (XR / AI / 3D)",
+      es: "Tecnologías Inmersivas y Emergentes (XR / IA / 3D)"
+    },
+    {
+      icon: <Cog8ToothIcon className="w-15 text-gray-400 mx-auto" />,
+      en: "Digital Strategy & Innovation Systems",
+      es: "Estrategia Digital y Sistemas de Innovación"
+    }
+  ];
+
   const hashtagList = [
-  { en: "#3D - Modeling", es: "#Modelado - 3D" },
-  { en: "#DevOps - OperationsDevelopment", es: "#DevOps - Desarrollo de Operaciones" },
-  { en: "#Chatbot - Development", es: "#Desarrollo - Chatbot" },
-  { en: "#Web - Design", es: "#Diseño - Web" },
-  { en: "#Immersive - Virtual - Environments", es: "#Entornos - Virtuales - Inmersivos" },
-  { en: "#3D - Animation", es: "#Animación - 3D" },
-  { en: "#VR/AR - Development", es: "#Desarrollo - RV/RA" },
-  { en: "#Web - Development", es: "#Desarrollo - Web" },
-  { en: "#Adaptability", es: "#Adaptabilidad" },
-  { en: "#Gamified - Experience", es: "#Experiencia - Gamificada" }
-];
+    { en: "#TechInnovation", es: "#InnovaciónTecnológica" },
+    { en: "#EmergingTech", es: "#TecnologíasEmergentes" },
+    { en: "#DigitalTransformation", es: "#TransformaciónDigital" },
+    { en: "#ImmersiveDesign", es: "#DiseñoInmersivo" },
+    { en: "#AIIntegration", es: "#IntegraciónIA" },
+    { en: "#3DModeling", es: "#Modelado3D" },
+    { en: "#Entrepreneurship", es: "#Emprendimiento" },
+    { en: "#WebDevelopment", es: "#DesarrolloWeb" },
+    { en: "#InnovationConsulting", es: "#ConsultoríaEnInnovación" },
+    { en: "#GamifiedExperience", es: "#ExperienciasGamificadas" }
+  ];
+
   return (
-    <div className=" w-[80%] mx-auto text-center">
+    <div className="w-[80%] mx-auto text-center">
       <div>
         <div className="md:w-20 w-15 bg-[#D9D9D9] text-[#10dffd] rounded-full outline-2 outline-[#10dffd] mx-auto p-3">
           <GlobeAltIcon />
@@ -46,31 +48,34 @@ const Services = ({languageState}:Props) => {
         <h1 className="md:text-3xl text-xl font-bold text-center mt-5">
           {languageState ? '</Services>' : '</Servicios>'}
         </h1>
-        {languageState ? (
-  <p className="text-gray-500 text-center mt-15 md:px-40 md:text-base text-sm">
-    I offer a diverse range of technology services. My expertise includes{" "}
-    <span className="text-[#10dffd]">3D modeling</span>,{" "}
-    <span className="text-[#10dffd]">animation</span>, and{" "}
-    <span className="text-[#10dffd]">VR/AR</span> development for immersive applications; 
-    custom mobile and web app development using Python and modern frameworks;{" "}
-    <span className="text-[#10dffd]">AI and data analytics</span> for intelligent automation;
-    game and gamified experience design; strategic consulting to implement creative tech solutions;{" "}
-    <span className="text-[#10dffd]">DevOps</span> and operations development.
-  </p>
-) : (
-  <p className="text-gray-500 text-center mt-15 md:px-40 md:text-base text-sm">
-    Ofrezco una amplia gama de servicios tecnológicos. Mi experiencia incluye{" "}
-    <span className="text-[#10dffd]">modelado 3D</span>,{" "}
-    <span className="text-[#10dffd]">animación</span> y desarrollo de{" "}
-    <span className="text-[#10dffd]">realidad virtual/aumentada</span> para aplicaciones inmersivas;
-    desarrollo personalizado de aplicaciones móviles y web usando Python y frameworks modernos;{" "}
-    <span className="text-[#10dffd]">IA y análisis de datos</span> para automatización inteligente;
-    diseño de experiencias lúdicas y gamificadas; consultoría estratégica para implementar soluciones tecnológicas creativas;{" "}
-    <span className="text-[#10dffd]">DevOps</span> y desarrollo de operaciones.
-  </p>
-)}
 
+        {languageState ? (
+          <p className="text-gray-500 text-center mt-15 md:px-40 md:text-base text-sm">
+            I provide strategic and technical consulting to help entrepreneurs and organizations 
+            implement <span className="text-[#10dffd]">emerging</span>,{" "}
+            <span className="text-[#10dffd]">immersive</span>, and{" "}
+            <span className="text-[#10dffd]">conventional</span> technologies effectively.  
+            My services combine innovation strategy,{" "}
+            <span className="text-[#10dffd]">AI integration</span>,{" "}
+            <span className="text-[#10dffd]">3D & XR development</span>, and{" "}
+            <span className="text-[#10dffd]">digital transformation</span> to 
+            accelerate growth and create meaningful impact.
+          </p>
+        ) : (
+          <p className="text-gray-500 text-center mt-15 md:px-40 md:text-base text-sm">
+            Brindo consultoría estratégica y técnica para ayudar a emprendedores y organizaciones 
+            a implementar tecnologías <span className="text-[#10dffd]">emergentes</span>,{" "}
+            <span className="text-[#10dffd]">inmersivas</span> y{" "}
+            <span className="text-[#10dffd]">convencionales</span> de forma efectiva.  
+            Mis servicios combinan estrategia de innovación,{" "}
+            <span className="text-[#10dffd]">integración de IA</span>,{" "}
+            <span className="text-[#10dffd]">desarrollo 3D y XR</span> y{" "}
+            <span className="text-[#10dffd]">transformación digital</span> para 
+            acelerar el crecimiento y generar impacto real.
+          </p>
+        )}
       </div>
+
       <div className="flex md:flex-row flex-col md:w-full justify-center gap-5 mt-20 text-gray-500">
   <div className="md:h-50 h-45 md:w-80 w-70 mx-auto outline-1 outline-gray-400 rounded-2xl flex flex-col justify-center">
     <CodeBracketIcon className="w-15 text-gray-400 mx-auto" />

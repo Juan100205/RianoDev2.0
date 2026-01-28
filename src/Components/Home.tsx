@@ -4,15 +4,16 @@ interface Props{
 }
 const Home = ({languageState}:Props) => {
   const homeContent = {
-  year: "2025",
-  tags: [
-    { en: "#3D Modeling", es: "#Modelado 3D" },
-    { en: "#Code Review", es: "#Revisión de Código" },
-    { en: "#Web Development", es: "#Desarrollo Web" },
-    { en: "#App Development", es: "#Desarrollo de Apps" },
-    { en: "#3D Animation", es: "#Animación 3D" },
-    { en: "#DataBase Review", es: "#Bases de Datos" }
-  ],
+  year: "2026",
+tags: [
+  { en: "#TechInnovation", es: "#Innovación" },
+  { en: "#ImmersiveTech", es: "#TecnologíaXR" },
+  { en: "#Entrepreneurship", es: "#Emprendimiento" },
+  { en: "#WebDevelopment", es: "#DesarrolloWeb" },
+  { en: "#AppDevelopment", es: "#DesarrolloDeApps" },
+  { en: "#Consulting", es: "#Consultoría" }
+],
+
 };
   return (
     <div className="md:flex mt-10 w-3/4 mx-auto items-end">
@@ -34,7 +35,7 @@ const Home = ({languageState}:Props) => {
         </div>
       </div>
       <div className="md:w-3/5 w-full md:h-[38vw] h-[60vw] rounded-2xl bg-[#10dffd] flex items-end p-5">
-        <div className="md:text-4xl text-xl font-black text-white ">2025</div>
+        <div className="md:text-4xl text-xl font-black text-white ">2026</div>
         <div className="relative w-full aspect-[3/1] font-banner font-black text-white">
           <span className="absolute text-[17vw] md:text-[11vw] top-[-100%]  left-[40%]     -rotate-[85deg]">P</span>
           <span className="absolute text-[17vw] md:text-[11vw] top-[-130%]  left-[53%]     ">O</span>

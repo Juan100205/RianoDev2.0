@@ -25,17 +25,19 @@ const Resume = ({languageState}:Props) => {
 const resume = [
   { en: "<Expertise>", es: "<Experiencia Técnica>" },
   {
-    en: "3D Applications, Web Development, Web Apps, Problem-Solving, Technology Research, UI Functionality, Visual Design, Fast-Paced Execution, Team Collaboration",
-    es: "Aplicaciones 3D, Desarrollo Web, Aplicaciones Web, Resolución de Problemas, Investigación Tecnológica, Funcionalidad de UI, Diseño Visual, Ejecución Rápida, Colaboración en Equipo"
+    en: "Technology Consulting, Innovation Strategy, Emerging & Immersive Technologies, Web & App Development, Digital Transformation, UX Strategy, Problem-Solving, Collaboration",
+    es: "Consultoría Tecnológica, Estrategia de Innovación, Tecnologías Emergentes e Inmersivas, Desarrollo Web y de Apps, Transformación Digital, Estrategia UX, Resolución de Problemas, Colaboración"
   },
   { en: "<Hardskills>", es: "<Habilidades Técnicas>" },
+  
   { en: "<Softskills>", es: "<Habilidades Blandas>" },
   { en: "#Innovation", es: "#Innovación" },
-  { en: "#Problem - Solving", es: "#Resolución de Problemas" },
-  { en: "#Effective - Communication", es: "#Comunicación Efectiva" },
+  { en: "#StrategicThinking", es: "#PensamientoEstratégico" },
+  { en: "#EffectiveCommunication", es: "#ComunicaciónEfectiva" },
   { en: "#Adaptability", es: "#Adaptabilidad" },
-  { en: "#Proactive - Leadership", es: "#Liderazgo Proactivo" }
+  { en: "#Leadership", es: "#Liderazgo" }
 ];
+
 
 const experiences = [
   {
