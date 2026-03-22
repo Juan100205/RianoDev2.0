@@ -1,162 +1,229 @@
-import Logo_A3D from "./Logos_comp/Logo_A3D";
-import Logo_Figma from "./Logos_comp/Logo_Figma";
-import Logo_Maya from "./Logos_comp/Logo_Maya";
-import Logo_SQL from "./Logos_comp/Logo_MySql";
-import Logo_React from "./Logos_comp/Logo_react";
-import Logo_UE from "./Logos_comp/Logo_UE";
-import Logo_Unity from "./Logos_comp/Logo_Unity";
-import Project_card from "./Project_card";
+import { Link } from "react-router-dom";
 
 interface Props {
   languageState: boolean;
 }
-const Projects = ({ languageState }: Props) => {
-  const projectTexts = [
 
-    {
-      name: {
-        eng: "Patology Museum",
-        esp: "Museo de Patología",
-      },
-      description: {
-        eng: `A fully custom 3D VR application that offers 
-immersive visualization of anatomical models with various 
-pathologies. This virtual museum lets users explore 
-interactive metaverse environments, featuring original 
-models designed, sculpted, and textured from scratch.`,
-        esp: `Una aplicación de realidad virtual 3D completamente personalizada que ofrece visualización inmersiva de modelos anatómicos con diversas patologías. Este museo virtual permite a los usuarios explorar entornos interactivos del metaverso, con modelos originales diseñados, esculpidos y texturizados desde cero.`,
-      },
+const cases = [
+  {
+    index: "01",
+    title: {
+      en: "Conversational automation and AI flows",
+      es: "Automatización conversacional y flujos con IA",
     },
-    {
-      "name": {
-        "eng": "ArcovXR",
-        "esp": "ArcovXR"
-      },
-      "description": {
-        "eng": "A deep web page for a consulting firm in emerging technologies, showcasing the use of state management, visual effects, and dynamic window routing. It also integrates cutting-edge technologies such as 3D model visualization, designed from scratch for interactive web experiences.",
-        "esp": "Página web avanzada de una consultora en tecnologías emergentes, donde se evidencia el uso de manejo de estados, efectos visuales y enrutamiento dinámico de ventanas. Además, integra tecnologías de última generación como la visualización de modelos 3D diseñados desde cero para experiencias web interactivas."
-      }
-    }
-    ,
-    {
-      name: {
-        eng: "TiktokClone",
-        esp: "Clon de TikTok"
-      },
-      description: {
-        eng: "Mobile application inspired by TikTok, featuring dynamic and interactive video visualization, integrated with Supabase for real-time functionality and updates. Developed using React Native.",
-        esp: "Aplicación móvil inspirada en TikTok, con visualización dinámica e interactiva de videos, integrada con Supabase para su respectiva funcionalidad y actualizaciones en tiempo real. Desarrollada con React Native."
-      }
-    }
-    ,
-  ];
+    context: {
+      en: "Implementation of automated conversation systems for user capture, qualification and management across different types of operations.",
+      es: "Implementación de sistemas de conversación automatizada para captura, calificación y gestión de usuarios en diferentes tipos de operación.",
+    },
+    implementation: {
+      en: [
+        "Chatbot development with natural conversational behavior",
+        "Integration with APIs and messaging platforms",
+        "Decision flow automation (dynamic funnels)",
+        "Connection with scheduling systems and CRM",
+      ],
+      es: [
+        "Desarrollo de chatbots con comportamiento conversacional natural",
+        "Integración con APIs y plataformas de mensajería",
+        "Automatización de flujos de decisión (funnels dinámicos)",
+        "Conexión con sistemas de agendamiento y CRM",
+      ],
+    },
+    appliedCases: {
+      en: [
+        "Educational campaigns (user capture and guidance)",
+        "Political campaigns (interaction and segmentation)",
+        "Automated scheduling for commercial teams",
+      ],
+      es: [
+        "Campañas educativas (captura y orientación de usuarios)",
+        "Campañas políticas (interacción y segmentación)",
+        "Agendamiento automatizado para equipos comerciales",
+      ],
+    },
+    result: {
+      en: "Systems capable of managing conversations in real time, reducing operational load and structuring user data for commercial use.",
+      es: "Sistemas capaces de gestionar conversaciones en tiempo real, reducir carga operativa y estructurar la información de usuarios para su uso comercial.",
+    },
+  },
+  {
+    index: "02",
+    title: {
+      en: "Process automation and data management",
+      es: "Automatización de procesos y gestión de datos",
+    },
+    context: {
+      en: "Design of solutions to automate internal operations and data handling in non-standardized environments.",
+      es: "Diseño de soluciones para automatizar operaciones internas y manejo de datos en entornos no estandarizados.",
+    },
+    implementation: {
+      en: [
+        "Operational process automation",
+        "Integration of physical and digital systems",
+        "Massive data processing and structuring",
+        "Custom logic development for non-conventional flows",
+      ],
+      es: [
+        "Automatización de procesos operativos",
+        "Integración de sistemas físicos y digitales",
+        "Procesamiento y estructuración de datos masivos",
+        "Desarrollo de lógica personalizada para flujos no convencionales",
+      ],
+    },
+    appliedCases: {
+      en: [
+        "Automation systems for residential complexes",
+        "Internal data flow automation",
+        "Large-scale information processing",
+      ],
+      es: [
+        "Sistemas de automatización para residencias y conjuntos",
+        "Automatización de flujos de datos internos",
+        "Procesamiento de información a gran escala",
+      ],
+    },
+    result: {
+      en: "Reduction of manual processes, greater operational control and availability of structured data for decision-making.",
+      es: "Reducción de procesos manuales, mayor control operativo y disponibilidad de datos estructurados para toma de decisiones.",
+    },
+  },
+  {
+    index: "03",
+    title: {
+      en: "Web infrastructure and digital platforms",
+      es: "Infraestructura web y plataformas digitales",
+    },
+    context: {
+      en: "Development of web platforms aligned with performance, user experience and technical positioning standards.",
+      es: "Desarrollo de plataformas web alineadas con estándares de rendimiento, experiencia de usuario y posicionamiento técnico.",
+    },
+    implementation: {
+      en: [
+        "Frontend and backend development",
+        "SEO and performance optimization",
+        "Tracking and analytics system integration",
+        "Interactive experience implementation (3D / XR when applicable)",
+      ],
+      es: [
+        "Desarrollo frontend y backend",
+        "Optimización para SEO y rendimiento",
+        "Integración de sistemas de tracking y analítica",
+        "Implementación de experiencias interactivas (3D / XR cuando aplica)",
+      ],
+    },
+    appliedCases: {
+      en: [
+        "Platforms for marketing agencies (e.g. Catali)",
+        "Digital experiences for XR companies (e.g. ArcovXR)",
+        "Websites for product-oriented businesses",
+      ],
+      es: [
+        "Plataformas para agencias de marketing (ej: Catali)",
+        "Experiencias digitales para empresas de XR (ej: ArcovXR)",
+        "Webs para negocios orientados a venta de productos",
+      ],
+    },
+    result: {
+      en: "Functional, fast platforms aligned with commercial objectives, ready to integrate with marketing and data systems.",
+      es: "Plataformas funcionales, rápidas y alineadas con objetivos comerciales, listas para integrarse con sistemas de marketing y datos.",
+    },
+  },
+];
+
+const Projects = ({ languageState }: Props) => {
+  const l = languageState;
 
   return (
-    <div className="w-[80%] mx-auto">
-      <h1 className="md:text-3xl text-xl md:text-start text-center font-bold mb-10">
-        {languageState ? "</Projects/>" : "</Proyectos>"}
-      </h1>
-      <div className="mt-10 ">
-        <div className="mt-30">
-          <Project_card
-            Index="01"
-            Name={languageState ? projectTexts[0].name.eng : projectTexts[0].name.esp}
-            Description={languageState ? projectTexts[0].description.eng : projectTexts[0].description.esp}
-            Image={
-              <div className="w-full h-full relative">
-                <div
-                  className="absolute inset-0 w-[90%] h-full 
-                    bg-[url('https://i.pinimg.com/736x/f6/2d/a0/f62da0329b47fefaa34bed8f0297575f.jpg')] 
-                    bg-cover bg-center rounded-2xl "
-                />
-                <div className="absolute inset-0 w-[90%] h-full bg-black rounded-2xl opacity-50" />
-              </div>
-            }
-            Technologies={
-              <>
-                <div className="bg-[#10dffd] rounded-2xl md:w-20 w-15 p-2">
-                  <Logo_UE />
-                </div>
-                <div className="bg-black rounded-2xl md:w-20 w-15 p-2">
-                  <Logo_Maya />
-                </div>
-                <div className="bg-[#D9D9D9] rounded-2xl md:w-20 w-15 p-2 text-black">
-                  <Logo_A3D />
-                </div>
-                <div className="bg-white rounded-2xl md:w-20 w-15 p-2 text-black">
-                  <Logo_Unity />
-                </div>
-              </>
-            }
-            link_project="https://github.com/Juan100205/Museo-de-Patologias"
-            link_live="https://youtu.be/sHS1-akv_OE"
-          />
-        </div>
-        <div className="mt-30">
-          <Project_card
-            Index="02"
-            Name={languageState ? projectTexts[1].name.eng : projectTexts[1].name.esp}
-            Description={languageState ? projectTexts[1].description.eng : projectTexts[1].description.esp}
-            Image={
-              <div className="w-full h-full relative">
-                <div
-                  className="absolute inset-0 w-[90%] h-full 
-                    bg-[url('/src/assets/ArcovXr.png')] 
-                    bg-cover bg-center rounded-2xl  "
-                />
-                <div className="absolute inset-0 w-[90%] h-full bg-black rounded-2xl opacity-50" />
-              </div>
-            }
-            Technologies={
-              <>
-                <div className="bg-[#10dffd] rounded-2xl md:w-20 w-15 p-2 fill-white">
-                  <Logo_React />
-                </div>
-                <div className="bg-black rounded-2xl md:w-20 w-15 p-2">
-                  <Logo_Maya />
-                </div>
-                <div className="bg-[#D9D9D9] rounded-2xl md:w-20 w-15 p-2 text-black">
-                  <Logo_Figma />
-                </div>
-              </>
-            }
-            link_project="https://github.com/ArcovXr/ArcovXr"
-            link_live="https://arcovxr.github.io/ArcovXr/#/Home_Main"
-          />
-          <div className="mt-30">
-            <Project_card
-              Index="04"
-              Name={languageState ? projectTexts[2].name.eng : projectTexts[2].name.esp}
-              Description={languageState ? projectTexts[2].description.eng : projectTexts[2].description.esp}
-              Image={
-                <div className="w-full h-full relative">
-                  <div
-                    className="absolute inset-0 w-[90%] h-full 
-                    bg-[url('https://i.pinimg.com/1200x/17/05/a3/1705a3f4adb05e8b8e6e8814feb18bf0.jpg')] 
-                    bg-cover bg-center rounded-2xl "
-                  />
-                  <div className="absolute inset-0 w-[90%] h-full bg-black rounded-2xl opacity-50" />
-                </div>
-              }
-              Technologies={
-                <>
-                  <div className="bg-[#10dffd] rounded-2xl md:w-20 w-15 p-2">
-                    <Logo_React/>
-                  </div>
-                  <div className="bg-black rounded-2xl md:w-20 w-15 p-2">
-                    <Logo_Figma/>
-                  </div>
-                  <div className="bg-[#D9D9D9] rounded-2xl md:w-20 w-15 p-2">
-                    <Logo_SQL/>
-                  </div>
-                </>
-              }
-              link_project="https://github.com/Juan100205/tiktok"
-              link_live="https://youtube.com/shorts/Us2YwgymK8E"
-            />
-          </div>
-        </div>
+    <div className="w-[70%] mx-auto py-10">
+
+      <div className="flex items-center gap-3 mb-12">
+        <span className="block w-8 h-[2px] bg-[#10dffd]" />
+        <span className="text-[#10dffd] text-xs tracking-[0.3em] uppercase">
+          {l ? "Case Studies" : "Casos de Estudio"}
+        </span>
       </div>
+
+      <div className="flex flex-col gap-16">
+        {cases.map((c) => (
+          <div
+            key={c.index}
+            className="border border-[#10dffd]/15 hover:border-[#10dffd]/40 transition-colors rounded-2xl p-8 md:p-10 relative"
+          >
+            <span className="absolute top-8 right-8 text-[#10dffd]/20 text-xs tracking-widest font-light">
+              {c.index}
+            </span>
+
+            <h2 className="text-white text-xl md:text-2xl font-light mb-6 max-w-xl">
+              {l ? c.title.en : c.title.es}
+            </h2>
+
+            <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-2xl">
+              {l ? c.context.en : c.context.es}
+            </p>
+
+            <div className="md:grid md:grid-cols-2 gap-10">
+
+              <div>
+                <span className="text-[#10dffd] text-xs tracking-widest uppercase block mb-4">
+                  {l ? "Implementation" : "Implementación"}
+                </span>
+                <ul className="flex flex-col gap-2">
+                  {(l ? c.implementation.en : c.implementation.es).map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-400">
+                      <span className="mt-1.5 w-1 h-1 rounded-full bg-[#10dffd] shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-8 md:mt-0">
+                <span className="text-[#10dffd] text-xs tracking-widest uppercase block mb-4">
+                  {l ? "Applied cases" : "Casos aplicados"}
+                </span>
+                <ul className="flex flex-col gap-2">
+                  {(l ? c.appliedCases.en : c.appliedCases.es).map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-400">
+                      <span className="mt-1.5 w-1 h-1 rounded-full bg-[#10dffd]/50 shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+            </div>
+
+            <div className="mt-8 border-l-2 border-[#10dffd]/40 pl-5">
+              <p className="text-gray-400 text-sm leading-relaxed italic">
+                {l ? c.result.en : c.result.es}
+              </p>
+            </div>
+
+            <div className="mt-8 flex items-center gap-4">
+              <Link
+                to="/servicios"
+                className="text-xs tracking-widest uppercase font-light text-black bg-[#10dffd] px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity"
+              >
+                {l ? "View implementation" : "Ver implementación"}
+              </Link>
+              <Link
+                to="/schedule"
+                className="text-xs tracking-widest uppercase font-light text-white/50 hover:text-white border border-white/10 hover:border-white/30 px-6 py-2.5 rounded-full transition-all"
+              >
+                {l ? "Start a conversation" : "Iniciar conversación"}
+              </Link>
+            </div>
+
+          </div>
+        ))}
+      </div>
+
+      <p className="text-gray-600 text-sm text-center mt-16 max-w-2xl mx-auto leading-relaxed">
+        {l
+          ? "The systems implemented vary by context, but share a common objective: structure, automate and connect digital operations in a functional way."
+          : "Los sistemas implementados varían según el contexto, pero comparten un objetivo común: estructurar, automatizar y conectar operaciones digitales de forma funcional."}
+      </p>
+
     </div>
   );
 };

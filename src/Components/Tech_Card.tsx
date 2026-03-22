@@ -7,8 +7,8 @@ interface Props {
 
 function Tech_card({ name, icon }: Props) {
   return (
-    <div className="md:h-35 h-30  bg-gray-300 rounded-2xl flex flex-col justify-between items-center mr-5 md:mr-7">
-      <h1 className="text-center font-extralight text-sm w-25 md:w-30 pt-4">
+    <div className="md:h-35 h-30  bg-gray-300 dark:bg-gray-700 rounded-2xl flex flex-col justify-between items-center mr-5 md:mr-7">
+      <h1 className="text-center font-extralight text-sm w-25 md:w-30 pt-4 text-white">
         {name}
       </h1>
       <div className="md:w-20 w-15 pb-3 items-center">

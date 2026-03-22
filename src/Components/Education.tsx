@@ -162,7 +162,7 @@ const education_i18n = {
   return (
 <>
   <div className="md:w-[80%] w-full mx-auto anim_block md:flex flex-col hidden">
-    <h1 className="text-3xl font-black ">
+    <h1 className="text-3xl font-light ">
       {languageState ? "<Educación>" : "<Education>"}
     </h1>
 
@@ -188,7 +188,7 @@ const education_i18n = {
   </div>
 
   <div className="w-[98%] flex md:hidden flex-col mx-auto border-b-2 border-gray-300 pl-8">
-    <h1 className="text-xl md:text-3xl text-center font-bold">
+    <h1 className="text-xl md:text-3xl text-center font-light">
       {languageState ? "<Educación>" : "<Education>"}
     </h1>
     <div className="w-full border-gray-300 h-170 pr-2">

@@ -39,31 +39,32 @@ const TermsOfService = ({ languageState, setLanguageState, scrollRef }: TermsOfS
             {
                 title: { en: "4. Limitation of Liability", es: "4. Limitación de Responsabilidad" },
                 text: {
-                    en: "Information on this site is provided 'as is'. I am not liable for any damages arising from the use or inability to use the information or services described on this site.",
-                    es: "La información en este sitio se proporciona 'tal cual'. No me hago responsable de ningún daño derivado del uso o la imposibilidad de usar la información o los servicios descritos en este sitio.",
+                    en: "Information on this site is provided 'as is'. RIANODEV is not liable for any damages arising from the use or inability to use the information or services described on this site.",
+                    es: "La información en este sitio se proporciona 'tal cual'. RIANODEV no se hace responsable de ningún daño derivado del uso o la imposibilidad de usar la información o los servicios descritos en este sitio.",
                 },
             },
         ],
     };
 
     return (
-        <div className="bg-[#F2F2F2] min-h-screen font-display">
+        <>
             <Header
                 languageState={languageState}
                 setLanguageState={setLanguageState}
                 scrollRef={scrollRef}
             />
-            <div className="max-w-4xl mx-auto pt-40 pb-20 px-10">
-                <h1 className="text-4xl font-bold mb-10 text-gray-800">
+            <div ref={scrollRef} className="page_scroll scrollbar_exp">
+            <div className="max-w-4xl mx-auto pt-20 pb-20 px-10">
+                <h1 className="text-4xl font-light mb-10 text-white">
                     {languageState ? content.title.en : content.title.es}
                 </h1>
                 <div className="space-y-8">
                     {content.sections.map((section, index) => (
                         <div key={index}>
-                            <h2 className="text-xl font-bold text-gray-700 mb-3">
+                            <h2 className="text-xl font-light text-gray-200 mb-3">
                                 {languageState ? section.title.en : section.title.es}
                             </h2>
-                            <p className="text-gray-600 leading-relaxed">
+                            <p className="text-gray-400 leading-relaxed">
                                 {languageState ? section.text.en : section.text.es}
                             </p>
                         </div>
@@ -71,7 +72,8 @@ const TermsOfService = ({ languageState, setLanguageState, scrollRef }: TermsOfS
                 </div>
             </div>
             <Footer languageState={languageState} />
-        </div>
+            </div>
+        </>
     );
 };
 

@@ -4,114 +4,174 @@ import { Link } from "react-router-dom";
 interface Props {
   languageState: boolean;
 }
-const Footer = ({ languageState }: Props) => {
-  return (
-    <div className="w-full bg-[#D9D9D9]">
-      <div className="border-b-1 h-75 border-gray-400 md:mx-5 flex justify-between items-center px-2 md:px-100">
-        <div className="md:w-full w-1/2 text-center">
-          <h1 className="font-bold text-center">
-            {languageState ? "Attachments" : "Adjuntos"}
-          </h1>
-          <a
-            onClick={() =>
-              window.open(
-                "https://drive.google.com/drive/folders/1OKmfIBey0vfV6QiR2QMvXtKVe1u2qP_7?usp=sharing",
-                "_blank"
-              )
-            }
-            className="transition-all text-gray-500 block mt-5 hover:text-black cursor-pointer"
-          >
-            {languageState ? "Certificates" : "Certificados"}
-          </a>
-          <a
-            onClick={() =>
-              window.open(
-                "https://drive.google.com/file/d/17ugZAIEIP7au6lPodQTcukQvqu5n3M3d/view",
-                "_blank"
-              )
-            }
-            className="transition-all text-gray-500 block mt-5 hover:text-black cursor-pointer"
-          >
-            {languageState ? "Resume" : "Hoja de Vida"}
-          </a>
-          <a
-            onClick={() =>
-              window.open(
-                "https://drive.google.com/file/d/1ODM0-GfPv1NyTh7SWEO-2XOLCASJuKT3/view?usp=sharing",
-                "_blank"
-              )
-            }
-            className="transition-all text-gray-500 block mt-5 hover:text-black cursor-pointer"
-          >
-            {languageState ? "CV" : "CV"}
-          </a>
-        </div>
 
-        <div className="md:w-full w-1/2 text-center">
-          <h1 className="font-bold text-center">
-            {languageState ? "Contact me" : "Contáctame"}
-          </h1>
-          <div className="flex justify-start mt-5">
-            <PhoneIcon className="w-5" />
-            <p
-              onClick={() => window.open("callto:+573124508591", "_blank")}
-              className="transition-all text-gray-500 block ml-5 hover:text-black cursor-pointer"
-            >
-              +57 312 450 8591
-            </p>
-          </div>
-          <div className="flex mt-10 justify-start">
-            <EnvelopeIcon className="w-5" />
-            <p
-              onClick={() =>
-                window.open("mailto:juanjorianozabaleta@gmail.com", "_blank")
-              }
-              className="md:hidden flex transition-all text-gray-500 block ml-5 hover:text-black cursor-pointer"
-            >
-              juan..@gmail.com
-            </p>
-            <p
-              onClick={() =>
-                window.open("mailto:juanjorianozabaleta@gmail.com", "_blank")
-              }
-              className="md:flex hidden transition-all text-gray-500 block ml-5 hover:text-black cursor-pointer"
-            >
-              juanjorianozabaleta@gmail.com
-            </p>
-          </div>
-        </div>
+const Footer = ({ languageState }: Props) => {
+  const col = {
+    services: {
+      title: { en: "Services", es: "Servicios" },
+      items: [
+        { en: "Web Infrastructure", es: "Infraestructura Web", path: "/servicios" },
+        { en: "Automation & AI", es: "Automatización & IA", path: "/servicios" },
+        { en: "Data & Tracking", es: "Data & Tracking", path: "/servicios" },
+        { en: "Systems Integration", es: "Integración de Sistemas", path: "/servicios" },
+      ],
+    },
+    company: {
+      title: { en: "Company", es: "Empresa" },
+      items: [
+        { en: "About RIANODEV", es: "Sobre RIANODEV", path: "/sobre" },
+        { en: "Case Studies", es: "Casos de Uso", path: "/clientes" },
+        { en: "Implementation Model", es: "Modelo de Implementación", path: "/servicios" },
+      ],
+    },
+    help: {
+      title: { en: "Help & Support", es: "Ayuda y Soporte" },
+      links: [
+        { en: "FAQ", es: "Preguntas Frecuentes", path: "/faq" },
+        { en: "Schedule a consultation", es: "Agendar consultoría", path: "/schedule" },
+        { en: "Request a quote", es: "Solicitar cotización", path: "/quote" },
+      ],
+      actions: [
+        {
+          en: "Technical support",
+          es: "Soporte técnico",
+          action: () => window.open("mailto:juanriza@rianodevz.net?subject=Soporte%20Técnico", "_blank"),
+        },
+        {
+          en: "WhatsApp",
+          es: "WhatsApp",
+          action: () => window.open("https://wa.me/3124508591?text=Hola%20me%20gustar%C3%ADa%20saber%20sobre%20ustedes", "_blank"),
+        },
+      ],
+    },
+    legal: {
+      title: { en: "Policies", es: "Políticas" },
+      items: [
+        { en: "Privacy Policy", es: "Política de Privacidad", path: "/privacy" },
+        { en: "Terms of Service", es: "Condiciones del Servicio", path: "/terms" },
+        {
+          en: "Data processing",
+          es: "Tratamiento de datos",
+          path: "/privacy",
+        },
+        {
+          en: "Cookies",
+          es: "Cookies",
+          path: "/privacy",
+        },
+      ],
+    },
+  };
+
+  return (
+    <div className="w-full bg-black dark:bg-black relative">
+      {/* Neon top border */}
+      <div className="relative w-full h-px">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#10dffd] to-transparent opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#10dffd] to-transparent blur-sm opacity-80" />
+        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-1/2 h-5 bg-[#10dffd] opacity-10 blur-xl rounded-full" />
       </div>
 
-      <div className="w-full flex flex-col items-center py-5 md:text-sm text-xs font-light text-gray-500 gap-2">
-        <div className="flex justify-between w-full px-15">
-          <span className="w-50 md:flex hidden">Isaías 43:19</span>
-          <span>
-            © 2025 Juan Jose Riaño.{" "}
+      {/* Main footer columns */}
+      <div className="max-w-6xl mx-auto px-6 md:px-10 py-14 grid grid-cols-2 md:grid-cols-5 gap-10">
+
+        {/* Brand column */}
+        <div className="col-span-2 md:col-span-1 flex flex-col gap-3">
+          <span className="text-[#10dffd] font-light text-lg tracking-wide">rianodev</span>
+          <p className="text-gray-500 text-xs leading-relaxed max-w-[180px]">
             {languageState
-              ? "All rights reserved."
-              : "Todos los derechos reservados."}
-          </span>
-          <span>
-            {languageState
-              ? "Made with React & Three.js"
-              : "Hecho con React & Three.js"}
-          </span>
+              ? "Design and implementation of digital systems for marketing and operations."
+              : "Diseño e implementación de sistemas digitales para marketing y operaciones."}
+          </p>
+          <div className="flex flex-col gap-2 mt-2">
+            <button
+              onClick={() => window.open("callto:+573124508591", "_blank")}
+              className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors text-xs cursor-pointer"
+            >
+              <PhoneIcon className="w-3.5 h-3.5" />
+              +57 312 450 8591
+            </button>
+            <button
+              onClick={() => window.open("mailto:juanriza@rianodevz.net", "_blank")}
+              className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors text-xs cursor-pointer"
+            >
+              <EnvelopeIcon className="w-3.5 h-3.5" />
+              <span className="md:hidden">juanriza@rianodevz.net</span>
+              <span className="hidden md:inline">juanriza@rianodevz.net</span>
+            </button>
+          </div>
         </div>
-        <div className="flex gap-5 mt-2">
-          <Link
-            to="/privacy"
-            className="hover:text-black transition-all cursor-pointer"
-          >
-            {languageState ? "Privacy Policy" : "Política de Privacidad"}
-          </Link>
-          <Link
-            to="/terms"
-            className="hover:text-black transition-all cursor-pointer"
-          >
-            {languageState
-              ? "Terms of Service"
-              : "Condiciones del Servicio"}
-          </Link>
+
+        {/* Services column */}
+        <div className="flex flex-col gap-3">
+          <span className="text-white text-xs font-light tracking-widest uppercase">
+            {languageState ? col.services.title.en : col.services.title.es}
+          </span>
+          {col.services.items.map((item, i) => (
+            <Link key={i} to={item.path} className="text-gray-500 hover:text-white transition-colors text-xs">
+              {languageState ? item.en : item.es}
+            </Link>
+          ))}
+        </div>
+
+        {/* Company column */}
+        <div className="flex flex-col gap-3">
+          <span className="text-white text-xs font-light tracking-widest uppercase">
+            {languageState ? col.company.title.en : col.company.title.es}
+          </span>
+          {col.company.items.map((item, i) => (
+            <Link key={i} to={item.path} className="text-gray-500 hover:text-white transition-colors text-xs">
+              {languageState ? item.en : item.es}
+            </Link>
+          ))}
+        </div>
+
+        {/* Help & Support column */}
+        <div className="flex flex-col gap-3">
+          <span className="text-white text-xs font-light tracking-widest uppercase">
+            {languageState ? col.help.title.en : col.help.title.es}
+          </span>
+          {col.help.links.map((item, i) => (
+            <Link key={i} to={item.path} className="text-gray-500 hover:text-white transition-colors text-xs">
+              {languageState ? item.en : item.es}
+            </Link>
+          ))}
+          {col.help.actions.map((item, i) => (
+            <button
+              key={i}
+              onClick={item.action}
+              className="text-gray-500 hover:text-white transition-colors text-xs text-left cursor-pointer"
+            >
+              {languageState ? item.en : item.es}
+            </button>
+          ))}
+        </div>
+
+        {/* Legal column */}
+        <div className="flex flex-col gap-3">
+          <span className="text-white text-xs font-light tracking-widest uppercase">
+            {languageState ? col.legal.title.en : col.legal.title.es}
+          </span>
+          {col.legal.items.map((item, i) => (
+            <Link key={i} to={item.path} className="text-gray-500 hover:text-white transition-colors text-xs">
+              {languageState ? item.en : item.es}
+            </Link>
+          ))}
+        </div>
+
+      </div>
+
+      {/* Bottom bar */}
+      <div className="border-t border-[#10dffd]/10 w-full">
+        <div className="max-w-6xl mx-auto px-6 md:px-10 py-5 flex flex-col md:flex-row md:justify-between items-center gap-2 text-xs font-light text-gray-600">
+          <span>Isaías 43:19</span>
+          <span>
+            © 2026 RIANODEV S.A.S.{" "}
+            {languageState ? "All rights reserved." : "Todos los derechos reservados."}
+          </span>
+          <span>
+            {languageState ? "Made with React & Vite" : "Hecho con React & Vite"}
+          </span>
         </div>
       </div>
     </div>
@@ -119,4 +179,3 @@ const Footer = ({ languageState }: Props) => {
 };
 
 export default Footer;
-

@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  Bars3Icon,
-  UserCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/solid";
+import { Link, useLocation } from "react-router-dom";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import isotipoBlack from "../assets/IsotipoNoBgBlack.png";
+import isotipoWhite from "../assets/IsotipoNoBgWhite.png";
 import Logo_GitHub_nav from "./Logos_comp/Logo_GitHub copy";
 interface Props {
   languageState: boolean;
@@ -13,7 +11,6 @@ interface Props {
 }
 function Header({ languageState, scrollRef, setLanguageState }: Props) {
   const [scrolled, setScrolled] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -28,32 +25,9 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
     return () => element.removeEventListener("scroll", handleScroll);
   }, [scrollRef]);
 
-  const scrollToSelection = (id: string) => {
-    if (location.pathname !== "/") {
-      navigate("/");
-      // Wait for navigation and then scroll
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        const container = scrollRef.current;
-        if (element && container) {
-          const offset = id === "resume" ? element.offsetTop - 60 : element.offsetTop - 130;
-          container.scrollTo({ top: offset, behavior: "smooth" });
-        }
-      }, 100);
-    } else {
-      const element = document.getElementById(id);
-      const container = scrollRef.current;
+  const isHome = location.pathname === "/";
+  const showNav = scrolled || !isHome;
 
-      if (element && container) {
-        const offset =
-          id === "resume" ? element.offsetTop - 60 : element.offsetTop - 130;
-        container.scrollTo({
-          top: offset,
-          behavior: "smooth",
-        });
-      }
-    }
-  };
   const [isOpen, setisOpen] = useState(false);
   const toggleNavbar = () => {
     setisOpen(!isOpen);
@@ -64,80 +38,78 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
   const [isHover, setisHover] = useState(false);
 
   const headerContent = {
-    name: "Juan Jose Riaño",
+    name: "rianodev",
     title: {
-      en: "</Innovation Engineer & Technology Consultant>",
-      es: "</Ingeniero en Innovación y Consultor Tecnológico>",
+      en: "Innovation Architect & Digital Transformation",
+      es: "Arquitecto de Innovación y Transformación Digital",
     },
     menuItems: [
-      { id: "home", en: "</Home>", es: "</Inicio>" },
-      { id: "about_me", en: "</About me>", es: "</Sobre mí>" },
-      { id: "resume", en: "</Resume>", es: "</Currículum>" },
-      { id: "projects", en: "</Projects>", es: "</Proyectos>" },
-      { id: "services", en: "</Services>", es: "</Servicios>" },
+      { path: "/", en: "Home", es: "Inicio" },
+      { path: "/servicios", en: "Services", es: "Servicios" },
+      { path: "/clientes", en: "Case Studies", es: "Casos de Uso" },
+      { path: "/sobre", en: "About", es: "Sobre" },
+      { path: "/portal", en: "Client Portal", es: "Portal" },
     ],
   };
   return (
     <header
-      className="sticky top-0 transform transform-all border-b-2 border-gray-300 
-                 flex w-49/50 mx-auto z-50 justify-between  items-center
-                 bg-[#F2F2F2] transition-all duration-500 h-15 flex-wrap"
+      className="sticky top-0 border-b border-[#10dffd]/20
+                 flex w-full z-50 justify-between items-center
+                 bg-white dark:bg-black transition-all duration-500 h-20 flex-wrap"
     >
       <div
-        className={`absolute top-2.5 left-0 md:flex flex justify-between px-10 
+        className={`absolute inset-0 md:flex flex justify-between px-10
                 w-full items-center transition-all duration-500 ease-in-out
-                    ${scrolled
+                    ${showNav
             ? "opacity-0 -translate-y-10 pointer-events-none"
             : " opacity-100 translate-x-0"
           }
                     `}
       >
         <Link to="/" className="flex items-center gap-5 cursor-pointer">
-          <UserCircleIcon className="w-10" />
+          <img src={isotipoBlack} alt="RianoDev" className="w-10 dark:hidden" />
+          <img src={isotipoWhite} alt="RianoDev" className="w-10 hidden dark:block" />
           <div className="md:flex flex-col justify center">
-            <span className="md:text-3xl text-xl text-gray-500 ">
-              {headerContent.name}
+            <span className="md:text-3xl text-xl text-gray-400">
             </span>
-            <span className="md:hidden flex text-[9px]">
+            <span className="md:hidden flex text-[9px] text-white">
               {languageState ? headerContent.title.en : headerContent.title.es}
             </span>
           </div>
         </Link>
-        <span className="text-xs md:flex hidden">
+        <span className="text-xs md:flex hidden text-white">
           {languageState ? headerContent.title.en : headerContent.title.es}
         </span>
       </div>
 
       <div
-        className={`absolute top-2.5 left-0 transition-all px-10 
+        className={`absolute inset-0 transition-all px-10
                                 duration-500 ease-in-out flex justify-between w-full items-center
-                                bg-[#F2F2F2] border-b-2 border-gray-300 flex-wrap pt-1
-                                    ${scrolled
+                                bg-white dark:bg-black border-b border-[#10dffd]/20 flex-wrap
+                                    ${showNav
             ? " opacity-100 translate-x-0"
             : "opacity-0 -translate-y-10 pointer-events-none"
           }
                                 `}
       >
         <div className="w-4/10 ">
-          <div className="md:flex hidden text-sm justify-between ">
-            <>
-              {headerContent.menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSelection(item.id)}
-                  className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer mb-2 bg-transparent border-none p-0 font-display"
-                >
-                  {languageState ? item.en : item.es}
-                  <span
-                    className="absolute -bottom-0 left-0 w-0 h-0.5 
-                             bg-gray-500 group-hover:w-full transition-all "
-                  ></span>
-                </button>
-              ))}
-            </>
+          <div className="md:flex hidden text-sm justify-between gap-6">
+            {headerContent.menuItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="relative group transition-transform duration-300
+                      ease-in-out cursor-pointer mb-2 font-display text-white"
+              >
+                {languageState ? item.en : item.es}
+                <span
+                  className="absolute -bottom-0 left-0 w-0 h-0.5
+                           bg-[#10dffd] group-hover:w-full transition-all"
+                ></span>
+              </Link>
+            ))}
           </div>
-          <button onClick={toggleNavbar} className="w-full md:hidden flex ">
+          <button onClick={toggleNavbar} className="w-full md:hidden flex text-white">
             {isOpen ? (
               <XMarkIcon className="w-10 cursor-pointer" />
             ) : (
@@ -146,12 +118,12 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
           </button>
         </div>
         <div className="w-6/10 flex justify-end mb-1">
-          <div className="w-50 fill-black flex justify-end gap-5">
+          <div className="w-50 text-white flex justify-end gap-5 items-center">
             <div className="w-10">
               <Logo_GitHub_nav />
             </div>
             <button
-              className="w-5 cursor-pointer border-none bg-transparent"
+              className="w-5 cursor-pointer border-none bg-transparent text-white"
               onClick={() => {
                 changeLanguage();
                 setisHover(false);
@@ -160,13 +132,13 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
               onMouseLeave={() => setisHover(false)}
             >
               <span
-                className={`absolute top-3 transition-all duration-500 ease-in-out font-bold ${isHover ? "translate-x-7 opacity-0" : "translate-x-0"
+                className={`absolute top-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out  ${isHover ? "translate-x-7 opacity-0" : "translate-x-0"
                   }`}
               >
                 {languageState ? "eng" : "esp"}
               </span>
               <span
-                className={`absolute top-3 transition-all duration-500 ease-in-out ${isHover ? "translate-x-0" : "-translate-x-7 opacity-0"
+                className={`absolute top-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out ${isHover ? "translate-x-0" : "-translate-x-7 opacity-0"
                   }`}
               >
                 {languageState ? "esp" : "eng"}
@@ -176,25 +148,21 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
         </div>
         {isOpen && (
           <div className="flex flex-col justify-center text-sm w-full items-center py-10">
-            <>
-              {headerContent.menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    scrollToSelection(item.id);
-                    setisOpen(false);
-                  }}
-                  className="relative group transition-transform duration-300 
-                        ease-in-out cursor-pointer mb-2 bg-transparent border-none p-0 font-display"
-                >
-                  {languageState ? item.en : item.es}
-                  <span
-                    className="absolute -bottom-0 left-0 w-0 h-0.5 
-                             bg-gray-500 group-hover:w-full transition-all "
-                  ></span>
-                </button>
-              ))}
-            </>
+            {headerContent.menuItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setisOpen(false)}
+                className="relative group transition-transform duration-300
+                      ease-in-out cursor-pointer mb-4 font-display text-white"
+              >
+                {languageState ? item.en : item.es}
+                <span
+                  className="absolute -bottom-0 left-0 w-0 h-0.5
+                           bg-[#10dffd] group-hover:w-full transition-all"
+                ></span>
+              </Link>
+            ))}
           </div>
         )}
       </div>
