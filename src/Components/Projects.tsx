@@ -221,11 +221,11 @@ const Projects = ({ languageState }: Props) => {
               </p>
             </div>
 
-            <div className="mt-8 flex items-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Link
                   to="/servicios"
-                  className="text-xs tracking-widest uppercase font-light text-black bg-[#10dffd] px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity"
+                  className="text-xs tracking-widest uppercase font-light text-black bg-[#10dffd] px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity block text-center"
                 >
                   {l ? "View implementation" : "Ver implementación"}
                 </Link>
@@ -233,7 +233,7 @@ const Projects = ({ languageState }: Props) => {
               <motion.div whileHover={{ scale: 1.04, x: 2 }} whileTap={{ scale: 0.97 }}>
                 <Link
                   to="/schedule"
-                  className="text-xs tracking-widest uppercase font-light text-white/50 hover:text-white border border-white/10 hover:border-white/30 px-6 py-2.5 rounded-full transition-all"
+                  className="text-xs tracking-widest uppercase font-light text-white/50 hover:text-white border border-white/10 hover:border-white/30 px-6 py-2.5 rounded-full transition-all block text-center"
                 >
                   {l ? "Start a conversation" : "Iniciar conversación"}
                 </Link>

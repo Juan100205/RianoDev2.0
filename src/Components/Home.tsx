@@ -126,12 +126,12 @@ const Home = ({ languageState }: Props) => {
 
             <motion.div variants={fadeUp} className="mt-2 flex gap-3 flex-wrap">
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/servicios" className="font-display text-black bg-[#10dffd] text-sm tracking-widest uppercase hover:opacity-90 transition-all duration-300 px-7 py-3 rounded-full cursor-pointer">
+                <Link to="/servicios" className="font-display text-black bg-[#10dffd] text-sm tracking-widest uppercase hover:opacity-90 transition-all duration-300 px-7 py-3 rounded-full cursor-pointer block text-center">
                   {content.cta}
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/schedule" className="font-display text-white text-sm tracking-widest uppercase border border-white/40 hover:border-white/80 hover:bg-white/5 transition-all duration-300 px-7 py-3 rounded-full cursor-pointer">
+                <Link to="/schedule" className="font-display text-white text-sm tracking-widest uppercase border border-white/40 hover:border-white/80 hover:bg-white/5 transition-all duration-300 px-7 py-3 rounded-full cursor-pointer block text-center">
                   {content.ctaSecondary}
                 </Link>
               </motion.div>

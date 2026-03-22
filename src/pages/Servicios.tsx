@@ -148,7 +148,7 @@ const Servicios = ({ languageState, setLanguageState, scrollRef }: Props) => {
     <>
       <Header scrollRef={scrollRef} languageState={languageState} setLanguageState={setLanguageState} />
       <div ref={scrollRef} className="page_scroll scrollbar_exp">
-      <div className="w-[88%] mx-auto py-20">
+      <div className="w-[92%] md:w-[88%] mx-auto py-20">
 
         {/* Page header */}
         <div className="flex items-center gap-3 mb-4">
