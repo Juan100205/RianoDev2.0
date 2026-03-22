@@ -383,7 +383,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
             {/* Stats */}
             <motion.div
-              className="grid grid-cols-3 gap-4 mb-8"
+              className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8"
               variants={contentStagger}
               initial="hidden"
               animate="show"

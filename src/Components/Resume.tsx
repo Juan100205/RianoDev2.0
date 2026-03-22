@@ -104,12 +104,12 @@ const experiences = [
 ];
 
   return (
-    <div className="w-[98%] flex md:flex-row flex-col mx-auto border-b-2 border-[#10dffd]/20 pl-8 md:px-35">
-      <div className="md:w-3/7 w-full pt-10 md:border-r-2 border-[#10dffd]/20 h-170 md:pr-0 pr-2">
+    <div className="w-[98%] flex md:flex-row flex-col mx-auto border-b-2 border-[#10dffd]/20 px-4 md:px-20">
+      <div className="md:w-3/7 w-full pt-10 md:border-r-2 border-[#10dffd]/20 md:h-170 md:pr-0 pr-2">
         <h1 className="text-xl md:text-3xl md:text-start text-center font-light text-white">
           {languageState ? "Professional Journey" : "Trayectoria Profesional"}
         </h1>
-        <div className="md:mt-10 mt-5 overflow-y-auto pt-10 h-140 scrollbar_exp md:pr-20 transition-all">
+        <div className="md:mt-10 mt-5 overflow-y-auto pt-10 md:h-140 h-auto scrollbar_exp md:pr-20 transition-all">
           {experiences.map((exp, index) => (
   <Experience
     key={index}
@@ -169,7 +169,7 @@ const experiences = [
             {languageState ? resume[3].en:resume[3].es}
           </h1>
           <div className="text-xs md:text-sm">
-            <div className="flex gap-5 mt-5">
+            <div className="flex flex-wrap gap-5 mt-5">
               <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
                 {languageState ? resume[4].en:resume[4].es}
               </span>
@@ -182,7 +182,7 @@ const experiences = [
                 {languageState ? resume[6].en:resume[6].es}
               </span>
             </div>
-            <div className="flex gap-5 mt-4">
+            <div className="flex flex-wrap gap-5 mt-4">
               <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">
                 {languageState ? resume[7].en:resume[7].es}
               </span>

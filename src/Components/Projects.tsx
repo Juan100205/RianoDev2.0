@@ -142,7 +142,7 @@ const Projects = ({ languageState }: Props) => {
   const l = languageState;
 
   return (
-    <div className="w-[70%] mx-auto py-10">
+    <div className="w-[90%] md:w-[70%] mx-auto py-10">
 
       <motion.div
         className="flex items-center gap-3 mb-12"

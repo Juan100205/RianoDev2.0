@@ -15,13 +15,15 @@ import FAQ from "./pages/FAQ";
 import Schedule from "./pages/Schedule";
 import Quote from "./pages/Quote";
 
+const fadeStyle = { willChange: "opacity" } as const;
+
 const Fade = ({ children }: { children: React.ReactNode }) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.22, ease: "easeInOut" }}
-    style={{ willChange: "opacity" }}
+    style={fadeStyle}
   >
     {children}
   </motion.div>
