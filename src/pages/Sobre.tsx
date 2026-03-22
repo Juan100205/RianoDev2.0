@@ -15,10 +15,10 @@ interface Props {
 
 const Sobre = ({ languageState, setLanguageState, scrollRef }: Props) => {
   const content = {
-    tag: { en: "About RIANODEV", es: "Sobre RIANODEV" },
+    tag: { en: "About RIANODEVZ", es: "Sobre RIANODEVZ" },
     intro: {
-      en: "RIANODEV is a team focused on building digital systems that integrate web, automation and data. Led by Juan José Riaño, we combine engineering, development and emerging technologies to build solutions that actually work in practice.",
-      es: "RIANODEV es un equipo enfocado en el desarrollo de sistemas digitales que integran web, automatización y datos. Liderado por Juan José Riaño, combinamos ingeniería, desarrollo y tecnologías emergentes para construir soluciones que funcionan en la práctica.",
+      en: "RIANODEVZ is a team focused on building digital systems that integrate web, automation and data. Led by Juan José Riaño, we combine engineering, development and emerging technologies to build solutions that actually work in practice.",
+      es: "RIANODEVZ es un equipo enfocado en el desarrollo de sistemas digitales que integran web, automatización y datos. Liderado por Juan José Riaño, combinamos ingeniería, desarrollo y tecnologías emergentes para construir soluciones que funcionan en la práctica.",
     },
     positioning: {
       en: "We're the technical team that converts marketing strategies into functional, measurable and scalable digital systems.",
@@ -53,8 +53,8 @@ const Sobre = ({ languageState, setLanguageState, scrollRef }: Props) => {
       <div className="w-4/5 mx-auto py-20">
         <div className="flex items-center gap-3 mb-4">
           <span className="flex items-center gap-1">
-            <img src={LogoSinBgBlack} alt="RIANODEV" className="h-20 dark:hidden object-contain" />
-            <img src={LogoSinBgWhite} alt="RIANODEV" className="h-20 hidden dark:block object-contain" />
+            <img src={LogoSinBgBlack} alt="RIANODEVZ" className="h-20 dark:hidden object-contain" />
+            <img src={LogoSinBgWhite} alt="RIANODEVZ" className="h-20 hidden dark:block object-contain" />
             <span className="text-xs text-gray-400 dark:text-gray-500">S.A.S.</span>
           </span>
         </div>
@@ -69,7 +69,7 @@ const Sobre = ({ languageState, setLanguageState, scrollRef }: Props) => {
             <div className="relative z-10 p-6 flex h-full flex-col justify-between">
               <div>
                 <span className="flex items-center gap-1">
-                  <img src={LogoSinBgWhite} alt="RIANODEV" className="h-4 object-contain" />
+                  <img src={LogoSinBgWhite} alt="RIANODEVZ" className="h-4 object-contain" />
                   <span className="text-white text-sm">S.A.S.</span>
                 </span>
                 <span className="block font-light text-2xl text-[#10dffd]">Juan José Riaño</span>

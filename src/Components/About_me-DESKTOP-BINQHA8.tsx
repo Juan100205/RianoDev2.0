@@ -16,13 +16,13 @@ const About_me = ({ languageState }: Props) => {
       es: "</Arquitecto de Innovación y Transformación Digital>",
     },
 introduction: {
-  en: "RIANODEV partners with organizations to architect transformative solutions that scale impact and drive competitive advantage.",
-  es: "RIANODEV colabora con organizaciones para arquitectar soluciones transformadoras que escalen el impacto y generen ventaja competitiva.",
+  en: "RIANODEVZ partners with organizations to architect transformative solutions that scale impact and drive competitive advantage.",
+  es: "RIANODEVZ colabora con organizaciones para arquitectar soluciones transformadoras que escalen el impacto y generen ventaja competitiva.",
 },
 
     description: {
-      en: "With deep expertise in software engineering, mechanical systems, and emerging technologies, RIANODEV synthesizes technical excellence with strategic vision to architect scalable, impact-driven solutions. The firm's approach integrates innovation strategy, XR/AI integration, and digital transformation to unlock new value streams and competitive advantages for forward-thinking organizations.",
-      es: "Con experiencia profunda en ingeniería de software, sistemas mecánicos y tecnologías emergentes, RIANODEV sintetiza excelencia técnica con visión estratégica para arquitectar soluciones escalables orientadas al impacto. El enfoque de la firma integra estrategia de innovación, integración de XR/IA y transformación digital para desbloquear nuevas fuentes de valor y ventajas competitivas en organizaciones visionarias.",
+      en: "With deep expertise in software engineering, mechanical systems, and emerging technologies, RIANODEVZ synthesizes technical excellence with strategic vision to architect scalable, impact-driven solutions. The firm's approach integrates innovation strategy, XR/AI integration, and digital transformation to unlock new value streams and competitive advantages for forward-thinking organizations.",
+      es: "Con experiencia profunda en ingeniería de software, sistemas mecánicos y tecnologías emergentes, RIANODEVZ sintetiza excelencia técnica con visión estratégica para arquitectar soluciones escalables orientadas al impacto. El enfoque de la firma integra estrategia de innovación, integración de XR/IA y transformación digital para desbloquear nuevas fuentes de valor y ventajas competitivas en organizaciones visionarias.",
     },
     contactHeader: {
       en: "</Let’s connect>",
@@ -38,7 +38,7 @@ introduction: {
           <div>
             <span className="block text-white ">Hello World; We're</span>
             <span className="block font-light text-3xl text-[#10dffd]">
-              rianodev
+              rianodevz
             </span>
           </div>
           <span className="block w-4/5 text-white opacity-100 md:text-base text-sm">

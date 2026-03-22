@@ -1,5 +1,6 @@
 import type { RefObject } from "react";
 import { useState } from "react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   RssIcon,
   GlobeAltIcon,
@@ -176,7 +177,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
   const content = {
     tag: { en: "Client Portal", es: "Portal de Clientes" },
-    subtitle: { en: "Exclusive access for RIANODEV active clients.", es: "Acceso exclusivo para clientes activos de RIANODEV." },
+    subtitle: { en: "Exclusive access for RIANODEVZ active clients.", es: "Acceso exclusivo para clientes activos de RIANODEVZ." },
     emailLabel: { en: "Email", es: "Correo electrónico" },
     passwordLabel: { en: "Password", es: "Contraseña" },
     button: { en: "Sign in", es: "Ingresar" },
@@ -188,25 +189,67 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
     setIsLoggedIn(true);
   };
 
+  const loginStagger: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.14, delayChildren: 0.1 } },
+  };
+  const loginItem: Variants = {
+    hidden: { opacity: 0, y: 22 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+  };
+
+  const sidebarStagger: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } },
+  };
+  const sidebarItem: Variants = {
+    hidden: { opacity: 0, x: -14 },
+    show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+  };
+  const tabFade: Variants = {
+    hidden: { opacity: 0, y: 14 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.38, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: "easeIn" } },
+  };
+  const contentStagger: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+  };
+  const contentItem: Variants = {
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+  };
+
   if (!isLoggedIn) {
     return (
       <>
         <Header scrollRef={scrollRef} languageState={languageState} setLanguageState={setLanguageState} />
         <div ref={scrollRef} className="page_scroll scrollbar_exp flex items-center justify-center py-20">
-          <div className="w-full max-w-md mx-auto px-6">
-            <div className="flex flex-col items-center mb-10">
-              <div className="w-14 bg-[#10dffd]/10 text-[#10dffd] rounded-full outline-2 outline-[#10dffd] p-3 mb-6">
+          <motion.div
+            className="w-full max-w-md mx-auto px-6"
+            variants={loginStagger}
+            initial="hidden"
+            animate="show"
+          >
+            <motion.div variants={loginItem} className="flex flex-col items-center mb-10">
+              <motion.div
+                className="w-14 bg-[#10dffd]/10 text-[#10dffd] rounded-full outline-2 outline-[#10dffd] p-3 mb-6"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
+              >
                 <LockClosedIcon />
-              </div>
+              </motion.div>
               <h1 className="md:text-3xl text-2xl font-light text-white text-center mb-2">
                 {l ? content.tag.en : content.tag.es}
               </h1>
               <p className="text-gray-400 text-sm text-center">
                 {l ? content.subtitle.en : content.subtitle.es}
               </p>
-            </div>
+            </motion.div>
 
-            <form
+            <motion.form
+              variants={loginItem}
               onSubmit={handleLogin}
               className="border border-[#10dffd]/20 rounded-2xl p-8 bg-black flex flex-col gap-5"
             >
@@ -234,18 +277,20 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   className="border border-[#10dffd]/20 rounded-xl px-4 py-3 bg-transparent text-white text-sm outline-none focus:border-[#10dffd] transition-colors duration-200"
                 />
               </div>
-              <button
+              <motion.button
                 type="submit"
                 className="bg-[#10dffd] text-black font-light px-6 py-3 rounded-xl hover:opacity-90 transition-opacity mt-2 cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
               >
                 {l ? content.button.en : content.button.es}
-              </button>
-            </form>
+              </motion.button>
+            </motion.form>
 
-            <p className="text-center text-xs text-gray-500 mt-6">
+            <motion.p variants={loginItem} className="text-center text-xs text-gray-500 mt-6">
               {l ? content.help.en : content.help.es}
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
         </div>
       </>
     );
@@ -289,11 +334,18 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
             </div>
 
             {/* Posts */}
-            <div className="flex flex-col gap-3">
+            <motion.div
+              className="flex flex-col gap-3"
+              variants={contentStagger}
+              initial="hidden"
+              animate="show"
+            >
               {filteredPosts.map((post) => (
-                <div
+                <motion.div
                   key={post.id}
+                  variants={contentItem}
                   className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 flex items-center justify-between gap-4 bg-[#10dffd]/[0.01] cursor-pointer"
+                  whileHover={{ borderColor: "rgba(16,223,253,0.3)", x: 2 }}
                 >
                   <div className="flex flex-col gap-1.5 flex-1 min-w-0">
                     <span className="text-white text-sm font-light truncate">
@@ -313,9 +365,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                     </div>
                   </div>
                   <StatusBadge status={post.status} l={l} />
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         );
 
@@ -330,7 +382,12 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
+            <motion.div
+              className="grid grid-cols-3 gap-4 mb-8"
+              variants={contentStagger}
+              initial="hidden"
+              animate="show"
+            >
               {[
                 { label: { en: "Total flows", es: "Flujos totales" }, value: String(aiFlows.length) },
                 {
@@ -342,24 +399,32 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   value: aiFlows.reduce((a, f) => a + f.interactions, 0).toLocaleString(),
                 },
               ].map((stat) => (
-                <div
+                <motion.div
                   key={stat.label.en}
+                  variants={contentItem}
                   className="border border-[#10dffd]/15 rounded-xl p-4 bg-[#10dffd]/[0.02]"
                 >
                   <div className="text-[#10dffd] text-xl font-light">{stat.value}</div>
                   <div className="text-gray-500 text-[11px] mt-1">
                     {l ? stat.label.en : stat.label.es}
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             {/* Flow cards */}
-            <div className="grid md:grid-cols-2 gap-4">
+            <motion.div
+              className="grid md:grid-cols-2 gap-4"
+              variants={contentStagger}
+              initial="hidden"
+              animate="show"
+            >
               {aiFlows.map((flow) => (
-                <div
+                <motion.div
                   key={flow.id}
+                  variants={contentItem}
                   className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 bg-[#10dffd]/[0.01]"
+                  whileHover={{ borderColor: "rgba(16,223,253,0.3)" }}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
@@ -385,9 +450,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       {l ? flow.lastActive.en : flow.lastActive.es}
                     </span>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         );
 
@@ -401,11 +466,18 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               </h2>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <motion.div
+              className="flex flex-col gap-4"
+              variants={contentStagger}
+              initial="hidden"
+              animate="show"
+            >
               {webPages.map((page) => (
-                <div
+                <motion.div
                   key={page.id}
+                  variants={contentItem}
                   className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 bg-[#10dffd]/[0.01]"
+                  whileHover={{ borderColor: "rgba(16,223,253,0.3)" }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -444,9 +516,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         );
 
@@ -480,10 +552,15 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <motion.tbody
+                  variants={contentStagger}
+                  initial="hidden"
+                  animate="show"
+                >
                   {domainsList.map((d) => (
-                    <tr
+                    <motion.tr
                       key={d.id}
+                      variants={contentItem}
                       className="border-b border-[#10dffd]/5 hover:bg-[#10dffd]/[0.02] transition-colors"
                     >
                       <td className="py-4 pr-8 text-white font-light">{d.domain}</td>
@@ -503,9 +580,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                           <ArrowPathIcon className="w-4 h-4 text-gray-600" />
                         )}
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
-                </tbody>
+                </motion.tbody>
               </table>
             </div>
           </div>
@@ -521,11 +598,18 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               </h2>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <motion.div
+              className="flex flex-col gap-3"
+              variants={contentStagger}
+              initial="hidden"
+              animate="show"
+            >
               {automations.map((auto) => (
-                <div
+                <motion.div
                   key={auto.id}
+                  variants={contentItem}
                   className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 flex items-center justify-between gap-4 bg-[#10dffd]/[0.01]"
+                  whileHover={{ borderColor: "rgba(16,223,253,0.3)", x: 2 }}
                 >
                   <div className="flex items-center gap-4 flex-1 min-w-0">
                     <div
@@ -546,9 +630,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                     </div>
                   </div>
                   <StatusBadge status={auto.status} l={l} />
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         );
 
@@ -570,27 +654,37 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <motion.div
+              className="flex flex-col gap-4"
+              variants={contentStagger}
+              initial="hidden"
+              animate="show"
+            >
               {[
                 { label: { en: "Display name", es: "Nombre" }, value: displayName, type: "text" },
                 { label: { en: "Email", es: "Correo electrónico" }, value: email, type: "email" },
                 { label: { en: "Company", es: "Empresa" }, value: "", type: "text" },
                 { label: { en: "Phone", es: "Teléfono" }, value: "", type: "tel" },
               ].map((field) => (
-                <div key={field.label.en} className="flex flex-col gap-1.5">
+                <motion.div key={field.label.en} variants={contentItem} className="flex flex-col gap-1.5">
                   <label className="text-[11px] text-gray-500">{l ? field.label.en : field.label.es}</label>
                   <input
                     type={field.type}
                     defaultValue={field.value}
                     className="border border-[#10dffd]/15 rounded-xl px-4 py-2.5 bg-transparent text-white text-sm outline-none focus:border-[#10dffd] transition-colors"
                   />
-                </div>
+                </motion.div>
               ))}
 
-              <button className="mt-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity cursor-pointer w-fit">
+              <motion.button
+                variants={contentItem}
+                className="mt-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity cursor-pointer w-fit"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+              >
                 {l ? "Save changes" : "Guardar cambios"}
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           </div>
         );
       }
@@ -676,17 +770,21 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
     const Icon = tab.icon;
     const active = activeTab === tab.id;
     return (
-      <button
+      <motion.button
+        variants={sidebarItem}
         onClick={() => setActiveTab(tab.id)}
         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-light transition-all text-left w-full cursor-pointer border ${
           active
             ? "bg-[#10dffd]/10 text-[#10dffd] border-[#10dffd]/20"
             : "text-gray-500 hover:text-gray-300 hover:bg-white/5 border-transparent"
         }`}
+        whileHover={{ x: 3 }}
+        whileTap={{ scale: 0.97 }}
+        transition={{ duration: 0.15 }}
       >
         <Icon className="w-4 h-4 flex-shrink-0" />
         {l ? tab.label.en : tab.label.es}
-      </button>
+      </motion.button>
     );
   };
 
@@ -694,22 +792,29 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
     <div className="flex flex-col bg-black" style={{ height: "100vh", overflow: "hidden" }}>
 
       {/* Dashboard top bar */}
-      <header className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/15 flex-shrink-0">
+      <motion.header
+        className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/15 flex-shrink-0"
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+      >
         <div className="flex items-center gap-3">
-          <img src={IsotipoWhite} alt="RIANODEV" className="h-8 w-8 object-contain hidden dark:block" />
-          <img src={IsotipoBlack} alt="RIANODEV" className="h-8 w-8 object-contain dark:hidden" />
+          <img src={IsotipoWhite} alt="RIANODEVZ" className="h-8 w-8 object-contain hidden dark:block" />
+          <img src={IsotipoBlack} alt="RIANODEVZ" className="h-8 w-8 object-contain dark:hidden" />
           <span className="text-[10px] text-[#10dffd]/60 tracking-[0.2em] uppercase hidden sm:block">
             {l ? "Client Portal" : "Portal de Clientes"}
           </span>
         </div>
-        <button
+        <motion.button
           onClick={() => setIsLoggedIn(false)}
           className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/25 text-gray-500 hover:text-gray-300 transition-all cursor-pointer"
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
         >
           <ArrowLeftStartOnRectangleIcon className="w-4 h-4" />
           <span className="text-xs font-light hidden sm:block">{l ? "Log out" : "Salir"}</span>
-        </button>
-      </header>
+        </motion.button>
+      </motion.header>
 
       <div
         ref={scrollRef}
@@ -717,12 +822,22 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
       >
         {/* Desktop sidebar */}
         <aside className="hidden md:flex flex-col w-56 border-r border-[#10dffd]/15 flex-shrink-0">
-          <nav className="flex flex-col gap-1 p-2 flex-1">
+          <motion.nav
+            className="flex flex-col gap-1 p-2 flex-1"
+            variants={sidebarStagger}
+            initial="hidden"
+            animate="show"
+          >
             {mainTabs.map((tab) => <SidebarBtn key={tab.id} tab={tab} />)}
-          </nav>
-          <div className="border-t border-[#10dffd]/10 p-2 flex flex-col gap-1">
+          </motion.nav>
+          <motion.div
+            className="border-t border-[#10dffd]/10 p-2 flex flex-col gap-1"
+            variants={sidebarStagger}
+            initial="hidden"
+            animate="show"
+          >
             {accountTabs.map((tab) => <SidebarBtn key={tab.id} tab={tab} />)}
-          </div>
+          </motion.div>
         </aside>
 
         {/* Right panel: mobile tab bar + content */}
@@ -752,9 +867,18 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
           {/* Tab content */}
           <main className="flex-1 overflow-y-auto scrollbar_exp">
-            <div className="p-6 md:p-10 max-w-4xl">
-              {renderContent()}
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                variants={tabFade}
+                initial="hidden"
+                animate="show"
+                exit="exit"
+                className="p-6 md:p-10 max-w-4xl"
+              >
+                {renderContent()}
+              </motion.div>
+            </AnimatePresence>
           </main>
         </div>
       </div>

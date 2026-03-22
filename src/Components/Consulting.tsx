@@ -5,7 +5,7 @@ import {
   BoltIcon,
   ArrowTrendingUpIcon,
 } from "@heroicons/react/24/solid";
-import type { JSX } from "react/jsx-dev-runtime";
+import type { JSX } from "react";
 
 interface Card {
   step: string;

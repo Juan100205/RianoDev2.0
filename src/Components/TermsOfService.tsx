@@ -39,8 +39,8 @@ const TermsOfService = ({ languageState, setLanguageState, scrollRef }: TermsOfS
             {
                 title: { en: "4. Limitation of Liability", es: "4. Limitación de Responsabilidad" },
                 text: {
-                    en: "Information on this site is provided 'as is'. RIANODEV is not liable for any damages arising from the use or inability to use the information or services described on this site.",
-                    es: "La información en este sitio se proporciona 'tal cual'. RIANODEV no se hace responsable de ningún daño derivado del uso o la imposibilidad de usar la información o los servicios descritos en este sitio.",
+                    en: "Information on this site is provided 'as is'. RIANODEVZ is not liable for any damages arising from the use or inability to use the information or services described on this site.",
+                    es: "La información en este sitio se proporciona 'tal cual'. RIANODEVZ no se hace responsable de ningún daño derivado del uso o la imposibilidad de usar la información o los servicios descritos en este sitio.",
                 },
             },
         ],

@@ -13,7 +13,7 @@ interface Props {
 
 const faqs = [
   {
-    q: { en: "What exactly does RIANODEV do?", es: "¿Qué hace exactamente RIANODEV?" },
+    q: { en: "What exactly does RIANODEVZ do?", es: "¿Qué hace exactamente RIANODEVZ?" },
     a: {
       en: "We design and implement digital systems that integrate web development, automation and data tracking. We work with marketing agencies and companies that need a reliable technical partner to build functional, scalable infrastructure.",
       es: "Diseñamos e implementamos sistemas digitales que integran desarrollo web, automatización y tracking de datos. Trabajamos con agencias de marketing y empresas que necesitan un socio técnico confiable para construir infraestructura funcional y escalable.",

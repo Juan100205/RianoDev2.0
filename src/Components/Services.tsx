@@ -4,10 +4,33 @@ import {
   ChartBarIcon,
   GlobeAltIcon,
 } from "@heroicons/react/24/solid";
+import { motion, type Variants } from "framer-motion";
 
 interface Props {
   languageState: boolean;
 }
+
+const ease = [0.25, 0.46, 0.45, 0.94] as const;
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.75, ease } },
+};
+
+const cardStagger: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.18, delayChildren: 0.2 } },
+};
+
+const tagStagger: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.25 } },
+};
+
+const tagItem: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+};
 
 const Services = ({ languageState }: Props) => {
   const serviceCards = [
@@ -62,31 +85,56 @@ const Services = ({ languageState }: Props) => {
     { en: "#Analytics", es: "#Analítica" },
   ];
 
+  const desktopRows = [
+    [0, 1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+  ];
+
+  const mobileRows = [[0, 6], [3, 9], [7, 8], [4], [1], [2], [5]];
+
   return (
-    <div className="relative w-[80%] mx-auto text-center overflow-x-hidden pt-50">
+    <div className="relative w-[80%] mx-auto text-center pt-50">
       <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-[#10dffd] opacity-[0.06] blur-[120px] pointer-events-none" aria-hidden="true" />
-      <div>
+
+      {/* Header */}
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-60px" }}
+      >
         <div className="md:w-20 w-15 bg-[#10dffd]/10 text-[#10dffd] rounded-full outline-2 outline-[#10dffd]/40 mx-auto p-3">
           <GlobeAltIcon />
         </div>
         <h1 className="md:text-3xl text-xl font-light text-center mt-5 text-white">
           {languageState ? "System components" : "Componentes del sistema"}
         </h1>
-
         <p className="text-gray-400 text-center mt-15 md:px-40 md:text-base text-sm">
           {languageState
             ? "Three technical layers that work as a single system. Each one handles a specific function — together they form the operational infrastructure."
             : "Tres capas técnicas que funcionan como un solo sistema. Cada una resuelve una función específica — juntas forman la infraestructura operativa."}
         </p>
-      </div>
+      </motion.div>
 
-      <div className="flex md:flex-row flex-col md:w-full justify-center gap-5 mt-20 text-gray-400">
+      {/* Cards */}
+      <motion.div
+        className="flex md:flex-row flex-col md:w-full justify-center gap-5 mt-20 text-gray-400"
+        variants={cardStagger}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-40px" }}
+      >
         {serviceCards.map((card, i) => (
-          <div
+          <motion.div
             key={i}
-            className="md:h-auto h-auto md:w-80 w-70 mx-auto outline-1 outline-[#10dffd]/25 hover:outline-[#10dffd]/70 transition-all rounded-2xl flex flex-col justify-start items-center pt-8 pb-8 px-6 gap-4"
+            variants={fadeUp}
+            whileHover={{ scale: 1.03, y: -4, transition: { duration: 0.2 } }}
+            className="md:h-auto h-auto md:w-80 w-70 mx-auto outline-1 outline-[#10dffd]/25 hover:outline-[#10dffd]/70 transition-colors rounded-2xl flex flex-col justify-start items-center pt-8 pb-8 px-6 gap-4 cursor-default"
           >
-            {card.icon}
+            <motion.div whileHover={{ scale: 1.1, rotate: 3 }} transition={{ duration: 0.2 }}>
+              {card.icon}
+            </motion.div>
             <span className="text-white text-sm font-light">
               {languageState ? card.en.title : card.es.title}
             </span>
@@ -100,55 +148,56 @@ const Services = ({ languageState }: Props) => {
                 </span>
               ))}
             </div>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Hashtags desktop */}
+      <motion.div
+        className="text-sm md:flex flex-col hidden mt-15"
+        variants={tagStagger}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-40px" }}
+      >
+        {desktopRows.map((row, ri) => (
+          <div key={ri} className={`flex gap-5 justify-center ${ri > 0 ? "mt-4" : "mt-5"}`}>
+            {row.map((idx, ci) => (
+              <motion.span
+                key={idx}
+                variants={tagItem}
+                whileHover={{ scale: 1.07 }}
+                className={`rounded-full p-2 px-3 cursor-default ${(ri + ci) % 2 === 0 ? "bg-[#10dffd] text-white" : "bg-[#10dffd]/10 text-[#10dffd]"}`}
+              >
+                {languageState ? hashtagList[idx].en : hashtagList[idx].es}
+              </motion.span>
+            ))}
           </div>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="text-sm md:flex flex-col hidden mt-15">
-        <div className="flex gap-5 mt-5 justify-center">
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[0].en : hashtagList[0].es}</span>
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[1].en : hashtagList[1].es}</span>
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[2].en : hashtagList[2].es}</span>
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[3].en : hashtagList[3].es}</span>
-        </div>
-        <div className="mt-4 flex gap-5 justify-center">
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[4].en : hashtagList[4].es}</span>
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[5].en : hashtagList[5].es}</span>
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[6].en : hashtagList[6].es}</span>
-        </div>
-        <div className="flex gap-5 justify-center mt-4">
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[7].en : hashtagList[7].es}</span>
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[8].en : hashtagList[8].es}</span>
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[9].en : hashtagList[9].es}</span>
-        </div>
-      </div>
-
-      <div className="text-xs md:hidden flex-col flex mt-15">
-        <div className="flex gap-5 mt-5 justify-center">
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[0].en : hashtagList[0].es}</span>
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[6].en : hashtagList[6].es}</span>
-        </div>
-        <div className="mt-2 flex gap-3 justify-center">
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[3].en : hashtagList[3].es}</span>
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[9].en : hashtagList[9].es}</span>
-        </div>
-        <div className="flex gap-5 mt-2 justify-center">
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[7].en : hashtagList[7].es}</span>
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[8].en : hashtagList[8].es}</span>
-        </div>
-        <div className="flex gap-5 justify-center mt-2">
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[4].en : hashtagList[4].es}</span>
-        </div>
-        <div className="flex gap-5 mt-2 justify-center">
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[1].en : hashtagList[1].es}</span>
-        </div>
-        <div className="flex gap-5 mt-2 justify-center">
-          <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">{languageState ? hashtagList[2].en : hashtagList[2].es}</span>
-        </div>
-        <div className="flex gap-5 mt-2 justify-center">
-          <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">{languageState ? hashtagList[5].en : hashtagList[5].es}</span>
-        </div>
-      </div>
+      {/* Hashtags mobile */}
+      <motion.div
+        className="text-xs md:hidden flex-col flex mt-15"
+        variants={tagStagger}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+      >
+        {mobileRows.map((row, ri) => (
+          <div key={ri} className={`flex gap-5 justify-center ${ri > 0 ? "mt-2" : "mt-5"}`}>
+            {row.map((idx, ci) => (
+              <motion.span
+                key={idx}
+                variants={tagItem}
+                className={`rounded-full p-2 px-3 ${(ri + ci) % 2 === 0 ? "bg-[#10dffd] text-white" : "bg-[#10dffd]/10 text-[#10dffd]"}`}
+              >
+                {languageState ? hashtagList[idx].en : hashtagList[idx].es}
+              </motion.span>
+            ))}
+          </div>
+        ))}
+      </motion.div>
     </div>
   );
 };

@@ -18,8 +18,8 @@ const PrivacyPolicy = ({ languageState, setLanguageState, scrollRef }: PrivacyPo
             {
                 title: { en: "1. Data Collection", es: "1. Recolección de Datos" },
                 text: {
-                    en: "RIANODEV does not actively collect personal data from visitors. If you contact us via email or phone, that information will only be used to respond to your inquiry.",
-                    es: "RIANODEV no recolecta activamente datos personales de los visitantes. Si se pone en contacto con nosotros por correo electrónico o teléfono, esa información solo será utilizada para responder a su consulta.",
+                    en: "RIANODEVZ does not actively collect personal data from visitors. If you contact us via email or phone, that information will only be used to respond to your inquiry.",
+                    es: "RIANODEVZ no recolecta activamente datos personales de los visitantes. Si se pone en contacto con nosotros por correo electrónico o teléfono, esa información solo será utilizada para responder a su consulta.",
                 },
             },
             {
@@ -39,7 +39,7 @@ const PrivacyPolicy = ({ languageState, setLanguageState, scrollRef }: PrivacyPo
             {
                 title: { en: "4. Contact Information", es: "4. Información de Contacto" },
                 text: {
-                    en: "If you have any questions about this Privacy Policy, please contact RIANODEV at juanriza@rianodevz.net.",
+                    en: "If you have any questions about this Privacy Policy, please contact RIANODEVZ at juanriza@rianodevz.net.",
                     es: "Si tiene alguna pregunta sobre esta Política de Privacidad, por favor contáctenos en juanriza@rianodevz.net.",
                 },
             },
