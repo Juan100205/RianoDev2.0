@@ -73,7 +73,7 @@ const Footer = ({ languageState }: Props) => {
       </div>
 
       {/* Main footer columns */}
-      <div className="max-w-6xl mx-auto px-6 md:px-10 py-14 grid grid-cols-2 md:grid-cols-5 gap-10">
+      <div className="max-w-6xl mx-auto px-6 md:px-10 py-14 grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-10">
 
         {/* Brand column */}
         <div className="col-span-2 md:col-span-1 flex flex-col gap-3">

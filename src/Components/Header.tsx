@@ -58,7 +58,7 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
                  bg-white dark:bg-black transition-all duration-500 h-20 flex-wrap"
     >
       <div
-        className={`absolute inset-0 md:flex flex justify-between px-10
+        className={`absolute inset-0 md:flex flex justify-between px-4 md:px-10
                 w-full items-center transition-all duration-500 ease-in-out
                     ${showNav
             ? "opacity-0 -translate-y-10 pointer-events-none"
@@ -83,7 +83,7 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
       </div>
 
       <div
-        className={`absolute inset-0 transition-all px-10
+        className={`absolute inset-0 transition-all px-4 md:px-10
                                 duration-500 ease-in-out flex justify-between w-full items-center
                                 bg-white dark:bg-black border-b border-[#10dffd]/20 flex-wrap
                                     ${showNav
@@ -123,7 +123,7 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
               <Logo_GitHub_nav />
             </div>
             <button
-              className="w-5 cursor-pointer border-none bg-transparent text-white"
+              className="w-5 cursor-pointer border-none bg-transparent text-white relative overflow-hidden"
               onClick={() => {
                 changeLanguage();
                 setisHover(false);
@@ -147,7 +147,7 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
           </div>
         </div>
         {isOpen && (
-          <div className="flex flex-col justify-center text-sm w-full items-center py-10">
+          <div className="flex flex-col justify-center text-sm w-full items-center py-10 max-h-[60vh] overflow-y-auto">
             {headerContent.menuItems.map((item) => (
               <Link
                 key={item.path}

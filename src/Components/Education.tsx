@@ -172,7 +172,7 @@ const education_i18n = {
       <div className="relative rounded-full bg-yellow-300 w-4 h-4 left-15 top-2 button-popup hover:cursor-pointer hover:scale-110"></div>
       <div className="relative rounded-full bg-green-600 w-4 h-4 left-22 -top-2 button-popup hover:cursor-pointer hover:scale-110"></div>
 
-      <div className="py-5 flex-warp">
+      <div className="py-5">
         {education_i18n.items.map((edu, index) => (
           <Edu
             key={index}
@@ -191,8 +191,8 @@ const education_i18n = {
     <h1 className="text-xl md:text-3xl text-center font-light">
       {languageState ? "<Educación>" : "<Education>"}
     </h1>
-    <div className="w-full border-gray-300 h-170 pr-2">
-      <div className="mt-2 overflow-y-auto pt-10 h-140 scrollbar_exp pr-2 transition-all">
+    <div className="w-full border-gray-300 md:h-170 pr-2">
+      <div className="mt-2 overflow-y-auto pt-10 md:h-140 h-auto scrollbar_exp pr-2 transition-all">
         {education_i18n.items.map((edu, index) => (
           <Education_resp
             key={index}

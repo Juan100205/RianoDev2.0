@@ -69,14 +69,14 @@ const About_me = ({ languageState }: Props) => {
             <motion.div
               whileHover={{ scale: 1.06, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#10dffd]/10 text-white dark:text-white outline outline-1 outline-[#10dffd]/30 w-2/7 pr-[20%] pl-[1%] pt-[1%] rounded-xl cursor-pointer hover:opacity-80 transition-opacity"
+              className="bg-[#10dffd]/10 text-white dark:text-white outline outline-1 outline-[#10dffd]/30 w-2/7 p-3 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
             >
               <Logo_LinkedIn />
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.06, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#10dffd] text-white w-2/7 pr-[20%] pl-[1%] pt-[1%] rounded-xl cursor-pointer hover:opacity-80 transition-opacity"
+              className="bg-[#10dffd] text-white w-2/7 p-3 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
             >
               <EnvelopeIcon
                 className="hover:scale-110 cursor-pointer transition-all"
@@ -86,7 +86,7 @@ const About_me = ({ languageState }: Props) => {
             <motion.div
               whileHover={{ scale: 1.06, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#10dffd]/10 text-white outline outline-1 outline-[#10dffd]/30 w-2/7 pr-[20%] pl-[1%] pt-[1%] rounded-xl cursor-pointer hover:opacity-80 transition-opacity"
+              className="bg-[#10dffd]/10 text-white outline outline-1 outline-[#10dffd]/30 w-2/7 p-3 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
             >
               <Logo_wha />
             </motion.div>

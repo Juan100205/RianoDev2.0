@@ -94,7 +94,7 @@ const Services = ({ languageState }: Props) => {
   const mobileRows = [[0, 6], [3, 9], [7, 8], [4], [1], [2], [5]];
 
   return (
-    <div className="relative w-[80%] mx-auto text-center pt-50">
+    <div className="relative w-[92%] md:w-[80%] mx-auto text-center pt-20 md:pt-50">
       <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-[#10dffd] opacity-[0.06] blur-[120px] pointer-events-none" aria-hidden="true" />
 
       {/* Header */}
@@ -130,7 +130,7 @@ const Services = ({ languageState }: Props) => {
             key={i}
             variants={fadeUp}
             whileHover={{ scale: 1.03, y: -4, transition: { duration: 0.2 } }}
-            className="md:h-auto h-auto md:w-80 w-70 mx-auto outline-1 outline-[#10dffd]/25 hover:outline-[#10dffd]/70 transition-colors rounded-2xl flex flex-col justify-start items-center pt-8 pb-8 px-6 gap-4 cursor-default"
+            className="md:h-auto h-auto md:w-80 w-full mx-auto outline-1 outline-[#10dffd]/25 hover:outline-[#10dffd]/70 transition-colors rounded-2xl flex flex-col justify-start items-center pt-8 pb-8 px-6 gap-4 cursor-default"
           >
             <motion.div whileHover={{ scale: 1.1, rotate: 3 }} transition={{ duration: 0.2 }}>
               {card.icon}

@@ -13,7 +13,7 @@ interface Props {
 }
  function Project_card ({Index,Name,Description,Technologies,Image,link_project,link_live}:Props){
     return (
-        <div className="flex w-full mx-auto h-100 justify-between mt-20 scroll_snap_per_comp_project">
+        <div className="flex w-full mx-auto md:h-100 h-auto justify-between mt-20 scroll_snap_per_comp_project">
             <div className="w-3/7 md:flex hidden">
                 {Image}
             </div>
