@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-import type { JSX } from "react/jsx-dev-runtime";
+import type { JSX } from "react";
 import LogoSinBgBlack from "../assets/LogoSinBgBlack.png";
 import LogoSinBgWhite from "../assets/LogoSinBgWhite.png";
 import {
@@ -156,8 +156,8 @@ const Servicios = ({ languageState, setLanguageState, scrollRef }: Props) => {
             <GlobeAltIcon />
           </div>
           <span className="flex items-center gap-1">
-            <img src={LogoSinBgBlack} alt="RIANODEV" className="h-20 dark:hidden object-contain" />
-            <img src={LogoSinBgWhite} alt="RIANODEV" className="h-20 hidden dark:block object-contain" />
+            <img src={LogoSinBgBlack} alt="RIANODEVZ" className="h-20 dark:hidden object-contain" />
+            <img src={LogoSinBgWhite} alt="RIANODEVZ" className="h-20 hidden dark:block object-contain" />
             <span className="text-xs text-gray-400 dark:text-gray-500">S.A.S.</span>
           </span>
         </div>

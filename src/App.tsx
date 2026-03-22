@@ -1,7 +1,8 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { SunIcon, MoonIcon } from "@heroicons/react/24/solid";
+import { AnimatePresence, motion } from "framer-motion";
 import LandingPage from "./pages/LandingPage";
 import PrivacyPolicy from "./Components/PrivacyPolicy";
 import TermsOfService from "./Components/TermsOfService";
@@ -13,6 +14,55 @@ import Sobre from "./pages/Sobre";
 import FAQ from "./pages/FAQ";
 import Schedule from "./pages/Schedule";
 import Quote from "./pages/Quote";
+
+const Fade = ({ children }: { children: React.ReactNode }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.22, ease: "easeInOut" }}
+    style={{ willChange: "opacity" }}
+  >
+    {children}
+  </motion.div>
+);
+
+interface RoutesProps {
+  isEnglish: boolean;
+  setIsEnglish: (v: boolean) => void;
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
+}
+
+function AppRoutes({ isEnglish, setIsEnglish, scrollContainerRef }: RoutesProps) {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <Fade>
+              <>
+                <Header scrollRef={scrollContainerRef} languageState={isEnglish} setLanguageState={setIsEnglish} />
+                <LandingPage languageState={isEnglish} scrollContainerRef={scrollContainerRef} />
+              </>
+            </Fade>
+          }
+        />
+        <Route path="/privacy" element={<Fade><PrivacyPolicy languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/terms" element={<Fade><TermsOfService languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/servicios" element={<Fade><Servicios languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/portal" element={<Fade><Portal languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/clientes" element={<Fade><Clientes languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/sobre" element={<Fade><Sobre languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/faq" element={<Fade><FAQ languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/schedule" element={<Fade><Schedule languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/quote" element={<Fade><Quote languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
 
 function App() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -29,131 +79,31 @@ function App() {
 
   return (
     <div className="bg-white dark:bg-black min-h-screen overflow-x-hidden">
-      <button
+      <motion.button
         onClick={() => setIsDark(!isDark)}
         title={isDark ? "Switch to light mode" : "Switch to dark mode"}
         className="fixed left-4 bottom-4 z-50 opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-pointer border-none bg-transparent p-2"
+        whileHover={{ scale: 1.15 }}
+        whileTap={{ scale: 0.9 }}
       >
-        {isDark ? (
-          <SunIcon className="w-6 h-6 text-white" />
-        ) : (
-          <MoonIcon className="w-6 h-6 text-gray-500" />
-        )}
-      </button>
+        <motion.div
+          key={isDark ? "sun" : "moon"}
+          initial={{ rotate: -30, opacity: 0 }}
+          animate={{ rotate: 0, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          {isDark ? (
+            <SunIcon className="w-6 h-6 text-white" />
+          ) : (
+            <MoonIcon className="w-6 h-6 text-gray-500" />
+          )}
+        </motion.div>
+      </motion.button>
       <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Header
-                  scrollRef={scrollContainerRef}
-                  languageState={isEnglish}
-                  setLanguageState={setIsEnglish}
-                />
-                <LandingPage
-                  languageState={isEnglish}
-                  scrollContainerRef={scrollContainerRef}
-                />
-              </>
-            }
-          />
-          <Route
-            path="/privacy"
-            element={
-              <PrivacyPolicy
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-          <Route
-            path="/terms"
-            element={
-              <TermsOfService
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-          <Route
-            path="/servicios"
-            element={
-              <Servicios
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-          <Route
-            path="/portal"
-            element={
-              <Portal
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-          <Route
-            path="/clientes"
-            element={
-              <Clientes
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-          <Route
-            path="/sobre"
-            element={
-              <Sobre
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-          <Route
-            path="/faq"
-            element={
-              <FAQ
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-          <Route
-            path="/schedule"
-            element={
-              <Schedule
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-          <Route
-            path="/quote"
-            element={
-              <Quote
-                languageState={isEnglish}
-                setLanguageState={setIsEnglish}
-                scrollRef={scrollContainerRef}
-              />
-            }
-          />
-        </Routes>
+        <AppRoutes isEnglish={isEnglish} setIsEnglish={setIsEnglish} scrollContainerRef={scrollContainerRef} />
       </BrowserRouter>
     </div>
   );
 }
 
 export default App;
-
-

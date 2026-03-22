@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion, type Variants } from "framer-motion";
 
 interface Props {
   languageState: boolean;
@@ -113,12 +114,12 @@ const cases = [
     },
     appliedCases: {
       en: [
-        "Platforms for marketing agencies (e.g. Catali)",
+        "Platforms for marketing agencies (e.g. Cataly)",
         "Digital experiences for XR companies (e.g. ArcovXR)",
         "Websites for product-oriented businesses",
       ],
       es: [
-        "Plataformas para agencias de marketing (ej: Catali)",
+        "Plataformas para agencias de marketing (ej: Cataly)",
         "Experiencias digitales para empresas de XR (ej: ArcovXR)",
         "Webs para negocios orientados a venta de productos",
       ],
@@ -130,28 +131,52 @@ const cases = [
   },
 ];
 
+const ease = [0.25, 0.46, 0.45, 0.94] as const;
+
+const cardVariant: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.75, ease } },
+};
+
 const Projects = ({ languageState }: Props) => {
   const l = languageState;
 
   return (
     <div className="w-[70%] mx-auto py-10">
 
-      <div className="flex items-center gap-3 mb-12">
+      <motion.div
+        className="flex items-center gap-3 mb-12"
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
         <span className="block w-8 h-[2px] bg-[#10dffd]" />
         <span className="text-[#10dffd] text-xs tracking-[0.3em] uppercase">
           {l ? "Case Studies" : "Casos de Estudio"}
         </span>
-      </div>
+      </motion.div>
 
       <div className="flex flex-col gap-16">
-        {cases.map((c) => (
-          <div
+        {cases.map((c, idx) => (
+          <motion.div
             key={c.index}
-            className="border border-[#10dffd]/15 hover:border-[#10dffd]/40 transition-colors rounded-2xl p-8 md:p-10 relative"
+            variants={cardVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-80px" }}
+            whileHover={{ borderColor: "rgba(16,223,253,0.4)" }}
+            transition={{ duration: 0.2 }}
+            className="border border-[#10dffd]/15 transition-colors rounded-2xl p-8 md:p-10 relative"
           >
-            <span className="absolute top-8 right-8 text-[#10dffd]/20 text-xs tracking-widest font-light">
+            <motion.span
+              className="absolute top-8 right-8 text-[#10dffd]/20 text-xs tracking-widest font-light"
+              whileInView={{ opacity: [0.1, 0.5, 0.2] }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.15 + 0.4, duration: 0.6 }}
+            >
               {c.index}
-            </span>
+            </motion.span>
 
             <h2 className="text-white text-xl md:text-2xl font-light mb-6 max-w-xl">
               {l ? c.title.en : c.title.es}
@@ -162,7 +187,6 @@ const Projects = ({ languageState }: Props) => {
             </p>
 
             <div className="md:grid md:grid-cols-2 gap-10">
-
               <div>
                 <span className="text-[#10dffd] text-xs tracking-widest uppercase block mb-4">
                   {l ? "Implementation" : "Implementación"}
@@ -176,7 +200,6 @@ const Projects = ({ languageState }: Props) => {
                   ))}
                 </ul>
               </div>
-
               <div className="mt-8 md:mt-0">
                 <span className="text-[#10dffd] text-xs tracking-widest uppercase block mb-4">
                   {l ? "Applied cases" : "Casos aplicados"}
@@ -190,7 +213,6 @@ const Projects = ({ languageState }: Props) => {
                   ))}
                 </ul>
               </div>
-
             </div>
 
             <div className="mt-8 border-l-2 border-[#10dffd]/40 pl-5">
@@ -200,29 +222,38 @@ const Projects = ({ languageState }: Props) => {
             </div>
 
             <div className="mt-8 flex items-center gap-4">
-              <Link
-                to="/servicios"
-                className="text-xs tracking-widest uppercase font-light text-black bg-[#10dffd] px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity"
-              >
-                {l ? "View implementation" : "Ver implementación"}
-              </Link>
-              <Link
-                to="/schedule"
-                className="text-xs tracking-widest uppercase font-light text-white/50 hover:text-white border border-white/10 hover:border-white/30 px-6 py-2.5 rounded-full transition-all"
-              >
-                {l ? "Start a conversation" : "Iniciar conversación"}
-              </Link>
+              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                <Link
+                  to="/servicios"
+                  className="text-xs tracking-widest uppercase font-light text-black bg-[#10dffd] px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity"
+                >
+                  {l ? "View implementation" : "Ver implementación"}
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.04, x: 2 }} whileTap={{ scale: 0.97 }}>
+                <Link
+                  to="/schedule"
+                  className="text-xs tracking-widest uppercase font-light text-white/50 hover:text-white border border-white/10 hover:border-white/30 px-6 py-2.5 rounded-full transition-all"
+                >
+                  {l ? "Start a conversation" : "Iniciar conversación"}
+                </Link>
+              </motion.div>
             </div>
-
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      <p className="text-gray-600 text-sm text-center mt-16 max-w-2xl mx-auto leading-relaxed">
+      <motion.p
+        className="text-gray-600 text-sm text-center mt-16 max-w-2xl mx-auto leading-relaxed"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7, delay: 0.2 }}
+      >
         {l
           ? "The systems implemented vary by context, but share a common objective: structure, automate and connect digital operations in a functional way."
           : "Los sistemas implementados varían según el contexto, pero comparten un objetivo común: estructurar, automatizar y conectar operaciones digitales de forma funcional."}
-      </p>
+      </motion.p>
 
     </div>
   );

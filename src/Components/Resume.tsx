@@ -71,7 +71,7 @@ const experiences = [
     ]
   },
   {
-    place: [{ en: "RIANODEV S.A.S.", es: "RIANODEV S.A.S." }],
+    place: [{ en: "RIANODEVZ S.A.S.", es: "RIANODEVZ S.A.S." }],
     occ: { en: "Founder & Innovation Architect", es: "Fundador y Arquitecto de Innovación" },
     date: { en: "06/2024 - Present", es: "06/2024 - Actualidad" },
     s_skills: [

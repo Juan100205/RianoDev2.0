@@ -19,7 +19,7 @@ const Footer = ({ languageState }: Props) => {
     company: {
       title: { en: "Company", es: "Empresa" },
       items: [
-        { en: "About RIANODEV", es: "Sobre RIANODEV", path: "/sobre" },
+        { en: "About RIANODEVZ", es: "Sobre RIANODEVZ", path: "/sobre" },
         { en: "Case Studies", es: "Casos de Uso", path: "/clientes" },
         { en: "Implementation Model", es: "Modelo de Implementación", path: "/servicios" },
       ],
@@ -77,7 +77,7 @@ const Footer = ({ languageState }: Props) => {
 
         {/* Brand column */}
         <div className="col-span-2 md:col-span-1 flex flex-col gap-3">
-          <span className="text-[#10dffd] font-light text-lg tracking-wide">rianodev</span>
+          <span className="text-[#10dffd] font-light text-lg tracking-wide">rianodevz</span>
           <p className="text-gray-500 text-xs leading-relaxed max-w-[180px]">
             {languageState
               ? "Design and implementation of digital systems for marketing and operations."
@@ -166,7 +166,7 @@ const Footer = ({ languageState }: Props) => {
         <div className="max-w-6xl mx-auto px-6 md:px-10 py-5 flex flex-col md:flex-row md:justify-between items-center gap-2 text-xs font-light text-gray-600">
           <span>Isaías 43:19</span>
           <span>
-            © 2026 RIANODEV S.A.S.{" "}
+            © 2026 RIANODEVZ S.A.S.{" "}
             {languageState ? "All rights reserved." : "Todos los derechos reservados."}
           </span>
           <span>

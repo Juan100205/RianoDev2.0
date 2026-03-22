@@ -194,8 +194,8 @@ const Clientes = ({ languageState, setLanguageState, scrollRef }: Props) => {
               <RocketLaunchIcon />
             </div>
             <span className="flex items-center gap-1">
-              <img src={LogoSinBgBlack} alt="RIANODEV" className="h-20 dark:hidden object-contain" />
-              <img src={LogoSinBgWhite} alt="RIANODEV" className="h-20 hidden dark:block object-contain" />
+              <img src={LogoSinBgBlack} alt="RIANODEVZ" className="h-20 dark:hidden object-contain" />
+              <img src={LogoSinBgWhite} alt="RIANODEVZ" className="h-20 hidden dark:block object-contain" />
               <span className="text-xs text-gray-400 dark:text-gray-500">S.A.S.</span>
             </span>
           </div>
