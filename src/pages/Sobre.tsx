@@ -50,7 +50,7 @@ const Sobre = ({ languageState, setLanguageState, scrollRef }: Props) => {
     <>
       <Header scrollRef={scrollRef} languageState={languageState} setLanguageState={setLanguageState} />
       <div ref={scrollRef} className="page_scroll scrollbar_exp">
-      <div className="w-4/5 mx-auto py-20">
+      <div className="w-[92%] md:w-4/5 mx-auto py-20">
         <div className="flex items-center gap-3 mb-4">
           <span className="flex items-center gap-1">
             <img src={LogoSinBgBlack} alt="RIANODEVZ" className="h-20 dark:hidden object-contain" />
@@ -127,7 +127,7 @@ const Sobre = ({ languageState, setLanguageState, scrollRef }: Props) => {
               <h3 className="font-light text-white mb-4">
                 {languageState ? content.connect.en : content.connect.es}
               </h3>
-              <div className="flex gap-4 items-center">
+              <div className="flex flex-wrap gap-4 items-center">
                 <a
                   href="mailto:juanriza@rianodevz.net"
                   className="flex items-center gap-2 bg-[#10dffd] text-black text-xs font-light px-4 py-2 rounded-xl hover:opacity-90 transition-opacity"
