@@ -4,6 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/RianoDev2.0/',
+  base: '/',
   plugins: [tailwindcss(),react()],
 })
