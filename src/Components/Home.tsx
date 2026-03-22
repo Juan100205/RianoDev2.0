@@ -71,7 +71,7 @@ const Home = ({ languageState }: Props) => {
   const content = languageState ? homeContent.en : homeContent.es;
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden">
+    <section className="relative w-full min-h-screen overflow-hidden" style={{ contain: "paint" }}>
       <img
         src={LandingImg}
         alt="RIANODEVZ hero background"

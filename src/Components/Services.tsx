@@ -94,7 +94,7 @@ const Services = ({ languageState }: Props) => {
   const mobileRows = [[0, 6], [3, 9], [7, 8], [4], [1], [2], [5]];
 
   return (
-    <div className="relative w-[92%] md:w-[80%] mx-auto text-center pt-20 md:pt-50">
+    <div className="relative w-[92%] md:w-[80%] mx-auto text-center pt-20 md:pt-50 overflow-hidden">
       <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-[#10dffd] opacity-[0.06] blur-[120px] pointer-events-none" aria-hidden="true" />
 
       {/* Header */}
