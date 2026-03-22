@@ -1,5 +1,5 @@
 import "./App.css";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { SunIcon, MoonIcon } from "@heroicons/react/24/solid";
 import LandingPage from "./pages/LandingPage";
@@ -40,7 +40,7 @@ function App() {
           <MoonIcon className="w-6 h-6 text-gray-500" />
         )}
       </button>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route
             path="/"
@@ -149,7 +149,7 @@ function App() {
             }
           />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </div>
   );
 }
