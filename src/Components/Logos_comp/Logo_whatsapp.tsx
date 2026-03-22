@@ -1,11 +1,11 @@
 function Logo_wha() {
   return (
     <svg
-          onClick={() => window.open("https://wa.me/573124508591", '_blank')}
+          onClick={() => window.open("https://wa.me/3124508591?text=Hola%20me%20gustar%C3%ADa%20saber%20sobre%20ustedes", '_blank')}
       xmlns="http://www.w3.org/2000/svg"
-      className=" transition-transform transform hover:scale-110 cursor-pointer"
+      className="transition-transform transform hover:scale-110 cursor-pointer"
       viewBox="0 0 24 24"
-      style={{ fill: "rgba(255, 255, 255, 1)" }}
+      fill="currentColor"
     >
       <path
         fillRule="evenodd"

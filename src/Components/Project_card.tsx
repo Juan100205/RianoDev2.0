@@ -20,14 +20,14 @@ interface Props {
             <div className="md:w-5/7 w-full md:px-10 flex flex-col justify-center">
                 <div className="flex">
                     <span className="w-3 h-5 bg-[#10dffd]"></span>
-                    <span className="text-sm font-black ml-2">
+                    <span className="text-sm font-light ml-2 text-white">
                         {Index}
                     </span>
                 </div>
-                <h1 className="text-xl md:text-3xl font-black md:px-10">
+                <h1 className="text-xl md:text-3xl font-light md:px-10 text-white">
                     {Name}
                 </h1>
-                <p className="md:text-base text-sm text-gray-500 md:pl-10 md:pr-25 mt-10">
+                <p className="md:text-base text-sm text-gray-400 md:pl-10 md:pr-25 mt-10">
                     {Description}
                 </p>
                 <div className="w-full flex md:h-20 h-15 justify-between md:pl-10 md:pr-30 mt-8">
@@ -36,7 +36,7 @@ interface Props {
                     </div>
                     <div className="w-20 md:flex-row flex-col flex gap-2 justify-end  text-gray-400">
                         <Logo_GitHub link={link_project}/>
-                        <PlayIcon className="hover:scale-110 cursor-pointer  " onClick={()=>window.open(link_live,'_blank')}/>
+                        <PlayIcon className="hover:scale-110 cursor-pointer hover:text-black dark:hover:text-white transition-colors" onClick={()=>window.open(link_live,'_blank')}/>
                     </div>
                 </div>
             </div>

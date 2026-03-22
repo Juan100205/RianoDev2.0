@@ -23,14 +23,14 @@ interface Props{
 }
 const Resume = ({languageState}:Props) => {
 const resume = [
-  { en: "<Expertise>", es: "<Experiencia Técnica>" },
+  { en: "Core Competencies", es: "Competencias Estratégicas" },
   {
-    en: "Technology Consulting, Innovation Strategy, Emerging & Immersive Technologies, Web & App Development, Digital Transformation, UX Strategy, Problem-Solving, Collaboration",
-    es: "Consultoría Tecnológica, Estrategia de Innovación, Tecnologías Emergentes e Inmersivas, Desarrollo Web y de Apps, Transformación Digital, Estrategia UX, Resolución de Problemas, Colaboración"
+    en: "Strategic Technology Advisory, Innovation Architecture, Emerging Tech Integration (XR/AI/3D), Enterprise Solution Design, Digital Transformation Programs, Strategic Roadmapping, Technology Stack Optimization, Organizational Change Management",
+    es: "Asesoría Tecnológica Estratégica, Arquitectura de Innovación, Integración de Tecnologías Emergentes (XR/IA/3D), Diseño de Soluciones Empresariales, Programas de Transformación Digital, Planificación Estratégica, Optimización de Stack Tecnológico, Gestión del Cambio Organizacional"
   },
-  { en: "<Hardskills>", es: "<Habilidades Técnicas>" },
+  { en: "Hardskills", es: "Habilidades Técnicas" },
   
-  { en: "<Softskills>", es: "<Habilidades Blandas>" },
+  { en: "Softskills", es: "Habilidades Blandas" },
   { en: "#Innovation", es: "#Innovación" },
   { en: "#StrategicThinking", es: "#PensamientoEstratégico" },
   { en: "#EffectiveCommunication", es: "#ComunicaciónEfectiva" },
@@ -42,7 +42,7 @@ const resume = [
 const experiences = [
   {
     place: [{ en: "Universidad de La Sabana" }, { es: "- Living Lab" }],
-    occ: { en: "Software Developer", es: "Desarrollador de Software" },
+    occ: { en: "Technology Innovation Lead", es: "Líder de Innovación Tecnológica" },
     date: { en: "06/2023 - 06/2024", es: "06/2023 - 06/2024" },
     s_skills: [
       {
@@ -53,7 +53,7 @@ const experiences = [
   },
   {
     place: [{ en: "Alcala Comunicaciones", es: "Alcalá Comunicaciones" }],
-    occ: { en: "Operations Executive", es: "Ejecutivo de Operaciones" },
+    occ: { en: "Operations & Strategy Manager", es: "Gerente de Operaciones y Estrategia" },
     date: { en: "06/2024 - 11/2024", es: "06/2024 - 11/2024" },
     s_skills: [
       {
@@ -71,8 +71,8 @@ const experiences = [
     ]
   },
   {
-    place: [{ en: "Freelancer", es: "Freelancer" }],
-    occ: { en: "Project Manager", es: "Gerente de Proyecto" },
+    place: [{ en: "RIANODEV S.A.S.", es: "RIANODEV S.A.S." }],
+    occ: { en: "Founder & Innovation Architect", es: "Fundador y Arquitecto de Innovación" },
     date: { en: "06/2024 - Present", es: "06/2024 - Actualidad" },
     s_skills: [
       {
@@ -104,10 +104,10 @@ const experiences = [
 ];
 
   return (
-    <div className="w-[98%] flex md:flex-row flex-col mx-auto border-b-2 border-gray-300 pl-8 md:px-35">
-      <div className="md:w-3/7 w-full pt-10 md:border-r-2 border-gray-300 h-170 md:pr-0 pr-2">
-        <h1 className="text-xl md:text-3xl md:text-start text-center font-bold">
-          {languageState ? "<Experience/>":"<Experiencia/>"}
+    <div className="w-[98%] flex md:flex-row flex-col mx-auto border-b-2 border-[#10dffd]/20 pl-8 md:px-35">
+      <div className="md:w-3/7 w-full pt-10 md:border-r-2 border-[#10dffd]/20 h-170 md:pr-0 pr-2">
+        <h1 className="text-xl md:text-3xl md:text-start text-center font-light text-white">
+          {languageState ? "Professional Journey" : "Trayectoria Profesional"}
         </h1>
         <div className="md:mt-10 mt-5 overflow-y-auto pt-10 h-140 scrollbar_exp md:pr-20 transition-all">
           {experiences.map((exp, index) => (
@@ -131,16 +131,16 @@ const experiences = [
         </div>
       </div>
       <div className="md:w-4/7 md:pt-10 pt-5 md:pl-10 w-15/16">
-        <div className="border-t-2 md:border-t-0 border-b-2 border-gray-300 md:pt-0 pt-5 md:px-10 px-1">
-          <h1 className="md:text-3xl text-xl font-bold md:text-start text-center">
+        <div className="border-t-2 md:border-t-0 border-b-2 border-[#10dffd]/20 md:pt-0 pt-5 md:px-10 px-1">
+          <h1 className="md:text-3xl text-xl font-light md:text-start text-center text-white">
             {languageState ? resume[0].en:resume[0].es}
           </h1>
-          <p className="text-gray-500 py-5 px-5 md:text-md text-sm">
+          <p className="text-gray-400 py-5 px-5 md:text-md text-sm">
             {languageState ? resume[1].en:resume[1].es}
           </p>
         </div>
-        <div className="md:border-b-2 border-gray-300 md:px-10 mt-5 md:pb-0 pb-30">
-          <h1 className="text-xl text-center md:text-start md:text-3xl font-bold">
+        <div className="md:border-b-2 border-[#10dffd]/20 md:px-10 mt-5 md:pb-0 pb-30">
+          <h1 className="text-xl text-center md:text-start md:text-3xl font-light text-white">
             {languageState ? resume[2].en:resume[2].es}
           </h1>
           <div className="fill-white md:pb-5 pb-2 overflow-x-auto scrollbar_exp flex w-full transition-all md:pt-10 overflow-y-hidden pt-20">
@@ -165,7 +165,7 @@ const experiences = [
           </div>
         </div>
         <div className="md:px-10 md:pb-0 pb-30">
-          <h1 className="text-xl text-center md:text-start md:text-3xl font-bold pt-5">
+          <h1 className="text-xl text-center md:text-start md:text-3xl font-light pt-5 text-white">
             {languageState ? resume[3].en:resume[3].es}
           </h1>
           <div className="text-xs md:text-sm">
@@ -173,17 +173,17 @@ const experiences = [
               <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">
                 {languageState ? resume[4].en:resume[4].es}
               </span>
-              <span className="bg-gray-300 rounded-full p-2 px-3">
+              <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">
                 {languageState ? resume[5].en:resume[5].es}
               </span>
             </div>
             <div className="mt-4">
-              <span className="bg-gray-300 rounded-full p-2 px-3">
+              <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">
                 {languageState ? resume[6].en:resume[6].es}
               </span>
             </div>
             <div className="flex gap-5 mt-4">
-              <span className="bg-gray-300 rounded-full p-2 px-3">
+              <span className="bg-[#10dffd]/10 text-[#10dffd] rounded-full p-2 px-3">
                 {languageState ? resume[7].en:resume[7].es}
               </span>
               <span className="bg-[#10dffd] text-white rounded-full p-2 px-3">

@@ -3,7 +3,7 @@ const Logo_LinkedIn = () => {
     <svg
       onClick={() => window.open("https://www.linkedin.com/in/juan-jose-ria%C3%B1o-zabaleta-86320a2a3/", '_blank')}
       viewBox="0 0 24 24"
-      style={{ fill: 'rgb(255, 255, 255)' }}
+      fill="currentColor"
       className="transition-transform transform hover:scale-110 cursor-pointer"
     >
       <circle cx="4.983" cy="5.009" r="2.188">

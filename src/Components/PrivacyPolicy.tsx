@@ -18,8 +18,8 @@ const PrivacyPolicy = ({ languageState, setLanguageState, scrollRef }: PrivacyPo
             {
                 title: { en: "1. Data Collection", es: "1. Recolección de Datos" },
                 text: {
-                    en: "This portfolio does not actively collect personal data from visitors. If you contact me via email or phone, I will only use that information to respond to your inquiry.",
-                    es: "Este portafolio no recolecta activamente datos personales de los visitantes. Si se pone en contacto conmigo por correo electrónico o teléfono, solo utilizaré esa información para responder a su consulta.",
+                    en: "RIANODEV does not actively collect personal data from visitors. If you contact us via email or phone, that information will only be used to respond to your inquiry.",
+                    es: "RIANODEV no recolecta activamente datos personales de los visitantes. Si se pone en contacto con nosotros por correo electrónico o teléfono, esa información solo será utilizada para responder a su consulta.",
                 },
             },
             {
@@ -39,31 +39,32 @@ const PrivacyPolicy = ({ languageState, setLanguageState, scrollRef }: PrivacyPo
             {
                 title: { en: "4. Contact Information", es: "4. Información de Contacto" },
                 text: {
-                    en: "If you have any questions about this Privacy Policy, please contact me at juanjorianozabaleta@gmail.com.",
-                    es: "Si tiene alguna pregunta sobre esta Política de Privacidad, por favor contácteme en juanjorianozabaleta@gmail.com.",
+                    en: "If you have any questions about this Privacy Policy, please contact RIANODEV at juanriza@rianodevz.net.",
+                    es: "Si tiene alguna pregunta sobre esta Política de Privacidad, por favor contáctenos en juanriza@rianodevz.net.",
                 },
             },
         ],
     };
 
     return (
-        <div className="bg-[#F2F2F2] min-h-screen font-display">
+        <>
             <Header
                 languageState={languageState}
                 setLanguageState={setLanguageState}
                 scrollRef={scrollRef}
             />
-            <div className="max-w-4xl mx-auto pt-40 pb-20 px-10">
-                <h1 className="text-4xl font-bold mb-10 text-gray-800">
+            <div ref={scrollRef} className="page_scroll scrollbar_exp">
+            <div className="max-w-4xl mx-auto pt-20 pb-20 px-10">
+                <h1 className="text-4xl font-light mb-10 text-white">
                     {languageState ? content.title.en : content.title.es}
                 </h1>
                 <div className="space-y-8">
                     {content.sections.map((section, index) => (
                         <div key={index}>
-                            <h2 className="text-xl font-bold text-gray-700 mb-3">
+                            <h2 className="text-xl font-light text-gray-200 mb-3">
                                 {languageState ? section.title.en : section.title.es}
                             </h2>
-                            <p className="text-gray-600 leading-relaxed">
+                            <p className="text-gray-400 leading-relaxed">
                                 {languageState ? section.text.en : section.text.es}
                             </p>
                         </div>
@@ -71,7 +72,8 @@ const PrivacyPolicy = ({ languageState, setLanguageState, scrollRef }: PrivacyPo
                 </div>
             </div>
             <Footer languageState={languageState} />
-        </div>
+            </div>
+        </>
     );
 };
 
