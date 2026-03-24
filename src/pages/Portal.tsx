@@ -113,7 +113,7 @@ const automations = [
 const aiFlows = [
   {
     id: 1,
-    name: { en: "Cataly Chatbot", es: "Chatbot Cataly" },
+    name: { en: "Catali AI Chatbot", es: "Chatbot Catali AI" },
     type: { en: "Conversational", es: "Conversacional" },
     interactions: 1234,
     status: "active",

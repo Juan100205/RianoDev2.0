@@ -55,7 +55,7 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
     <header
       className="sticky top-0 border-b border-[#10dffd]/20
                  flex w-full z-50 justify-between items-center
-                 bg-white dark:bg-black transition-all duration-500 h-20 flex-wrap"
+                 bg-white dark:bg-black transition-all duration-500 min-h-[5rem] flex-wrap"
     >
       <div
         className={`absolute inset-0 md:flex flex justify-between px-4 md:px-10
@@ -146,26 +146,32 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
             </button>
           </div>
         </div>
-        {isOpen && (
-          <div className="flex flex-col justify-center text-sm w-full items-center py-10 max-h-[60vh] overflow-y-auto">
-            {headerContent.menuItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setisOpen(false)}
-                className="relative group transition-transform duration-300
-                      ease-in-out cursor-pointer mb-4 font-display text-white"
-              >
-                {languageState ? item.en : item.es}
-                <span
-                  className="absolute -bottom-0 left-0 w-0 h-0.5
-                           bg-[#10dffd] group-hover:w-full transition-all"
-                ></span>
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
+      {isOpen && (
+        <div className="flex flex-col text-sm w-full items-center pb-8 pt-4 mt-[5rem] md:hidden">
+          {headerContent.menuItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setisOpen(false)}
+              className="relative group transition-transform duration-300
+                    ease-in-out cursor-pointer py-3 font-display text-white w-full text-center"
+            >
+              {languageState ? item.en : item.es}
+              <span
+                className="absolute -bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5
+                         bg-[#10dffd] group-hover:w-1/4 transition-all"
+              ></span>
+            </Link>
+          ))}
+          <button
+            onClick={changeLanguage}
+            className="mt-4 px-5 py-2 rounded-full border border-[#10dffd]/40 text-[#10dffd] text-xs tracking-widest uppercase cursor-pointer hover:bg-[#10dffd]/10 transition-colors"
+          >
+            {languageState ? "Español" : "English"}
+          </button>
+        </div>
+      )}
     </header>
   );
 }
