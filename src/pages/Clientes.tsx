@@ -14,7 +14,7 @@ interface Props {
 const clients = [
   {
     index: "01",
-    name: "Cataly",
+    name: "Catali AI",
     category: { en: "Marketing & Automation", es: "Marketing & Automatización" },
     context: {
       en: "Technical implementation collaboration for marketing operations and digital campaigns.",
@@ -40,7 +40,7 @@ const clients = [
         items: [
           { en: "Mass outreach campaign — human-replicating chatbot with voice cloning", es: "Campaña de comunicación masiva — chatbot imitador de humano con replicación de voz" },
           { en: "Educational project (Compucol)", es: "Proyecto educativo (Compucol)" },
-          { en: "Cataly corporate website development", es: "Desarrollo de la web corporativa de Cataly" },
+          { en: "Catali AI corporate website development", es: "Desarrollo de la web corporativa de Catali AI" },
         ],
       },
     ],
@@ -151,7 +151,7 @@ const clients = [
   },
   {
     index: "05",
-    name: "ArcovXR",
+    name: "Siilla",
 
     category: { en: "Digital Platform", es: "Plataforma Digital" },
     context: {

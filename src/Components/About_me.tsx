@@ -65,30 +65,28 @@ const About_me = ({ languageState }: Props) => {
           <h1 className="md:text-3xl text-base font-light mt-3 md:mt-5 text-center md:text-start text-white">
             {languageState ? aboutContent.contactHeader.en : aboutContent.contactHeader.es}
           </h1>
-          <div className="flex md:mt-10 mt-5 h-20 md:h-35 mx-auto justify-between w-full md:w-10/12 md:mr-20">
+          <div className="flex mt-5 md:mt-10 gap-4 justify-center md:justify-start">
             <motion.div
               whileHover={{ scale: 1.06, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#10dffd]/10 text-white dark:text-white outline outline-1 outline-[#10dffd]/30 w-2/7 p-3 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
+              className="bg-[#10dffd]/10 text-white dark:text-white outline outline-1 outline-[#10dffd]/30 w-16 h-16 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
             >
-              <Logo_LinkedIn />
+              <div className="w-8 h-8"><Logo_LinkedIn /></div>
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.06, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#10dffd] text-white w-2/7 p-3 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
+              className="bg-[#10dffd] text-white w-16 h-16 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
+              onClick={() => window.open("mailto:juanriza@rianodevz.net", "_blank")}
             >
-              <EnvelopeIcon
-                className="hover:scale-110 cursor-pointer transition-all"
-                onClick={() => window.open("mailto:juanriza@rianodevz.net", "_blank")}
-              />
+              <EnvelopeIcon className="w-8 h-8 hover:scale-110 transition-all" />
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.06, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#10dffd]/10 text-white outline outline-1 outline-[#10dffd]/30 w-2/7 p-3 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
+              className="bg-[#10dffd]/10 text-white outline outline-1 outline-[#10dffd]/30 w-16 h-16 rounded-xl cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
             >
-              <Logo_wha />
+              <div className="w-8 h-8"><Logo_wha /></div>
             </motion.div>
           </div>
         </div>

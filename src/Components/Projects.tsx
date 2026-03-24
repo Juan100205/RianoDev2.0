@@ -114,13 +114,13 @@ const cases = [
     },
     appliedCases: {
       en: [
-        "Platforms for marketing agencies (e.g. Cataly)",
-        "Digital experiences for XR companies (e.g. ArcovXR)",
+        "Platforms for marketing agencies (e.g. Catali AI)",
+        "Digital experiences for XR companies (e.g. Siilla)",
         "Websites for product-oriented businesses",
       ],
       es: [
-        "Plataformas para agencias de marketing (ej: Cataly)",
-        "Experiencias digitales para empresas de XR (ej: ArcovXR)",
+        "Plataformas para agencias de marketing (ej: Catali AI)",
+        "Experiencias digitales para empresas de XR (ej: Siilla)",
         "Webs para negocios orientados a venta de productos",
       ],
     },

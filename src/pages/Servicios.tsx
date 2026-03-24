@@ -64,7 +64,7 @@ const services: ServiceDef[] = [
     ],
     cases: [
       { en: "Marketing agency platform (e.g. Catali)", es: "Plataforma para agencia de marketing (ej: Catali)" },
-      { en: "XR company digital experience (e.g. ArcovXR)", es: "Experiencia digital para empresa XR (ej: ArcovXR)" },
+      { en: "XR company digital experience (e.g. Siilla)", es: "Experiencia digital para empresa XR (ej: Siilla)" },
       { en: "Product-oriented business website", es: "Web para negocio orientado a productos" },
     ],
     stack: ["React", "Next.js", "TypeScript", "Tailwind", "SEO", "CRO"],
