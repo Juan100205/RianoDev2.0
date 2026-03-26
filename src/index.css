@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300..900;1,300..900&display=swap');
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: "Amoresa";
   src: url('./assets/Andrey-Sharonov-Amoresa-Regular.otf') format('opentype');
@@ -36,40 +37,46 @@ html {
   overflow-x: clip;
 }
 
-@layer utilities{
-  .scrollbar_exp::-webkit-scrollbar{
-    width:0px;
-    height:0px;
+@layer utilities {
+  .scrollbar_exp::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
   }
-  .scrollbar_exp:hover::-webkit-scrollbar{
-    width:3px;
-    height:3px;
+
+  .scrollbar_exp:hover::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
   }
+
   .scrollbar_exp::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
   }
 
   .scrollbar_exp::-webkit-scrollbar-thumb {
     background-color: #928F8F;
   }
-  .scroll_snap{
+
+  .scroll_snap {
     scroll-snap-type: y proximity;
     scroll-padding-top: 30px;
     height: calc(100vh - 5rem);
     overflow-y: scroll;
     overflow-x: hidden;
   }
-  .page_scroll{
+
+  .page_scroll {
     height: calc(100vh - 5rem);
     overflow-y: scroll;
     overflow-x: hidden;
   }
-  .scroll_snap_per_comp{
-    scroll-snap-align:start;
+
+  .scroll_snap_per_comp {
+    scroll-snap-align: start;
     min-height: 10vh;
   }
-    .scroll_snap_per_comp_project{
-    scroll-snap-align:center;
+
+  .scroll_snap_per_comp_project {
+    scroll-snap-align: center;
     min-height: 10vh;
   }
 }
@@ -81,76 +88,97 @@ html {
 /* ── Light mode global overrides ─────────────────────────────── */
 html:not(.dark) body {
   background:
-    radial-gradient(ellipse at 8% 0%,   rgba(16,223,253,0.10) 0%, transparent 45%),
-    radial-gradient(ellipse at 92% 15%, rgba(16,223,253,0.07) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 55%, rgba(16,223,253,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 15% 90%, rgba(16,223,253,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 8% 0%, rgba(16, 223, 253, 0.10) 0%, transparent 45%),
+    radial-gradient(ellipse at 92% 15%, rgba(16, 223, 253, 0.07) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 55%, rgba(16, 223, 253, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 15% 90%, rgba(16, 223, 253, 0.06) 0%, transparent 40%),
     #f8feff;
   color: #111111;
 }
+
 html:not(.dark) .text-white {
   color: #111111 !important;
 }
+
 html:not(.dark) .text-gray-400 {
   color: #444444 !important;
 }
+
 html:not(.dark) .text-gray-500 {
   color: #555555 !important;
 }
+
 html:not(.dark) .text-gray-600 {
   color: #666666 !important;
 }
+
 html:not(.dark) .text-gray-300 {
   color: #333333 !important;
 }
+
 html:not(.dark) .text-gray-200 {
   color: #222222 !important;
 }
+
 html:not(.dark) .bg-black {
   background-color: transparent !important;
 }
+
 html:not(.dark) .dark\:bg-black {
   background-color: transparent !important;
 }
+
 html:not(.dark) header {
-  background-color: rgba(248,254,255,0.85) !important;
+  background-color: rgba(248, 254, 255, 0.85) !important;
   backdrop-filter: blur(12px);
-  border-bottom-color: rgba(16,223,253,0.25) !important;
+  border-bottom-color: rgba(16, 223, 253, 0.25) !important;
 }
+
 html:not(.dark) footer,
 html:not(.dark) [class*="bg-\[#111"] {
-  background: linear-gradient(to bottom, rgba(16,223,253,0.04), rgba(16,223,253,0.08)) !important;
+  background: linear-gradient(to bottom, rgba(16, 223, 253, 0.04), rgba(16, 223, 253, 0.08)) !important;
   color: #111111 !important;
-  border-top-color: rgba(16,223,253,0.3) !important;
+  border-top-color: rgba(16, 223, 253, 0.3) !important;
 }
+
 /* Boost cyan border visibility in light mode */
 html:not(.dark) [class*="border-\[#10dffd\]"] {
-  border-color: rgba(16,223,253,0.65) !important;
+  border-color: rgba(16, 223, 253, 0.65) !important;
 }
+
 html:not(.dark) [class*="outline-\[#10dffd\]"] {
-  outline-color: rgba(16,223,253,0.7) !important;
+  outline-color: rgba(16, 223, 253, 0.7) !important;
 }
+
 /* Card backgrounds in light mode */
 html:not(.dark) [class*="rounded-2xl"][class*="border"] {
-  background-color: rgba(16,223,253,0.06) !important;
+  background-color: rgba(16, 223, 253, 0.06) !important;
 }
+
 html:not(.dark) [class*="rounded-2xl"]:hover {
-  background-color: rgba(16,223,253,0.10) !important;
-  box-shadow: 0 0 30px rgba(16,223,253,0.15);
+  background-color: rgba(16, 223, 253, 0.10) !important;
+  box-shadow: 0 0 30px rgba(16, 223, 253, 0.15);
 }
+
 /* Cyan tag/badge backgrounds */
 html:not(.dark) [class*="bg-\[#10dffd\]\/10"] {
-  background-color: rgba(16,223,253,0.18) !important;
+  background-color: rgba(16, 223, 253, 0.18) !important;
 }
+
 html:not(.dark) [class*="bg-\[#10dffd\]\/8"] {
-  background-color: rgba(16,223,253,0.15) !important;
+  background-color: rgba(16, 223, 253, 0.15) !important;
 }
+
 /* Neon top border in footer */
 html:not(.dark) footer [class*="via-\[#10dffd\]"] {
   opacity: 1 !important;
 }
 
 /* ── Método Levántate scoped styles ─────────────────────────────────────────── */
+html:has(.ml-root) {
+  font-size: 80% !important; /* Force zoom out for this page (0.8) */
+}
+
 .ml-root {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -174,15 +202,17 @@ html:not(.dark) footer [class*="via-\[#10dffd\]"] {
 }
 
 /* Override global light/dark mode styles inside ml-root */
-html:not(.dark) .ml-root .text-white,
-.dark .ml-root .text-white {
+html:not(.dark) .ml-root .text-white:not([class*="bg-"]),
+.dark .ml-root .text-white:not([class*="bg-"]) {
   color: unset !important;
 }
+
 html:not(.dark) .ml-root [class*="rounded-2xl"][class*="border"],
 html:not(.dark) .ml-root [class*="rounded-2xl"]:hover {
   background-color: unset !important;
   box-shadow: unset;
 }
+
 html:not(.dark) .ml-root header {
   background-color: unset !important;
   backdrop-filter: unset;

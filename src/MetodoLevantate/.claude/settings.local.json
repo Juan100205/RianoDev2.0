@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm \"C:\\\\Users\\\\USER\\\\OneDrive - Universidad de la Sabana\\\\Documents\\\\Documentos\\\\Juan Jose Riaño Zabaleta\\\\Trabajo\\\\Metodo Levante\\\\levantate-app\\\\src\\\\pages\\\\Home.tsx\")",
+      "Bash(rm \"C:\\\\Users\\\\USER\\\\OneDrive - Universidad de la Sabana\\\\Documents\\\\Documentos\\\\Juan Jose Riaño Zabaleta\\\\Trabajo\\\\Metodo Levante\\\\levantate-app\\\\src\\\\sections\\\\HeroSection.tsx\")",
+      "Bash(rm \"C:\\\\Users\\\\USER\\\\OneDrive - Universidad de la Sabana\\\\Documents\\\\Documentos\\\\Juan Jose Riaño Zabaleta\\\\Trabajo\\\\Metodo Levante\\\\levantate-app\\\\src\\\\sections\\\\WhySection.tsx\")",
+      "Bash(rm \"C:\\\\Users\\\\USER\\\\OneDrive - Universidad de la Sabana\\\\Documents\\\\Documentos\\\\Juan Jose Riaño Zabaleta\\\\Trabajo\\\\Metodo Levante\\\\levantate-app\\\\src\\\\sections\\\\LevantateSection.tsx\")",
+      "Bash(rm \"C:\\\\Users\\\\USER\\\\OneDrive - Universidad de la Sabana\\\\Documents\\\\Documentos\\\\Juan Jose Riaño Zabaleta\\\\Trabajo\\\\Metodo Levante\\\\levantate-app\\\\src\\\\sections\\\\HowToSection.tsx\")",
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(del:*)"
+    ]
+  }
+}

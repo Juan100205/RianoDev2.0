@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
-import Navbar from "../MetodoLevantate/components/Navbar";
-import Hero from "../MetodoLevantate/components/HeroSection";
-import Identificacion from "../MetodoLevantate/components/Identificacion";
-import Solucion from "../MetodoLevantate/components/Solucion";
-import LoQueRecibes from "../MetodoLevantate/components/LoQueRecibes";
-import Testimonios from "../MetodoLevantate/components/Testimonios";
-import Oferta from "../MetodoLevantate/components/Oferta";
-import Preguntas from "../MetodoLevantate/components/Preguntas";
-import FinalCTA from "../MetodoLevantate/components/FinalCTA";
+import Navbar from "../MetodoLevantate/src/components/Navbar";
+import Hero from "../MetodoLevantate/src/components/HeroSection";
+import Identificacion from "../MetodoLevantate/src/components/Identificacion";
+import Solucion from "../MetodoLevantate/src/components/Solucion";
+import LoQueRecibes from "../MetodoLevantate/src/components/LoQueRecibes";
+import Testimonios from "../MetodoLevantate/src/components/Testimonios";
+import Oferta from "../MetodoLevantate/src/components/Oferta";
+import Preguntas from "../MetodoLevantate/src/components/Preguntas";
+import FinalCTA from "../MetodoLevantate/src/components/FinalCTA";
+import "../MetodoLevantate/src/index.css";
 
 export default function MetodoLevantate() {
   const navigate = useNavigate();

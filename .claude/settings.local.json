@@ -14,7 +14,19 @@
       "Bash(cp \"Metodo-Levantate/src/assets/Isotipo.png\" \"src/assets/metodo-levantate/Isotipo.png\")",
       "Bash(cp \"Metodo-Levantate/src/assets/HowTo.png\" \"src/assets/metodo-levantate/HowTo.png\")",
       "Bash(cp \"Metodo-Levantate/src/assets/Andrey-Sharonov-Amoresa-Regular.otf\" \"src/assets/Andrey-Sharonov-Amoresa-Regular.otf\")",
-      "Bash(cp \"Metodo-Levantate/src/assets/Tablero de Marca \\(8\\).png\" \"src/assets/metodo-levantate/Tablero de Marca \\(8\\).png\")"
+      "Bash(cp \"Metodo-Levantate/src/assets/Tablero de Marca \\(8\\).png\" \"src/assets/metodo-levantate/Tablero de Marca \\(8\\).png\")",
+      "WebFetch(domain:github.com)",
+      "Bash(SRC_ASSETS=\"/tmp/levante_temp/src/assets\")",
+      "Bash(DEST_ASSETS=\"C:/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/assets/metodo-levantate\")",
+      "Bash(__NEW_LINE_19c70e9991910950__ cp:*)",
+      "Bash(cp \"$SRC_ASSETS/Landing.png\" \"$DEST_ASSETS/\")",
+      "Bash(cp \"$SRC_ASSETS/Logo.png\" \"$DEST_ASSETS/\")",
+      "Bash(npx tsc:*)",
+      "Bash(__NEW_LINE_5ef95df24ab89062__ for:*)",
+      "Bash(do)",
+      "Bash(cp \"$SRC_ASSETS/$f\" \"$DEST_ASSETS/$f\")",
+      "Bash(echo \"OK: $f\")",
+      "Bash(done)"
     ]
   }
 }

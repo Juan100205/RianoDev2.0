@@ -15,6 +15,8 @@ import FAQ from "./pages/FAQ";
 import Schedule from "./pages/Schedule";
 import Quote from "./pages/Quote";
 import MetodoLevantate from "./pages/MetodoLevantate";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const fadeStyle = { willChange: "opacity" } as const;
 
@@ -58,6 +60,8 @@ function AppRoutes({ isEnglish, setIsEnglish, scrollContainerRef }: RoutesProps)
         <Route path="/portal" element={<Fade><Portal languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
         <Route path="/clientes" element={<Fade><Clientes languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
         <Route path="/sobre" element={<Fade><Sobre languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/blog" element={<Fade><Blog languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
+        <Route path="/blog/:slug" element={<Fade><BlogPost languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
         <Route path="/faq" element={<Fade><FAQ languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
         <Route path="/schedule" element={<Fade><Schedule languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
         <Route path="/quote" element={<Fade><Quote languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
@@ -67,6 +71,8 @@ function AppRoutes({ isEnglish, setIsEnglish, scrollContainerRef }: RoutesProps)
     </AnimatePresence>
   );
 }
+
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -82,31 +88,33 @@ function App() {
   }, [isDark]);
 
   return (
-    <div className="bg-white dark:bg-black min-h-screen overflow-x-hidden">
-      <motion.button
-        onClick={() => setIsDark(!isDark)}
-        title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-        className="fixed left-4 bottom-4 z-50 opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-pointer border-none bg-transparent p-2"
-        whileHover={{ scale: 1.15 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <motion.div
-          key={isDark ? "sun" : "moon"}
-          initial={{ rotate: -30, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          transition={{ duration: 0.3 }}
+    <AuthProvider>
+      <div className="bg-white dark:bg-black min-h-screen overflow-x-hidden">
+        <motion.button
+          onClick={() => setIsDark(!isDark)}
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          className="fixed left-4 bottom-4 z-50 opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-pointer border-none bg-transparent p-2"
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
         >
-          {isDark ? (
-            <SunIcon className="w-6 h-6 text-white" />
-          ) : (
-            <MoonIcon className="w-6 h-6 text-gray-500" />
-          )}
-        </motion.div>
-      </motion.button>
-      <BrowserRouter>
-        <AppRoutes isEnglish={isEnglish} setIsEnglish={setIsEnglish} scrollContainerRef={scrollContainerRef} />
-      </BrowserRouter>
-    </div>
+          <motion.div
+            key={isDark ? "sun" : "moon"}
+            initial={{ rotate: -30, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {isDark ? (
+              <SunIcon className="w-6 h-6 text-white" />
+            ) : (
+              <MoonIcon className="w-6 h-6 text-gray-500" />
+            )}
+          </motion.div>
+        </motion.button>
+        <BrowserRouter>
+          <AppRoutes isEnglish={isEnglish} setIsEnglish={setIsEnglish} scrollContainerRef={scrollContainerRef} />
+        </BrowserRouter>
+      </div>
+    </AuthProvider>
   );
 }
 

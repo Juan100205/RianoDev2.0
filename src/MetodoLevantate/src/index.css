@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300..900;1,300..900&display=swap');
+
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Amoresa";
+  src: url('./assets/Andrey-Sharonov-Amoresa-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-amoresa: "Amoresa", cursive;
+  --color-brand-red: #9E182B;
+  --color-brand-pink: #FB6F92;
+  --color-brand-beige: #FBF4EB;
+  --color-brand-light-pink: #FADADD;
+  --color-brand-olive: #3F4321;
+}
+
+
+
+.ml-root {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+  font-size: 85%; /* Zoom out at 0.825/0.85 as requested */
+}
+
+@media (min-width: 768px) {
+  .ml-root {
+    font-size: 85%; /* Exact 0.85 scale */
+  }
+}
+
+.ml-root body {
+  height: 100%;
+  font-family: var(--font-playfair);
+  background: radial-gradient(ellipse at center, #FFFFFF 0%, #FBF4EB 60%, #F5EDE0 100%);
+  background-attachment: fixed;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cada sección ocupa exactamente el viewport y se detiene al llegar */
+.ml-root section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: transparent;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 7%, black 93%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 7%, black 93%, transparent 100%);
+}
