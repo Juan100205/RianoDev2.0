@@ -11,7 +11,7 @@ export default function FinalCTA() {
         <section
             id="final-cta"
             ref={ref as React.RefObject<HTMLElement>}
-            className="w-full relative flex flex-col items-center justify-center text-center px-6 py-32"
+            className="w-full relative flex flex-col items-center justify-center text-center px-6 py-16 md:py-32"
             style={{ overflow: 'clip' }}
         >
             {/* Degradado invertido: blanco afuera, beige al centro */}
@@ -32,7 +32,7 @@ export default function FinalCTA() {
                 initial="hidden"
                 animate={isActive ? "visible" : "hidden"}
             >
-                <motion.h1 variants={fadeUp} style={{ fontSize: 'clamp(4rem, 8vw, 7rem)' }} className="font-bold font-playfair text-[#1a1a1a] leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] mb-8">
+                <motion.h1 variants={fadeUp} style={{ fontSize: 'clamp(2.2rem, 8vw, 7rem)' }} className="font-bold font-playfair text-[#1a1a1a] leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] mb-8">
                     Levántate
                 </motion.h1>
 

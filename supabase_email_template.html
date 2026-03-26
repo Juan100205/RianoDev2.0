@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirma tu cuenta - RIANODEVZ</title>
+  <style>
+    /* Estilos base para correos (los clientes de correo son quisquillosos, CSS en línea es mejor, pero esto es un buen fallback) */
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      width: 100%;
+      background-color: #000000;
+      padding: 40px 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #0a0a0a;
+      border: 1px solid rgba(16, 223, 253, 0.2);
+      border-radius: 16px;
+      overflow: hidden;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .logo-container {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 30px auto;
+      background-color: rgba(16, 223, 253, 0.1);
+      border: 2px solid #10dffd;
+      border-radius: 50%;
+      display: table;
+    }
+    .logo-icon {
+      display: table-cell;
+      vertical-align: middle;
+      color: #10dffd;
+      font-size: 24px;
+      line-height: normal;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 300;
+      margin: 0 0 16px 0;
+      color: #ffffff;
+    }
+    p {
+      color: #a3a3a3;
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0 0 32px 0;
+      font-weight: 300;
+    }
+    .button {
+      display: inline-block;
+      background-color: #10dffd;
+      color: #000000;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 15px;
+      margin-bottom: 32px;
+    }
+    .footer {
+      max-width: 500px;
+      margin: 30px auto 0 auto;
+      text-align: center;
+      font-size: 12px;
+      color: #525252;
+      line-height: 1.5;
+    }
+    .highlight {
+      color: #10dffd;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper" style="background-color: #000000;">
+    <div class="container" style="max-width: 500px; margin: 0 auto; background-color: #0a0a0a; border: 1px solid rgba(16,223,253,0.2); border-radius: 16px; padding: 40px 30px; text-align: center;">
+      
+      <!-- Icono RianoDevz (Opcional: puedes reemplazar esto por tu logo en URL alojada publicamente ej: <img src="URL_DEL_LOGO" alt="RIANODEVZ" style="width: 56px; margin-bottom: 30px;" />) -->
+      <div style="width: 56px; height: 56px; margin: 0 auto 30px auto; background-color: rgba(16,223,253,0.1); border: 2px solid #10dffd; border-radius: 50%; display: table;">
+        <span style="display: table-cell; vertical-align: middle; color: #10dffd; font-size: 20px; font-weight: bold;">R</span>
+      </div>
+
+      <h1 style="font-size: 24px; font-weight: 300; margin-bottom: 16px; color: #ffffff;">
+        Bienvenido a <span class="highlight" style="color: #10dffd;">RIANODEVZ</span>
+      </h1>
+      
+      <p style="color: #a3a3a3; font-size: 15px; line-height: 1.6; margin-bottom: 32px; font-weight: 300;">
+        Estás a un paso de acceder a tu portal de clientes exclusivo. Solo necesitamos verificar tu dirección de correo electrónico para asegurar tu cuenta y activar tu membresía.
+      </p>
+      
+      <a href="{{ .ConfirmationURL }}" class="button" style="display: inline-block; background-color: #10dffd; color: #000000; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: 500; font-size: 15px; margin-bottom: 32px;">
+        Confirmar mi correo
+      </a>
+      
+      <p style="color: #a3a3a3; font-size: 13px; margin-bottom: 0; font-weight: 300;">
+        Si el botón no funciona, copia y pega este enlace en tu navegador:<br>
+        <a href="{{ .ConfirmationURL }}" style="color: #10dffd; word-break: break-all; text-decoration: none;">
+          {{ .ConfirmationURL }}
+        </a>
+      </p>
+    </div>
+    
+    <div class="footer" style="max-width: 500px; margin: 30px auto 0 auto; text-align: center; font-size: 12px; color: #525252; line-height: 1.5;">
+      &copy; 2026 RIANODEVZ. Todos los derechos reservados.<br>
+      Este es un mensaje automático, por favor no respondas a este correo.
+    </div>
+  </div>
+</body>
+</html>

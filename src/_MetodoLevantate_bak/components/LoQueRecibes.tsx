@@ -17,7 +17,7 @@ export default function LoQueRecibes() {
         <section
             id="lo-que-recibes"
             ref={ref as React.RefObject<HTMLElement>}
-            className="w-full flex flex-col items-center justify-center text-center px-6 py-20"
+            className="w-full flex flex-col items-center justify-center text-center px-6 py-12 md:py-20"
         >
             <motion.div
                 className="max-w-5xl flex flex-col items-center w-full"
@@ -34,11 +34,11 @@ export default function LoQueRecibes() {
                     <span className="font-amoresa font-light text-[#FB6F92] drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">levantarte de verdad</span>
                 </motion.h2>
 
-                <div className="flex flex-col md:flex-row items-stretch gap-10 w-full pt-16">
+                <div className="flex flex-col md:flex-row items-stretch gap-6 w-full pt-8 md:pt-16">
                     <motion.div
                         variants={fadeUp}
                         whileHover={{ y: -4, boxShadow: '0 16px 36px rgba(251,111,146,0.2)' }}
-                        className="flex-1 flex flex-col items-center justify-start bg-[#FADADD] rounded-[2rem] p-10 shadow-md transition-shadow duration-300"
+                        className="flex-1 flex flex-col items-center justify-start bg-[#FADADD] rounded-[2rem] p-6 md:p-10 shadow-md transition-shadow duration-300"
                     >
                         <h3 className="font-playfair text-2xl font-bold text-[#1a1a1a] mb-1">eBook Método Levántate</h3>
                         <p className="font-cormorant text-lg text-neutral-800 mb-6">Tu guía de transformación completa</p>

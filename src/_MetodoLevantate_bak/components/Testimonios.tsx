@@ -21,7 +21,7 @@ export default function Testimonios() {
         <section
             id="testimonios"
             ref={ref as React.RefObject<HTMLElement>}
-            className="w-full flex flex-col items-center justify-center text-center px-6 py-20"
+            className="w-full flex flex-col items-center justify-center text-center px-6 py-12 md:py-20"
         >
             <motion.div
                 className="max-w-6xl flex flex-col items-center w-full"
@@ -44,9 +44,9 @@ export default function Testimonios() {
                             key={i}
                             variants={cardVariant}
                             whileHover={{ y: -6, backgroundColor: '#FADADD', boxShadow: '0 16px 36px rgba(251,111,146,0.2)' }}
-                            className="bg-white rounded-[2rem] p-10 shadow-md flex flex-col text-left transition-colors duration-300"
+                            className="bg-white rounded-[2rem] p-6 md:p-10 shadow-md flex flex-col text-left transition-colors duration-300"
                         >
-                            <div className="flex gap-1 mb-6">{[...Array(5)].map((_, j) => <Star key={j} />)}</div>
+                            <div className="flex gap-1 mb-4">{[...Array(5)].map((_, j) => <Star key={j} />)}</div>
                             <p className="font-cormorant text-[1.15rem] leading-relaxed text-neutral-800 mb-8 flex-grow">{t.text}</p>
                             <div className="flex items-center gap-4 mt-auto">
                                 <div className="w-12 h-12 rounded-full bg-[#FB6F92] flex items-center justify-center shadow-inner flex-shrink-0">

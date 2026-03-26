@@ -48,6 +48,7 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
       { path: "/servicios", en: "Services", es: "Servicios" },
       { path: "/clientes", en: "Case Studies", es: "Casos de Uso" },
       { path: "/sobre", en: "About", es: "Sobre" },
+      { path: "/blog", en: "Blog", es: "Blog" },
       { path: "/portal", en: "Client Portal", es: "Portal" },
     ],
   };

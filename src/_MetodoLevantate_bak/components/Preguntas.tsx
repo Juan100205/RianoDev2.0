@@ -19,7 +19,7 @@ export default function Preguntas() {
         <section
             id="preguntas"
             ref={ref as React.RefObject<HTMLElement>}
-            className="w-full flex flex-col items-center justify-center text-center px-6 py-20"
+            className="w-full flex flex-col items-center justify-center text-center px-6 py-12 md:py-20"
         >
             <motion.div
                 className="max-w-4xl flex flex-col items-center w-full"
@@ -41,7 +41,7 @@ export default function Preguntas() {
                         <motion.div key={i} variants={fadeUp} className="bg-[#FADADD] rounded-2xl shadow-sm overflow-hidden text-left">
                             <button
                                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                                className="w-full flex justify-between items-center px-8 py-6 cursor-pointer focus:outline-none group"
+                                className="w-full flex justify-between items-center px-5 py-4 md:px-8 md:py-6 cursor-pointer focus:outline-none group"
                             >
                                 <span className="font-cormorant text-[1.2rem] text-neutral-800 group-hover:text-[#1a1a1a] transition-colors">
                                     {faq.question}
@@ -64,7 +64,7 @@ export default function Preguntas() {
                                         transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
                                         style={{ overflow: 'hidden' }}
                                     >
-                                        <div className="px-8 pb-6">
+                                        <div className="px-5 pb-4 md:px-8 md:pb-6">
                                             <div className="border-t border-pink-300/60 mb-5" />
                                             <p className="font-cormorant text-[1.15rem] leading-relaxed text-neutral-800">{faq.answer}</p>
                                         </div>
