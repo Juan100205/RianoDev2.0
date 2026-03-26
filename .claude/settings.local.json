@@ -3,7 +3,18 @@
     "allow": [
       "Bash(npm run:*)",
       "Bash(node -e \":*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(cd:*)",
+      "Bash(cp \"Metodo-Levantate/src/hooks/useSnapSection.ts\" \"src/MetodoLevantate/hooks/useSnapSection.ts\")",
+      "Bash(cp \"Metodo-Levantate/src/lib/animations.ts\" \"src/MetodoLevantate/lib/animations.ts\")",
+      "Bash(cp \"Metodo-Levantate/src/components/HeroSection.tsx\" \"src/MetodoLevantate/components/HeroSection.tsx\")",
+      "Bash(cp \"Metodo-Levantate/src/components/Identificacion.tsx\" \"src/MetodoLevantate/components/Identificacion.tsx\")",
+      "Bash(cp \"Metodo-Levantate/src/components/Solucion.tsx\" \"src/MetodoLevantate/components/Solucion.tsx\")",
+      "Bash(cp \"Metodo-Levantate/src/assets/Logo1.png\" \"src/assets/metodo-levantate/Logo1.png\")",
+      "Bash(cp \"Metodo-Levantate/src/assets/Isotipo.png\" \"src/assets/metodo-levantate/Isotipo.png\")",
+      "Bash(cp \"Metodo-Levantate/src/assets/HowTo.png\" \"src/assets/metodo-levantate/HowTo.png\")",
+      "Bash(cp \"Metodo-Levantate/src/assets/Andrey-Sharonov-Amoresa-Regular.otf\" \"src/assets/Andrey-Sharonov-Amoresa-Regular.otf\")",
+      "Bash(cp \"Metodo-Levantate/src/assets/Tablero de Marca \\(8\\).png\" \"src/assets/metodo-levantate/Tablero de Marca \\(8\\).png\")"
     ]
   }
 }
