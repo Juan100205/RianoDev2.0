@@ -1,9 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300..900;1,300..900&display=swap');
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+@font-face {
+  font-family: "Amoresa";
+  src: url('./assets/Andrey-Sharonov-Amoresa-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-display: "Geist", sans-serif;
   --font-banner: "Geist", sans-serif;
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-amoresa: "Amoresa", cursive;
+  --color-brand-red: #9E182B;
+  --color-brand-pink: #FB6F92;
+  --color-brand-beige: #FBF4EB;
+  --color-brand-light-pink: #FADADD;
+  --color-brand-olive: #3F4321;
 }
 
 
@@ -130,4 +148,43 @@ html:not(.dark) [class*="bg-\[#10dffd\]\/8"] {
 /* Neon top border in footer */
 html:not(.dark) footer [class*="via-\[#10dffd\]"] {
   opacity: 1 !important;
+}
+
+/* ── Método Levántate scoped styles ─────────────────────────────────────────── */
+.ml-root {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
+  scroll-snap-type: y mandatory;
+  background: radial-gradient(ellipse at center, #FFFFFF 0%, #FBF4EB 60%, #F5EDE0 100%);
+  background-attachment: fixed;
+  color: #1a1a1a;
+  font-family: var(--font-playfair);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ml-root section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: transparent;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 7%, black 93%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 7%, black 93%, transparent 100%);
+}
+
+/* Override global light/dark mode styles inside ml-root */
+html:not(.dark) .ml-root .text-white,
+.dark .ml-root .text-white {
+  color: unset !important;
+}
+html:not(.dark) .ml-root [class*="rounded-2xl"][class*="border"],
+html:not(.dark) .ml-root [class*="rounded-2xl"]:hover {
+  background-color: unset !important;
+  box-shadow: unset;
+}
+html:not(.dark) .ml-root header {
+  background-color: unset !important;
+  backdrop-filter: unset;
+  border-bottom-color: unset !important;
 }

@@ -1,5 +1,6 @@
 import type { RefObject } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   RssIcon,
@@ -66,10 +67,11 @@ const blogPosts = [
 ];
 
 const webPages = [
-  { id: 1, domain: "rianodevz.net", status: "live", lastDeploy: "2026-03-01", score: 98, tech: "React + Vite" },
-  { id: 2, domain: "cataly.co", status: "live", lastDeploy: "2026-02-20", score: 95, tech: "Next.js" },
-  { id: 3, domain: "arcovxr.com", status: "live", lastDeploy: "2026-01-15", score: 92, tech: "React" },
-  { id: 4, domain: "conjuntocallejas.co", status: "maintenance", lastDeploy: "2026-03-10", score: 88, tech: "WordPress" },
+  { id: 1, domain: "rianodevz.net", status: "live", lastDeploy: "2026-03-01", score: 98, tech: "React + Vite", route: null as string | null },
+  { id: 2, domain: "cataly.co", status: "live", lastDeploy: "2026-02-20", score: 95, tech: "Next.js", route: null as string | null },
+  { id: 3, domain: "arcovxr.com", status: "live", lastDeploy: "2026-01-15", score: 92, tech: "React", route: null as string | null },
+  { id: 4, domain: "conjuntocallejas.co", status: "maintenance", lastDeploy: "2026-03-10", score: 88, tech: "WordPress", route: null as string | null },
+  { id: 5, domain: "Método Levántate", status: "live", lastDeploy: "2026-03-26", score: 100, tech: "React + Vite", route: "/metodo-levantate" },
 ];
 
 const domainsList = [
@@ -168,6 +170,7 @@ const StatusBadge = ({ status, l }: { status: string; l: boolean }) => {
 // ── Main component ────────────────────────────────────────────────────────────
 
 const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -476,8 +479,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 <motion.div
                   key={page.id}
                   variants={contentItem}
-                  className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 bg-[#10dffd]/[0.01]"
-                  whileHover={{ borderColor: "rgba(16,223,253,0.3)" }}
+                  onClick={() => page.route ? navigate(page.route) : undefined}
+                  className={`border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 bg-[#10dffd]/[0.01] ${page.route ? "cursor-pointer" : ""}`}
+                  whileHover={{ borderColor: "rgba(16,223,253,0.3)", x: page.route ? 2 : 0 }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -489,7 +493,12 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                         <div className="text-gray-500 text-[11px]">{page.tech}</div>
                       </div>
                     </div>
-                    <StatusBadge status={page.status} l={l} />
+                    <div className="flex items-center gap-3">
+                      <StatusBadge status={page.status} l={l} />
+                      {page.route && (
+                        <span className="text-[#10dffd] text-xs opacity-60">→</span>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-[#10dffd]/10">
