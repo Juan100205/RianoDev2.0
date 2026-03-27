@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import type { GitHubRepo } from "./useGitHubRepos";
+import { CURATED_REPOS } from "./useGitHubRepos";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -31,34 +32,58 @@ export interface AccessEntry {
   repo_id: number;
 }
 
+export interface AiWorkflow {
+  id: string;
+  name: string;
+  description: string | null;
+  type: string;
+  status: string;
+  n8n_webhook_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WorkflowAccessEntry {
+  user_id: string;
+  workflow_id: string;
+}
+
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 export function useAdminPanel(enabled = false) {
   const [repos, setRepos] = useState<DbRepo[]>([]);
   const [users, setUsers] = useState<Profile[]>([]);
   const [access, setAccess] = useState<AccessEntry[]>([]);
+  const [workflows, setWorkflows] = useState<AiWorkflow[]>([]);
+  const [workflowAccess, setWorkflowAccess] = useState<WorkflowAccessEntry[]>([]);
   const [syncing, setSyncing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load repos, users and access from Supabase
+  // Load repos, users, access, workflows and workflow access from Supabase
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const [reposRes, usersRes, accessRes] = await Promise.all([
+      const [reposRes, usersRes, accessRes, workflowsRes, wfAccessRes] = await Promise.all([
         supabase.from("github_repos").select("*").order("stars", { ascending: false }),
         supabase.from("profiles").select("*").order("created_at", { ascending: true }),
         supabase.from("user_repo_access").select("user_id, repo_id"),
+        supabase.from("ai_workflows").select("*").order("created_at", { ascending: true }),
+        supabase.from("user_workflow_access").select("user_id, workflow_id"),
       ]);
 
       if (reposRes.error) throw reposRes.error;
       if (usersRes.error) throw usersRes.error;
       if (accessRes.error) throw accessRes.error;
+      if (workflowsRes.error) throw workflowsRes.error;
+      if (wfAccessRes.error) throw wfAccessRes.error;
 
       setRepos((reposRes.data as DbRepo[]) ?? []);
       setUsers((usersRes.data as Profile[]) ?? []);
       setAccess((accessRes.data as AccessEntry[]) ?? []);
+      setWorkflows((workflowsRes.data as AiWorkflow[]) ?? []);
+      setWorkflowAccess((wfAccessRes.data as WorkflowAccessEntry[]) ?? []);
     } catch (e: any) {
       setError(e.message ?? "Error loading admin data");
     } finally {
@@ -71,19 +96,22 @@ export function useAdminPanel(enabled = false) {
     else setLoading(false);
   }, [load, enabled]);
 
-  // Sync all public repos from GitHub API → Supabase
+  // Sync curated repos from GitHub API → Supabase
   const syncFromGitHub = useCallback(async () => {
     setSyncing(true);
     setError(null);
     try {
-      const res = await fetch(
-        "https://api.github.com/users/Juan100205/repos?sort=updated&per_page=100"
+      const headers = { Accept: "application/vnd.github+json" };
+      const results = await Promise.all(
+        CURATED_REPOS.map((slug) =>
+          fetch(`https://api.github.com/repos/${slug}`, { headers })
+            .then((r) => (r.ok ? (r.json() as Promise<GitHubRepo>) : null))
+            .catch(() => null)
+        )
       );
-      if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
-      const data: GitHubRepo[] = await res.json();
 
-      const rows = data
-        .filter((r) => !r.fork)
+      const rows = results
+        .filter((r): r is GitHubRepo => r !== null)
         .map((r) => ({
           id: r.id,
           name: r.name,
@@ -118,7 +146,6 @@ export function useAdminPanel(enabled = false) {
         .from("user_repo_access")
         .insert({ user_id: userId, repo_id: repoId });
       if (error && error.code !== "23505") {
-        // 23505 = unique violation (already exists) → ignore
         setError(error.message);
         return;
       }
@@ -152,10 +179,56 @@ export function useAdminPanel(enabled = false) {
     [access]
   );
 
+  // Grant a user access to a workflow
+  const grantWorkflowAccess = useCallback(
+    async (userId: string, workflowId: string) => {
+      const { error } = await supabase
+        .from("user_workflow_access")
+        .insert({ user_id: userId, workflow_id: workflowId });
+      if (error && error.code !== "23505") {
+        setError(error.message);
+        return;
+      }
+      setWorkflowAccess((prev) => [...prev, { user_id: userId, workflow_id: workflowId }]);
+    },
+    []
+  );
+
+  // Revoke a user's access to a workflow
+  const revokeWorkflowAccess = useCallback(
+    async (userId: string, workflowId: string) => {
+      const { error } = await supabase
+        .from("user_workflow_access")
+        .delete()
+        .match({ user_id: userId, workflow_id: workflowId });
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      setWorkflowAccess((prev) =>
+        prev.filter((a) => !(a.user_id === userId && a.workflow_id === workflowId))
+      );
+    },
+    []
+  );
+
+  // Convenience: set of workflowIds for a given userId
+  const workflowsForUser = useCallback(
+    (userId: string): Set<string> =>
+      new Set(
+        workflowAccess
+          .filter((a) => a.user_id === userId)
+          .map((a) => a.workflow_id)
+      ),
+    [workflowAccess]
+  );
+
   return {
     repos,
     users,
     access,
+    workflows,
+    workflowAccess,
     loading,
     syncing,
     error,
@@ -163,6 +236,9 @@ export function useAdminPanel(enabled = false) {
     grantAccess,
     revokeAccess,
     reposForUser,
+    grantWorkflowAccess,
+    revokeWorkflowAccess,
+    workflowsForUser,
     reload: load,
   };
 }
