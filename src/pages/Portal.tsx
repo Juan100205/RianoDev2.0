@@ -1,14 +1,7 @@
 import type { RefObject } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
-  GlobeAltIcon,
-  LinkIcon,
-  BoltIcon,
-  CpuChipIcon,
-  ShieldCheckIcon,
-  CheckCircleIcon,
   ArrowPathIcon,
   UserCircleIcon,
   ArrowLeftStartOnRectangleIcon,
@@ -18,6 +11,8 @@ import {
   PlusIcon,
   CodeBracketIcon,
   XMarkIcon,
+  BoltIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 
 const RefreshIcon = ArrowPathIcon;
@@ -31,100 +26,36 @@ interface Props {
   scrollRef: RefObject<HTMLDivElement | null>;
 }
 
-type Tab = "blog" | "flujos" | "paginas" | "dominios" | "automatizaciones" | "profile" | "settings" | "admin" | "blog-admin" | "proyectos";
+type Tab = "automatizaciones" | "documentos" | "proyectos" | "profile" | "settings" | "admin" | "blog-admin";
 
 
-
-const webPages = [
-  { id: 1, domain: "rianodevz.net", status: "live", lastDeploy: "2026-03-01", score: 98, tech: "React + Vite", route: null as string | null },
-  { id: 2, domain: "cataly.co", status: "live", lastDeploy: "2026-02-20", score: 95, tech: "Next.js", route: null as string | null },
-  { id: 3, domain: "arcovxr.com", status: "live", lastDeploy: "2026-01-15", score: 92, tech: "React", route: null as string | null },
-  { id: 4, domain: "conjuntocallejas.co", status: "maintenance", lastDeploy: "2026-03-10", score: 88, tech: "WordPress", route: null as string | null },
-  { id: 5, domain: "Método Levántate", status: "live", lastDeploy: "2026-03-26", score: 100, tech: "React + Vite", route: "/metodo-levantate" },
-];
-
-const domainsList = [
-  { id: 1, domain: "rianodevz.net", registrar: "Namecheap", expires: "2027-03-01", ssl: true, autoRenew: true },
-  { id: 2, domain: "cataly.co", registrar: "GoDaddy", expires: "2027-01-10", ssl: true, autoRenew: false },
-  { id: 3, domain: "arcovxr.com", registrar: "Namecheap", expires: "2026-11-22", ssl: true, autoRenew: true },
-  { id: 4, domain: "conjuntocallejas.co", registrar: "Porkbun", expires: "2026-08-05", ssl: true, autoRenew: true },
-];
-
-const automations = [
-  {
-    id: 1,
-    name: { en: "Lead capture bot", es: "Bot de captura de leads" },
-    trigger: "WhatsApp",
-    status: "active",
-    lastRun: { en: "2 min ago", es: "hace 2 min" },
-  },
-  {
-    id: 2,
-    name: { en: "CRM sync", es: "Sincronización CRM" },
-    trigger: "Scheduled",
-    status: "active",
-    lastRun: { en: "1 hour ago", es: "hace 1 hora" },
-  },
-  {
-    id: 3,
-    name: { en: "Weekly report", es: "Reporte semanal" },
-    trigger: "Weekly",
-    status: "paused",
-    lastRun: { en: "3 days ago", es: "hace 3 días" },
-  },
-  {
-    id: 4,
-    name: { en: "Email follow-up", es: "Seguimiento por email" },
-    trigger: "Form submit",
-    status: "active",
-    lastRun: { en: "34 min ago", es: "hace 34 min" },
-  },
-];
-
-// ── Status badge ─────────────────────────────────────────────────────────────
-
-const statusMap: Record<string, { en: string; es: string; cls: string }> = {
-  published: { en: "Published", es: "Publicado", cls: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20" },
-  draft: { en: "Draft", es: "Borrador", cls: "text-gray-400 bg-gray-400/10 border-gray-400/20" },
-  active: { en: "Active", es: "Activo", cls: "text-[#10dffd] bg-[#10dffd]/10 border-[#10dffd]/20" },
-  paused: { en: "Paused", es: "Pausado", cls: "text-amber-400 bg-amber-400/10 border-amber-400/20" },
-  live: { en: "Live", es: "En línea", cls: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20" },
-  maintenance: { en: "Maintenance", es: "Mantenimiento", cls: "text-amber-400 bg-amber-400/10 border-amber-400/20" },
-};
 
 import { useAuth } from "../context/AuthContext";
 import Auth from "../Components/Auth";
 import { useAdminPanel } from "../hooks/useAdminPanel";
 import { useUserRepos } from "../hooks/useUserRepos";
 import { useGitHubRepos } from "../hooks/useGitHubRepos";
-import { useWorkflows, type AiWorkflow } from "../hooks/useWorkflows";
-import WorkflowDashboard from "../Components/WorkflowDashboard";
-
-const StatusBadge = ({ status, l }: { status: string; l: boolean }) => {
-  const s = statusMap[status] ?? statusMap.draft;
-  return (
-    <span className={`text-[10px] px-2.5 py-0.5 rounded-full border ${s.cls}`}>
-      {l ? s.en : s.es}
-    </span>
-  );
-};
 
 // ── Main component ────────────────────────────────────────────────────────────
 
 const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
-  const navigate = useNavigate();
   const { user, loading, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>("flujos");
+  const [activeTab, setActiveTab] = useState<Tab>("automatizaciones");
   const l = languageState;
 
-  const sidebarStagger: Variants = {
-    hidden: {},
-    show: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } },
-  };
-  const sidebarItem: Variants = {
-    hidden: { opacity: 0, x: -14 },
-    show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as const } },
-  };
+  // Computed before hooks so all hooks are always called unconditionally
+  const userEmail = user?.email || "";
+  const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",") || [];
+  const isAdmin = adminEmails.includes(userEmail);
+
+  // ── Admin panel state (only fetches when isAdmin) ─────────────────────────
+  const adminPanel = useAdminPanel(isAdmin);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+  // ── User repos: admin sees all from GitHub API, clients see Supabase-assigned ──
+  const githubRepos = useGitHubRepos("Juan100205");
+  const userRepos = useUserRepos(isAdmin ? null : (user?.id ?? null));
+
   const tabFade: Variants = {
     hidden: { opacity: 0, y: 14 },
     show: { opacity: 1, y: 0, transition: { duration: 0.38, ease: [0.25, 0.46, 0.45, 0.94] as const } },
@@ -151,460 +82,22 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
     return (
       <>
         <Header scrollRef={scrollRef} languageState={languageState} setLanguageState={setLanguageState} />
-        <div ref={scrollRef} className="page_scroll scrollbar_exp flex items-center justify-center py-20 bg-black">
+        <div ref={scrollRef} className="page_scroll scrollbar_exp flex items-center justify-center py-20 bg-white dark:bg-black">
           <Auth />
         </div>
       </>
     );
   }
   const displayName = user.user_metadata?.full_name || user.email?.split("@")[0] || "Cliente";
-  const userEmail = user.email || "";
-  const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",") || [];
-  const isAdmin = adminEmails.includes(userEmail);
-
-  // ── Admin panel state (only fetches when isAdmin) ─────────────────────────
-  const adminPanel = useAdminPanel(isAdmin);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-
-  // ── User repos: admin sees all from GitHub API, clients see Supabase-assigned ──
-  const githubRepos = useGitHubRepos("Juan100205");
-  const userRepos = useUserRepos(isAdmin ? null : user.id);
-
-  // ── AI Workflows ──────────────────────────────────────────────────────────
-  const workflows = useWorkflows(isAdmin);
-  const [selectedWorkflow, setSelectedWorkflow] = useState<AiWorkflow | null>(null);
-
-  // ── Add workflow modal state ───────────────────────────────────────────────
-  const [showAddWorkflow, setShowAddWorkflow] = useState(false);
-  const [newWfName, setNewWfName] = useState('');
-  const [newWfType, setNewWfType] = useState<AiWorkflow['type']>('conversational');
-  const [newWfDesc, setNewWfDesc] = useState('');
-  const [newWfWebhook, setNewWfWebhook] = useState('');
-  const [savingWf, setSavingWf] = useState(false);
 
   const renderContent = () => {
     switch (activeTab) {
-      // ── Flujos de IA ───────────────────────────────────────────────────────
-      case "flujos": {
-        const totalInteractions = workflows.workflows.reduce((acc, _wf) => acc, 0);
-        const activeCount = workflows.workflows.filter((wf) => wf.status === "active").length;
-
-        const handleAddWorkflow = async () => {
-          if (!newWfName.trim()) return;
-          setSavingWf(true);
-          try {
-            await workflows.createWorkflow({
-              name: newWfName.trim(),
-              description: newWfDesc.trim() || null,
-              type: newWfType,
-              status: "active",
-              n8n_webhook_url: newWfWebhook.trim() || null,
-            });
-            setNewWfName('');
-            setNewWfDesc('');
-            setNewWfWebhook('');
-            setNewWfType('conversational');
-            setShowAddWorkflow(false);
-          } catch {
-            // silent
-          } finally {
-            setSavingWf(false);
-          }
-        };
-
-        const TYPE_MAP: Record<string, { en: string; es: string }> = {
-          conversational: { en: "Conversational", es: "Conversacional" },
-          classification: { en: "Classification", es: "Clasificación" },
-          generation: { en: "Generation", es: "Generación" },
-          voice: { en: "Voice", es: "Voz" },
-        };
-
-        return (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-white text-xl font-light">
-                {l ? "AI Flows" : "Flujos de IA"}
-              </h2>
-              {isAdmin && (
-                <motion.button
-                  onClick={() => setShowAddWorkflow((v) => !v)}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="flex items-center gap-2 text-[10px] tracking-widest uppercase bg-[#10dffd] text-black px-4 py-1.5 rounded-full hover:opacity-90 transition-opacity cursor-pointer"
-                >
-                  <PlusIcon className="w-3 h-3" />
-                  {l ? "Add flow" : "Agregar flujo"}
-                </motion.button>
-              )}
-            </div>
-
-            {/* Add workflow form */}
-            {showAddWorkflow && isAdmin && (
-              <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="border border-[#10dffd]/20 rounded-xl p-5 mb-6 bg-[#10dffd]/[0.02]"
-              >
-                <div className="text-[10px] text-[#10dffd] tracking-widest uppercase mb-4">
-                  {l ? "New AI Flow" : "Nuevo Flujo de IA"}
-                </div>
-                <div className="grid gap-3 md:grid-cols-2">
-                  <input
-                    value={newWfName}
-                    onChange={(e) => setNewWfName(e.target.value)}
-                    placeholder={l ? "Flow name" : "Nombre del flujo"}
-                    className="border border-[#10dffd]/15 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40 placeholder-gray-600"
-                  />
-                  <select
-                    value={newWfType}
-                    onChange={(e) => setNewWfType(e.target.value as AiWorkflow['type'])}
-                    className="border border-[#10dffd]/15 bg-black text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40"
-                  >
-                    <option value="conversational">{l ? "Conversational" : "Conversacional"}</option>
-                    <option value="classification">{l ? "Classification" : "Clasificación"}</option>
-                    <option value="generation">{l ? "Generation" : "Generación"}</option>
-                    <option value="voice">{l ? "Voice" : "Voz"}</option>
-                  </select>
-                  <input
-                    value={newWfDesc}
-                    onChange={(e) => setNewWfDesc(e.target.value)}
-                    placeholder={l ? "Description (optional)" : "Descripción (opcional)"}
-                    className="border border-[#10dffd]/15 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40 placeholder-gray-600 md:col-span-2"
-                  />
-                  <input
-                    value={newWfWebhook}
-                    onChange={(e) => setNewWfWebhook(e.target.value)}
-                    placeholder="n8n webhook URL (optional)"
-                    className="border border-[#10dffd]/15 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40 placeholder-gray-600 md:col-span-2"
-                  />
-                </div>
-                <div className="flex gap-2 mt-4">
-                  <motion.button
-                    onClick={() => void handleAddWorkflow()}
-                    disabled={savingWf || !newWfName.trim()}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="bg-[#10dffd] text-black text-xs px-5 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-40 cursor-pointer"
-                  >
-                    {savingWf ? (l ? "Saving..." : "Guardando...") : (l ? "Create" : "Crear")}
-                  </motion.button>
-                  <button
-                    onClick={() => setShowAddWorkflow(false)}
-                    className="border border-[#10dffd]/15 text-gray-400 text-xs px-4 py-2 rounded-lg hover:border-[#10dffd]/30 transition-colors cursor-pointer"
-                  >
-                    {l ? "Cancel" : "Cancelar"}
-                  </button>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Stats */}
-            <motion.div
-              className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8"
-              variants={contentStagger}
-              initial="hidden"
-              animate="show"
-            >
-              {[
-                { label: { en: "Total flows", es: "Flujos totales" }, value: String(workflows.workflows.length) },
-                { label: { en: "Active", es: "Activos" }, value: String(activeCount) },
-                { label: { en: "Total interactions", es: "Interacciones totales" }, value: String(totalInteractions) },
-              ].map((stat) => (
-                <motion.div
-                  key={stat.label.en}
-                  variants={contentItem}
-                  className="border border-[#10dffd]/15 rounded-xl p-4 bg-[#10dffd]/[0.02]"
-                >
-                  <div className="text-[#10dffd] text-xl font-light">{stat.value}</div>
-                  <div className="text-gray-500 text-[11px] mt-1">
-                    {l ? stat.label.en : stat.label.es}
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Loading */}
-            {workflows.loading && (
-              <div className="flex items-center justify-center py-16">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#10dffd]" />
-              </div>
-            )}
-
-            {/* Error */}
-            {workflows.error && (
-              <div className="border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-xs mb-4">
-                {workflows.error}
-              </div>
-            )}
-
-            {/* Empty state */}
-            {!workflows.loading && workflows.workflows.length === 0 && (
-              <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
-                <CpuChipIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
-                <p className="text-gray-500 text-sm font-light">
-                  {l
-                    ? "No flows yet. Click + to add one."
-                    : "No hay flujos. Haz clic en + para agregar."}
-                </p>
-              </div>
-            )}
-
-            {/* Flow cards */}
-            {!workflows.loading && workflows.workflows.length > 0 && (
-              <motion.div
-                className="grid md:grid-cols-2 gap-4"
-                variants={contentStagger}
-                initial="hidden"
-                animate="show"
-              >
-                {workflows.workflows.map((wf) => (
-                  <motion.div
-                    key={wf.id}
-                    variants={contentItem}
-                    onClick={() => setSelectedWorkflow(wf)}
-                    className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 bg-[#10dffd]/[0.01] cursor-pointer"
-                    whileHover={{ borderColor: "rgba(16,223,253,0.3)" }}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <div className="text-white text-sm font-light">{wf.name}</div>
-                        <div className="text-gray-500 text-[11px] mt-0.5">
-                          {l
-                            ? (TYPE_MAP[wf.type]?.en ?? wf.type)
-                            : (TYPE_MAP[wf.type]?.es ?? wf.type)}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <StatusBadge status={wf.status} l={l} />
-                        {isAdmin && (
-                          <motion.button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              void workflows.updateWorkflow(wf.id, {
-                                status: wf.status === "active" ? "paused" : "active",
-                              });
-                            }}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            className="text-gray-600 hover:text-[#10dffd] transition-colors cursor-pointer"
-                            title={wf.status === "active" ? (l ? "Pause" : "Pausar") : (l ? "Activate" : "Activar")}
-                          >
-                            <PencilSquareIcon className="w-3.5 h-3.5" />
-                          </motion.button>
-                        )}
-                      </div>
-                    </div>
-                    {wf.description && (
-                      <p className="text-gray-600 text-[11px] mb-3 leading-relaxed">{wf.description}</p>
-                    )}
-                    <div className="flex items-end justify-between mt-4 pt-4 border-t border-[#10dffd]/10">
-                      <span className="text-[#10dffd] text-xs">
-                        {l ? "Open dashboard →" : "Ver dashboard →"}
-                      </span>
-                      <span className="text-gray-600 text-[10px]">
-                        {new Date(wf.updated_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </div>
-        );
-      }
-
-      // ── Páginas Web ────────────────────────────────────────────────────────
-      case "paginas":
-        return (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-white text-xl font-light">
-                {l ? "Web Pages" : "Páginas Web"}
-              </h2>
-            </div>
-
-            <motion.div
-              className="flex flex-col gap-4"
-              variants={contentStagger}
-              initial="hidden"
-              animate="show"
-            >
-              {webPages.map((page) => (
-                <motion.div
-                  key={page.id}
-                  variants={contentItem}
-                  onClick={() => page.route ? navigate(page.route) : undefined}
-                  className={`border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 bg-[#10dffd]/[0.01] ${page.route ? "cursor-pointer" : ""}`}
-                  whileHover={{ borderColor: "rgba(16,223,253,0.3)", x: page.route ? 2 : 0 }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-[#10dffd]/10 flex items-center justify-center flex-shrink-0">
-                        <GlobeAltIcon className="w-4 h-4 text-[#10dffd]" />
-                      </div>
-                      <div>
-                        <div className="text-white text-sm font-light">{page.domain}</div>
-                        <div className="text-gray-500 text-[11px]">{page.tech}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <StatusBadge status={page.status} l={l} />
-                      {page.route && (
-                        <span className="text-[#10dffd] text-xs opacity-60">→</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-[#10dffd]/10">
-                    <div>
-                      <div className="text-gray-600 text-[10px] mb-0.5">
-                        {l ? "Last deploy" : "Último deploy"}
-                      </div>
-                      <div className="text-gray-400 text-xs">{page.lastDeploy}</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-600 text-[10px] mb-0.5">
-                        {l ? "Performance score" : "Score de rendimiento"}
-                      </div>
-                      <div
-                        className={`text-xs font-light ${
-                          page.score >= 95
-                            ? "text-emerald-400"
-                            : page.score >= 90
-                            ? "text-[#10dffd]"
-                            : "text-amber-400"
-                        }`}
-                      >
-                        {page.score} / 100
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        );
-
-      // ── Dominios ───────────────────────────────────────────────────────────
-      case "dominios":
-        return (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-white text-xl font-light">
-                {l ? "Domains" : "Dominios"}
-              </h2>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-[#10dffd]/10 text-left">
-                    {[
-                      { en: "Domain", es: "Dominio" },
-                      { en: "Registrar", es: "Registrador" },
-                      { en: "Expires", es: "Vence" },
-                      { en: "SSL", es: "SSL" },
-                      { en: "Auto-renew", es: "Auto-renovación" },
-                    ].map((col) => (
-                      <th
-                        key={col.en}
-                        className="pb-3 pr-8 text-[10px] text-[#10dffd] tracking-widest uppercase font-normal"
-                      >
-                        {l ? col.en : col.es}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <motion.tbody
-                  variants={contentStagger}
-                  initial="hidden"
-                  animate="show"
-                >
-                  {domainsList.map((d) => (
-                    <motion.tr
-                      key={d.id}
-                      variants={contentItem}
-                      className="border-b border-[#10dffd]/5 hover:bg-[#10dffd]/[0.02] transition-colors"
-                    >
-                      <td className="py-4 pr-8 text-white font-light">{d.domain}</td>
-                      <td className="py-4 pr-8 text-gray-400 text-xs">{d.registrar}</td>
-                      <td className="py-4 pr-8 text-gray-400 text-xs">{d.expires}</td>
-                      <td className="py-4 pr-8">
-                        {d.ssl ? (
-                          <ShieldCheckIcon className="w-4 h-4 text-emerald-400" />
-                        ) : (
-                          <span className="text-gray-600 text-xs">—</span>
-                        )}
-                      </td>
-                      <td className="py-4">
-                        {d.autoRenew ? (
-                          <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
-                        ) : (
-                          <ArrowPathIcon className="w-4 h-4 text-gray-600" />
-                        )}
-                      </td>
-                    </motion.tr>
-                  ))}
-                </motion.tbody>
-              </table>
-            </div>
-          </div>
-        );
-
-      // ── Automatizaciones ───────────────────────────────────────────────────
-      case "automatizaciones":
-        return (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-white text-xl font-light">
-                {l ? "Automations" : "Automatizaciones"}
-              </h2>
-            </div>
-
-            <motion.div
-              className="flex flex-col gap-3"
-              variants={contentStagger}
-              initial="hidden"
-              animate="show"
-            >
-              {automations.map((auto) => (
-                <motion.div
-                  key={auto.id}
-                  variants={contentItem}
-                  className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 flex items-center justify-between gap-4 bg-[#10dffd]/[0.01]"
-                  whileHover={{ borderColor: "rgba(16,223,253,0.3)", x: 2 }}
-                >
-                  <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <div
-                      className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                        auto.status === "active" ? "bg-[#10dffd]" : "bg-gray-600"
-                      }`}
-                    />
-                    <div className="min-w-0">
-                      <div className="text-white text-sm font-light truncate">
-                        {l ? auto.name.en : auto.name.es}
-                      </div>
-                      <div className="flex items-center gap-3 mt-0.5">
-                        <span className="text-gray-500 text-[11px]">{auto.trigger}</span>
-                        <span className="text-gray-600 text-[11px]">
-                          {l ? auto.lastRun.en : auto.lastRun.es}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <StatusBadge status={auto.status} l={l} />
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        );
-
       // ── Profile ────────────────────────────────────────────────────────────
       case "profile": {
         const initials = displayName.slice(0, 2).toUpperCase();
         return (
           <div className="max-w-lg">
-            <h2 className="text-white text-xl font-light mb-8">{l ? "Profile" : "Perfil"}</h2>
+            <h2 className="font-banner font-light text-white text-2xl mb-8">{l ? "Profile" : "Perfil"}</h2>
 
             {/* Avatar */}
             <div className="flex items-center gap-5 mb-8">
@@ -656,7 +149,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
       case "settings":
         return (
           <div className="max-w-lg">
-            <h2 className="text-white text-xl font-light mb-8">{l ? "Settings" : "Configuración"}</h2>
+            <h2 className="font-banner font-light text-white text-2xl mb-8">{l ? "Settings" : "Configuración"}</h2>
 
             {/* Notifications */}
             <section className="mb-8">
@@ -713,7 +206,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
       case "blog-admin":
         return (
           <div className="max-w-2xl">
-            <h2 className="text-white text-xl font-light mb-2">{l ? "Write Article" : "Nuevo Artículo para el Blog"}</h2>
+            <h2 className="font-banner font-light text-white text-2xl mb-2">{l ? "Write Article" : "Nuevo Artículo para el Blog"}</h2>
             <p className="text-gray-400 text-sm mb-8">{l ? "Submit a new article to be published." : "Redacta un nuevo artículo y envíalo para publicación."}</p>
             <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); alert(l ? "Article saved locally. Supabase connection will be configured soon." : "Artículo guardado localmente. La conexión a Supabase 'posts' se configurará pronto."); }}>
               <div className="flex flex-col gap-1.5">
@@ -741,6 +234,43 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
           </div>
         );
 
+      // ── Webs ───────────────────────────────────────────────────────────────
+      // ── Automatizaciones ───────────────────────────────────────────────────
+      case "automatizaciones":
+        return (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-banner font-light text-white text-2xl">
+                {l ? "Automations" : "Automatizaciones"}
+              </h2>
+            </div>
+            <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+              <BoltIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
+              <p className="text-gray-500 text-sm font-light">
+                {l ? "Coming soon." : "Próximamente."}
+              </p>
+            </div>
+          </div>
+        );
+
+      // ── Documentos ─────────────────────────────────────────────────────────
+      case "documentos":
+        return (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-banner font-light text-white text-2xl">
+                {l ? "Documents" : "Documentos"}
+              </h2>
+            </div>
+            <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+              <DocumentTextIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
+              <p className="text-gray-500 text-sm font-light">
+                {l ? "Coming soon." : "Próximamente."}
+              </p>
+            </div>
+          </div>
+        );
+
       // ── Proyectos ──────────────────────────────────────────────────────────
       case "proyectos": {
         // Admin → live from GitHub API. Client → Supabase-assigned repos.
@@ -758,8 +288,8 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
           <div>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-white text-xl font-light">
-                  {l ? "Projects" : "Proyectos"}
+                <h2 className="font-banner font-light text-white text-2xl">
+                  {l ? "Web Pages" : "Páginas Web"}
                 </h2>
                 {isAdmin && (
                   <p className="text-gray-600 text-xs mt-1">
@@ -891,7 +421,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
         return (
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-white text-xl font-light">{l ? "Admin Dashboard" : "Panel de Administración"}</h2>
+              <h2 className="font-banner font-light text-white text-2xl">{l ? "Admin Dashboard" : "Panel de Administración"}</h2>
             </div>
 
             {adminPanel.error && (
@@ -1043,6 +573,107 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 </div>
               </div>
             </section>
+
+            {/* ── AI Workflows access management ── */}
+            <section className="mt-10">
+              <span className="text-[10px] text-[#10dffd] tracking-[0.25em] uppercase block mb-4">
+                {l ? "AI Workflows" : "Flujos de IA"}
+                {adminPanel.workflows.length > 0 && (
+                  <span className="ml-2 text-gray-600">({adminPanel.workflows.length})</span>
+                )}
+              </span>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {/* Users list (reuse same selection) */}
+                <div className="border border-[#10dffd]/15 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
+                  <p className="text-gray-600 text-[10px] uppercase tracking-widest mb-1">
+                    {l ? "Select user" : "Selecciona usuario"}
+                  </p>
+                  {adminPanel.users.filter((u) => !u.is_admin).map((u) => (
+                    <button
+                      key={u.id}
+                      onClick={() => setSelectedUserId(selectedUserId === u.id ? null : u.id)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer border ${
+                        selectedUserId === u.id
+                          ? "bg-[#10dffd]/10 border-[#10dffd]/30 text-[#10dffd]"
+                          : "border-transparent hover:bg-white/5 text-gray-300"
+                      }`}
+                    >
+                      <UserCircleIcon className="w-5 h-5 flex-shrink-0 opacity-50" />
+                      <div className="min-w-0">
+                        <div className="text-xs font-light truncate">{u.full_name || u.email}</div>
+                        {u.full_name && (
+                          <div className="text-[10px] text-gray-600 truncate">{u.email}</div>
+                        )}
+                      </div>
+                      <span className="ml-auto text-[10px] text-gray-600 shrink-0">
+                        {adminPanel.workflowsForUser(u.id).size} flows
+                      </span>
+                    </button>
+                  ))}
+                  {adminPanel.users.filter((u) => !u.is_admin).length === 0 && !adminPanel.loading && (
+                    <p className="text-gray-600 text-xs text-center py-4">
+                      {l ? "No users registered yet." : "Sin usuarios registrados aún."}
+                    </p>
+                  )}
+                </div>
+
+                {/* Workflow access toggles for selected user */}
+                <div className="border border-[#10dffd]/15 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
+                  {!selectedUserId ? (
+                    <div className="flex items-center justify-center h-full py-10 text-center">
+                      <p className="text-gray-600 text-xs">
+                        {l ? "← Select a user to manage their workflows" : "← Selecciona un usuario para gestionar sus flujos"}
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-gray-600 text-[10px] uppercase tracking-widest">
+                          {l ? "Workflow access" : "Acceso a flujos"}
+                        </p>
+                        <button
+                          onClick={() => setSelectedUserId(null)}
+                          className="text-gray-600 hover:text-gray-400 transition-colors cursor-pointer"
+                        >
+                          <XMarkIcon className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      {adminPanel.workflows.length === 0 && (
+                        <p className="text-gray-600 text-xs text-center py-4">
+                          {l ? "No workflows found. Run migration 004." : "Sin flujos. Ejecuta la migración 004."}
+                        </p>
+                      )}
+                      {adminPanel.workflows.map((wf) => {
+                        const hasAccess = adminPanel.workflowsForUser(selectedUserId).has(wf.id);
+                        return (
+                          <div key={wf.id} className="flex items-center justify-between border border-[#10dffd]/8 rounded-xl px-3 py-2">
+                            <div className="min-w-0 mr-2">
+                              <span className="text-xs text-gray-300 font-light truncate block">{wf.name}</span>
+                              {wf.description && (
+                                <span className="text-[10px] text-gray-600 truncate block">{wf.description}</span>
+                              )}
+                            </div>
+                            <button
+                              onClick={() =>
+                                hasAccess
+                                  ? adminPanel.revokeWorkflowAccess(selectedUserId, wf.id)
+                                  : adminPanel.grantWorkflowAccess(selectedUserId, wf.id)
+                              }
+                              className={`shrink-0 w-9 h-5 rounded-full relative cursor-pointer transition-colors ${
+                                hasAccess ? "bg-[#10dffd]/40" : "bg-white/10"
+                              }`}
+                            >
+                              <div className={`w-3.5 h-3.5 rounded-full bg-white absolute top-[3px] transition-all ${hasAccess ? "left-[18px]" : "left-[3px]"}`} />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
+              </div>
+            </section>
           </div>
         );
     }
@@ -1051,15 +682,13 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
   // ── Tabs configuration ───────────────────────────────────────────────────
 
   const mainTabs = [
-    { id: "flujos" as Tab, icon: CpuChipIcon, label: { en: "AI Flows", es: "Flujos de IA" } },
-    { id: "paginas" as Tab, icon: GlobeAltIcon, label: { en: "Web Pages", es: "Páginas Web" } },
-    { id: "proyectos" as Tab, icon: CodeBracketIcon, label: { en: "Projects", es: "Proyectos" } },
-    { id: "dominios" as Tab, icon: LinkIcon, label: { en: "Domains", es: "Dominios" } },
     { id: "automatizaciones" as Tab, icon: BoltIcon, label: { en: "Automations", es: "Automatizaciones" } },
+    { id: "documentos" as Tab, icon: DocumentTextIcon, label: { en: "Documents", es: "Documentos" } },
     { id: "blog-admin" as Tab, icon: PencilSquareIcon, label: { en: "Write Article", es: "Aportar al Blog" } },
   ];
 
   if (isAdmin) {
+    mainTabs.push({ id: "proyectos" as Tab, icon: CodeBracketIcon, label: { en: "Web Pages", es: "Páginas Web" } });
     mainTabs.push({ id: "admin" as Tab, icon: ShieldExclamationIcon, label: { en: "Admin", es: "Admin" } });
   }
 
@@ -1070,144 +699,100 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
   const allTabs = [...mainTabs, ...accountTabs];
 
-  const SidebarBtn = ({ tab }: { tab: typeof mainTabs[0] }) => {
-    const Icon = tab.icon;
-    const active = activeTab === tab.id;
-    return (
-      <motion.button
-        variants={sidebarItem}
-        onClick={() => setActiveTab(tab.id)}
-        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-light transition-all text-left w-full cursor-pointer border ${
-          active
-            ? "bg-[#10dffd]/10 text-[#10dffd] border-[#10dffd]/20"
-            : "text-gray-500 hover:text-gray-300 hover:bg-white/5 border-transparent"
-        }`}
-        whileHover={{ x: 3 }}
-        whileTap={{ scale: 0.97 }}
-        transition={{ duration: 0.15 }}
-      >
-        <Icon className="w-4 h-4 flex-shrink-0" />
-        {l ? tab.label.en : tab.label.es}
-      </motion.button>
-    );
-  };
-
   return (
     <>
-    {selectedWorkflow && (
-      <WorkflowDashboard
-        workflow={selectedWorkflow}
-        onClose={() => setSelectedWorkflow(null)}
-        languageState={l}
-        isAdmin={isAdmin}
-        getCredentials={workflows.getCredentials}
-        saveCredential={workflows.saveCredential}
-        deleteCredential={workflows.deleteCredential}
-      />
-    )}
-    <div className="flex flex-col bg-black" style={{ height: "100vh", overflow: "hidden" }}>
+    <div className="flex flex-col bg-white dark:bg-black" style={{ height: "100vh", overflow: "hidden" }}>
 
-      {/* Dashboard top bar */}
+      {/* Header — misma estética que el Header externo */}
       <motion.header
-        className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/15 flex-shrink-0"
+        className="sticky top-0 border-b border-[#10dffd]/20 flex w-full z-50 justify-between items-center
+                   bg-white dark:bg-black transition-all duration-500 min-h-[5rem] px-4 md:px-10 flex-shrink-0"
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] as const }}
       >
-        <div className="flex items-center gap-3">
-          <img src={IsotipoWhite} alt="RIANODEVZ" className="h-8 w-8 object-contain hidden dark:block" />
-          <img src={IsotipoBlack} alt="RIANODEVZ" className="h-8 w-8 object-contain dark:hidden" />
-          <span className="text-[10px] text-[#10dffd]/60 tracking-[0.2em] uppercase hidden sm:block">
+        {/* Logo + label */}
+        <div className="flex items-center gap-4">
+          <img src={IsotipoWhite} alt="RIANODEVZ" className="w-10 object-contain hidden dark:block" />
+          <img src={IsotipoBlack} alt="RIANODEVZ" className="w-10 object-contain dark:hidden" />
+          <span className="font-display text-xs text-gray-400 dark:text-gray-500 hidden md:block tracking-widest uppercase">
             {l ? "Client Portal" : "Portal de Clientes"}
           </span>
         </div>
+
+        {/* Nav — estilo underline igual que el header externo */}
+        <nav className="hidden md:flex items-center gap-6">
+          {allTabs.map((tab) => {
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className="relative group font-display text-sm text-white transition-colors cursor-pointer bg-transparent border-none"
+              >
+                <span className={active ? "text-[#10dffd]" : "text-white hover:text-gray-300 transition-colors"}>
+                  {l ? tab.label.en : tab.label.es}
+                </span>
+                <span className={`absolute -bottom-0 left-0 h-0.5 bg-[#10dffd] transition-all duration-300 ${
+                  active ? "w-full" : "w-0 group-hover:w-full"
+                }`} />
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Sign out — estilo CTA outlined */}
         <motion.button
           onClick={() => signOut()}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/25 text-gray-500 hover:text-gray-300 transition-all cursor-pointer"
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
+          className="font-display text-xs tracking-widest uppercase border border-white/40 hover:border-white/80 hover:bg-white/5 text-white transition-all duration-300 px-5 py-2 rounded-full cursor-pointer hidden sm:flex items-center gap-2"
         >
-          <ArrowLeftStartOnRectangleIcon className="w-4 h-4" />
-          <span className="text-xs font-light hidden sm:block">{l ? "Log out" : "Salir"}</span>
+          <ArrowLeftStartOnRectangleIcon className="w-3.5 h-3.5" />
+          {l ? "Log out" : "Salir"}
         </motion.button>
+
+        {/* Mobile: solo icono salir */}
+        <button onClick={() => signOut()} className="sm:hidden text-white/60 hover:text-white transition-colors cursor-pointer">
+          <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
+        </button>
       </motion.header>
 
-      <div
-        ref={scrollRef}
-        className="flex flex-1 overflow-hidden"
-      >
-        {/* Desktop sidebar */}
-        <aside className="hidden md:flex flex-col w-56 border-r border-[#10dffd]/15 flex-shrink-0">
-          <motion.nav
-            className="flex flex-col gap-1 p-2 flex-1"
-            variants={sidebarStagger}
-            initial="hidden"
-            animate="show"
-          >
-            {mainTabs.map((tab) => <SidebarBtn key={tab.id} tab={tab} />)}
-          </motion.nav>
-          <motion.div
-            className="border-t border-[#10dffd]/10 p-2 flex flex-col gap-1"
-            variants={sidebarStagger}
-            initial="hidden"
-            animate="show"
-          >
-            {accountTabs.map((tab) => <SidebarBtn key={tab.id} tab={tab} />)}
-            <motion.button
-              variants={sidebarItem}
-              onClick={() => signOut()}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-light transition-all text-left w-full cursor-pointer border border-transparent text-red-400 hover:text-red-300 hover:bg-red-400/5 mt-auto"
-              whileHover={{ x: 3 }}
-              whileTap={{ scale: 0.97 }}
+      {/* Mobile tab bar */}
+      <div className="md:hidden flex border-b border-[#10dffd]/20 overflow-x-auto scrollbar_exp flex-shrink-0 bg-white dark:bg-black">
+        {allTabs.map((tab) => {
+          const Icon = tab.icon;
+          const active = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-3 font-display text-[10px] uppercase tracking-widest border-b-2 transition-colors cursor-pointer ${
+                active ? "border-[#10dffd] text-[#10dffd]" : "border-transparent text-gray-500"
+              }`}
             >
-              <ArrowLeftStartOnRectangleIcon className="w-4 h-4 flex-shrink-0" />
-              {l ? "Logout" : "Cerrar sesión"}
-            </motion.button>
-          </motion.div>
-        </aside>
-
-        {/* Right panel: mobile tab bar + content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-
-          {/* Mobile horizontal tab bar */}
-          <div className="md:hidden flex border-b border-[#10dffd]/15 overflow-x-auto scrollbar_exp flex-shrink-0">
-            {allTabs.map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex-shrink-0 flex items-center gap-2 px-4 py-3 text-[10px] uppercase tracking-widest border-b-2 transition-colors cursor-pointer ${
-                    active
-                      ? "border-[#10dffd] text-[#10dffd]"
-                      : "border-transparent text-gray-500"
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  {l ? tab.label.en : tab.label.es}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Tab content */}
-          <main className="flex-1 overflow-y-auto scrollbar_exp">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                variants={tabFade}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                className="p-6 md:p-10 max-w-4xl"
-              >
-                {renderContent()}
-              </motion.div>
-            </AnimatePresence>
-          </main>
-        </div>
+              <Icon className="w-3.5 h-3.5" />
+              {l ? tab.label.en : tab.label.es}
+            </button>
+          );
+        })}
       </div>
+
+      {/* Content */}
+      <main ref={scrollRef} className="flex-1 overflow-y-auto scrollbar_exp bg-white dark:bg-black">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            variants={tabFade}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+            className="w-full max-w-7xl mx-auto px-6 py-12 md:px-10"
+          >
+            {renderContent()}
+          </motion.div>
+        </AnimatePresence>
+      </main>
     </div>
     </>
   );

@@ -27,7 +27,8 @@
       "Bash(cp \"$SRC_ASSETS/$f\" \"$DEST_ASSETS/$f\")",
       "Bash(echo \"OK: $f\")",
       "Bash(done)",
-      "Bash(echo \"Exit: $?\")"
+      "Bash(echo \"Exit: $?\")",
+      "Bash(grep -rn from.*[''].*assets/ 'C:/Users/juanj/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src' --include=*.tsx --include=*.ts)"
     ]
   }
 }

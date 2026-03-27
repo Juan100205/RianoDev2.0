@@ -13,10 +13,19 @@ export interface GitHubRepo {
   fork: boolean;
 }
 
-// Repos in OTHER orgs/users that should also be shown
-const EXTRA_REPOS = ["ArcovXr/ArcovXr", "vykymoon/Connect"];
+// Repos curados manualmente — solo estos se muestran públicamente
+export const CURATED_REPOS = [
+  "Juan100205/RianoDev2.0",
+  "Juan100205/Cataly_ai",
+  "ArcovXr/ArcovXr",
+  "Juan100205/WhatsappDashboard",
+  "Juan100205/Metodo-Levantate",
+  "Juan100205/Oveja-Music-World",
+  "Juan100205/Sistema-de-Gestion-Residencial",
+  "Juan100205/Callejas-App",
+];
 
-export function useGitHubRepos(username: string) {
+export function useGitHubRepos(_username: string) {
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,39 +33,16 @@ export function useGitHubRepos(username: string) {
   useEffect(() => {
     const headers = { Accept: "application/vnd.github+json" };
 
-    const fetchOwn = fetch(
-      `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`,
-      { headers }
-    ).then((r) => {
-      if (!r.ok) throw new Error(`GitHub API ${r.status}`);
-      return r.json() as Promise<GitHubRepo[]>;
-    });
-
-    const fetchExtras = Promise.all(
-      EXTRA_REPOS.map((slug) =>
+    Promise.all(
+      CURATED_REPOS.map((slug) =>
         fetch(`https://api.github.com/repos/${slug}`, { headers })
           .then((r) => (r.ok ? (r.json() as Promise<GitHubRepo>) : null))
           .catch(() => null)
       )
-    );
+    )
+      .then((results) => {
+        const all = results.filter((r): r is GitHubRepo => r !== null);
 
-    Promise.all([fetchOwn, fetchExtras])
-      .then(([own, extras]) => {
-        const seen = new Set<number>();
-        const all: GitHubRepo[] = [];
-
-        for (const r of own) {
-          seen.add(r.id);
-          all.push(r);
-        }
-        for (const r of extras) {
-          if (r && !seen.has(r.id)) {
-            seen.add(r.id);
-            all.push(r);
-          }
-        }
-
-        // Sort: starred first, then by most recently updated
         all.sort((a, b) => {
           if (b.stargazers_count !== a.stargazers_count)
             return b.stargazers_count - a.stargazers_count;
@@ -70,7 +56,7 @@ export function useGitHubRepos(username: string) {
         setError(err.message);
         setLoading(false);
       });
-  }, [username]);
+  }, []);
 
   return { repos, loading, error };
 }
