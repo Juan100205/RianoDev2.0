@@ -17,9 +17,10 @@ import {
   PencilSquareIcon,
   PlusIcon,
   CodeBracketIcon,
-  ArrowPathIcon as RefreshIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
+
+const RefreshIcon = ArrowPathIcon;
 import IsotipoWhite from "../assets/IsotipoNoBgWhite.png";
 import IsotipoBlack from "../assets/IsotipoNoBgBlack.png";
 import Header from "../Components/Header";
