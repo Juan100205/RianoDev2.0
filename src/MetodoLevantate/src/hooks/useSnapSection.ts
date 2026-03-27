@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react'
 export function useSnapSection(sectionName: string) {
     const ref = useRef<HTMLElement>(null)
     const [isActive, setIsActive] = useState(false)
-    const deactivateTimer = useRef<ReturnType<typeof setTimeout>>()
+    const deactivateTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
     const tracked = useRef(false)
 
     useEffect(() => {
