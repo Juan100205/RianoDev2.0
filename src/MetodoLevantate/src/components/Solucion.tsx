@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import solucionImg from "../assets/Howto.png"
+import solucionImg from "../assets/HowTo.png"
 import { useSnapSection } from "../hooks/useSnapSection"
 import { staggerContainer, fadeUp, fadeRight } from "../lib/animations"
 
