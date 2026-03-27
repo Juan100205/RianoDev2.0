@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Logo from "../assets/Logo1.png"
-import isotipo from "../assets/isotipo.png"
+import isotipo from "../assets/Isotipo.png"
 
 const links = [
     { label: "Inicio",       id: "inicio" },
