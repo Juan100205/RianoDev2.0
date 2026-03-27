@@ -7,7 +7,6 @@ import {
   LinkIcon,
   BoltIcon,
   CpuChipIcon,
-  EyeIcon,
   ShieldCheckIcon,
   CheckCircleIcon,
   ArrowPathIcon,
@@ -17,6 +16,9 @@ import {
   ShieldExclamationIcon,
   PencilSquareIcon,
   PlusIcon,
+  CodeBracketIcon,
+  ArrowPathIcon as RefreshIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import IsotipoWhite from "../assets/IsotipoNoBgWhite.png";
 import IsotipoBlack from "../assets/IsotipoNoBgBlack.png";
@@ -28,7 +30,7 @@ interface Props {
   scrollRef: RefObject<HTMLDivElement | null>;
 }
 
-type Tab = "blog" | "flujos" | "paginas" | "dominios" | "automatizaciones" | "profile" | "settings" | "admin" | "blog-admin";
+type Tab = "blog" | "flujos" | "paginas" | "dominios" | "automatizaciones" | "profile" | "settings" | "admin" | "blog-admin" | "proyectos";
 
 
 
@@ -78,41 +80,6 @@ const automations = [
   },
 ];
 
-const aiFlows = [
-  {
-    id: 1,
-    name: { en: "Catali AI Chatbot", es: "Chatbot Catali AI" },
-    type: { en: "Conversational", es: "Conversacional" },
-    interactions: 1234,
-    status: "active",
-    lastActive: { en: "3 min ago", es: "hace 3 min" },
-  },
-  {
-    id: 2,
-    name: { en: "Lead qualifier", es: "Calificador de leads" },
-    type: { en: "Classification", es: "Clasificación" },
-    interactions: 567,
-    status: "active",
-    lastActive: { en: "1 hour ago", es: "hace 1 hora" },
-  },
-  {
-    id: 3,
-    name: { en: "Content generator", es: "Generador de contenido" },
-    type: { en: "Generation", es: "Generación" },
-    interactions: 89,
-    status: "paused",
-    lastActive: { en: "2 days ago", es: "hace 2 días" },
-  },
-  {
-    id: 4,
-    name: { en: "Voice clone assistant", es: "Asistente con voz clonada" },
-    type: { en: "Voice + Chat", es: "Voz + Chat" },
-    interactions: 2891,
-    status: "active",
-    lastActive: { en: "just now", es: "ahora mismo" },
-  },
-];
-
 // ── Status badge ─────────────────────────────────────────────────────────────
 
 const statusMap: Record<string, { en: string; es: string; cls: string }> = {
@@ -126,6 +93,11 @@ const statusMap: Record<string, { en: string; es: string; cls: string }> = {
 
 import { useAuth } from "../context/AuthContext";
 import Auth from "../Components/Auth";
+import { useAdminPanel } from "../hooks/useAdminPanel";
+import { useUserRepos } from "../hooks/useUserRepos";
+import { useGitHubRepos } from "../hooks/useGitHubRepos";
+import { useWorkflows, type AiWorkflow } from "../hooks/useWorkflows";
+import WorkflowDashboard from "../Components/WorkflowDashboard";
 
 const StatusBadge = ({ status, l }: { status: string; l: boolean }) => {
   const s = statusMap[status] ?? statusMap.draft;
@@ -189,17 +161,141 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
   const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",") || [];
   const isAdmin = adminEmails.includes(userEmail);
 
+  // ── Admin panel state (only fetches when isAdmin) ─────────────────────────
+  const adminPanel = useAdminPanel(isAdmin);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+  // ── User repos: admin sees all from GitHub API, clients see Supabase-assigned ──
+  const githubRepos = useGitHubRepos("Juan100205");
+  const userRepos = useUserRepos(isAdmin ? null : user.id);
+
+  // ── AI Workflows ──────────────────────────────────────────────────────────
+  const workflows = useWorkflows(isAdmin);
+  const [selectedWorkflow, setSelectedWorkflow] = useState<AiWorkflow | null>(null);
+
+  // ── Add workflow modal state ───────────────────────────────────────────────
+  const [showAddWorkflow, setShowAddWorkflow] = useState(false);
+  const [newWfName, setNewWfName] = useState('');
+  const [newWfType, setNewWfType] = useState<AiWorkflow['type']>('conversational');
+  const [newWfDesc, setNewWfDesc] = useState('');
+  const [newWfWebhook, setNewWfWebhook] = useState('');
+  const [savingWf, setSavingWf] = useState(false);
+
   const renderContent = () => {
     switch (activeTab) {
       // ── Flujos de IA ───────────────────────────────────────────────────────
-      case "flujos":
+      case "flujos": {
+        const totalInteractions = workflows.workflows.reduce((acc, _wf) => acc, 0);
+        const activeCount = workflows.workflows.filter((wf) => wf.status === "active").length;
+
+        const handleAddWorkflow = async () => {
+          if (!newWfName.trim()) return;
+          setSavingWf(true);
+          try {
+            await workflows.createWorkflow({
+              name: newWfName.trim(),
+              description: newWfDesc.trim() || null,
+              type: newWfType,
+              status: "active",
+              n8n_webhook_url: newWfWebhook.trim() || null,
+            });
+            setNewWfName('');
+            setNewWfDesc('');
+            setNewWfWebhook('');
+            setNewWfType('conversational');
+            setShowAddWorkflow(false);
+          } catch {
+            // silent
+          } finally {
+            setSavingWf(false);
+          }
+        };
+
+        const TYPE_MAP: Record<string, { en: string; es: string }> = {
+          conversational: { en: "Conversational", es: "Conversacional" },
+          classification: { en: "Classification", es: "Clasificación" },
+          generation: { en: "Generation", es: "Generación" },
+          voice: { en: "Voice", es: "Voz" },
+        };
+
         return (
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-white text-xl font-light">
                 {l ? "AI Flows" : "Flujos de IA"}
               </h2>
+              {isAdmin && (
+                <motion.button
+                  onClick={() => setShowAddWorkflow((v) => !v)}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="flex items-center gap-2 text-[10px] tracking-widest uppercase bg-[#10dffd] text-black px-4 py-1.5 rounded-full hover:opacity-90 transition-opacity cursor-pointer"
+                >
+                  <PlusIcon className="w-3 h-3" />
+                  {l ? "Add flow" : "Agregar flujo"}
+                </motion.button>
+              )}
             </div>
+
+            {/* Add workflow form */}
+            {showAddWorkflow && isAdmin && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="border border-[#10dffd]/20 rounded-xl p-5 mb-6 bg-[#10dffd]/[0.02]"
+              >
+                <div className="text-[10px] text-[#10dffd] tracking-widest uppercase mb-4">
+                  {l ? "New AI Flow" : "Nuevo Flujo de IA"}
+                </div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <input
+                    value={newWfName}
+                    onChange={(e) => setNewWfName(e.target.value)}
+                    placeholder={l ? "Flow name" : "Nombre del flujo"}
+                    className="border border-[#10dffd]/15 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40 placeholder-gray-600"
+                  />
+                  <select
+                    value={newWfType}
+                    onChange={(e) => setNewWfType(e.target.value as AiWorkflow['type'])}
+                    className="border border-[#10dffd]/15 bg-black text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40"
+                  >
+                    <option value="conversational">{l ? "Conversational" : "Conversacional"}</option>
+                    <option value="classification">{l ? "Classification" : "Clasificación"}</option>
+                    <option value="generation">{l ? "Generation" : "Generación"}</option>
+                    <option value="voice">{l ? "Voice" : "Voz"}</option>
+                  </select>
+                  <input
+                    value={newWfDesc}
+                    onChange={(e) => setNewWfDesc(e.target.value)}
+                    placeholder={l ? "Description (optional)" : "Descripción (opcional)"}
+                    className="border border-[#10dffd]/15 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40 placeholder-gray-600 md:col-span-2"
+                  />
+                  <input
+                    value={newWfWebhook}
+                    onChange={(e) => setNewWfWebhook(e.target.value)}
+                    placeholder="n8n webhook URL (optional)"
+                    className="border border-[#10dffd]/15 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40 placeholder-gray-600 md:col-span-2"
+                  />
+                </div>
+                <div className="flex gap-2 mt-4">
+                  <motion.button
+                    onClick={() => void handleAddWorkflow()}
+                    disabled={savingWf || !newWfName.trim()}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="bg-[#10dffd] text-black text-xs px-5 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-40 cursor-pointer"
+                  >
+                    {savingWf ? (l ? "Saving..." : "Guardando...") : (l ? "Create" : "Crear")}
+                  </motion.button>
+                  <button
+                    onClick={() => setShowAddWorkflow(false)}
+                    className="border border-[#10dffd]/15 text-gray-400 text-xs px-4 py-2 rounded-lg hover:border-[#10dffd]/30 transition-colors cursor-pointer"
+                  >
+                    {l ? "Cancel" : "Cancelar"}
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
             {/* Stats */}
             <motion.div
@@ -209,15 +305,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               animate="show"
             >
               {[
-                { label: { en: "Total flows", es: "Flujos totales" }, value: String(aiFlows.length) },
-                {
-                  label: { en: "Active", es: "Activos" },
-                  value: String(aiFlows.filter((f) => f.status === "active").length),
-                },
-                {
-                  label: { en: "Total interactions", es: "Interacciones totales" },
-                  value: aiFlows.reduce((a, f) => a + f.interactions, 0).toLocaleString(),
-                },
+                { label: { en: "Total flows", es: "Flujos totales" }, value: String(workflows.workflows.length) },
+                { label: { en: "Active", es: "Activos" }, value: String(activeCount) },
+                { label: { en: "Total interactions", es: "Interacciones totales" }, value: String(totalInteractions) },
               ].map((stat) => (
                 <motion.div
                   key={stat.label.en}
@@ -232,49 +322,95 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               ))}
             </motion.div>
 
+            {/* Loading */}
+            {workflows.loading && (
+              <div className="flex items-center justify-center py-16">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#10dffd]" />
+              </div>
+            )}
+
+            {/* Error */}
+            {workflows.error && (
+              <div className="border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-xs mb-4">
+                {workflows.error}
+              </div>
+            )}
+
+            {/* Empty state */}
+            {!workflows.loading && workflows.workflows.length === 0 && (
+              <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+                <CpuChipIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
+                <p className="text-gray-500 text-sm font-light">
+                  {l
+                    ? "No flows yet. Click + to add one."
+                    : "No hay flujos. Haz clic en + para agregar."}
+                </p>
+              </div>
+            )}
+
             {/* Flow cards */}
-            <motion.div
-              className="grid md:grid-cols-2 gap-4"
-              variants={contentStagger}
-              initial="hidden"
-              animate="show"
-            >
-              {aiFlows.map((flow) => (
-                <motion.div
-                  key={flow.id}
-                  variants={contentItem}
-                  className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 bg-[#10dffd]/[0.01]"
-                  whileHover={{ borderColor: "rgba(16,223,253,0.3)" }}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <div className="text-white text-sm font-light">
-                        {l ? flow.name.en : flow.name.es}
+            {!workflows.loading && workflows.workflows.length > 0 && (
+              <motion.div
+                className="grid md:grid-cols-2 gap-4"
+                variants={contentStagger}
+                initial="hidden"
+                animate="show"
+              >
+                {workflows.workflows.map((wf) => (
+                  <motion.div
+                    key={wf.id}
+                    variants={contentItem}
+                    onClick={() => setSelectedWorkflow(wf)}
+                    className="border border-[#10dffd]/10 hover:border-[#10dffd]/30 transition-colors rounded-xl p-5 bg-[#10dffd]/[0.01] cursor-pointer"
+                    whileHover={{ borderColor: "rgba(16,223,253,0.3)" }}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <div className="text-white text-sm font-light">{wf.name}</div>
+                        <div className="text-gray-500 text-[11px] mt-0.5">
+                          {l
+                            ? (TYPE_MAP[wf.type]?.en ?? wf.type)
+                            : (TYPE_MAP[wf.type]?.es ?? wf.type)}
+                        </div>
                       </div>
-                      <div className="text-gray-500 text-[11px] mt-0.5">
-                        {l ? flow.type.en : flow.type.es}
+                      <div className="flex items-center gap-2">
+                        <StatusBadge status={wf.status} l={l} />
+                        {isAdmin && (
+                          <motion.button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              void workflows.updateWorkflow(wf.id, {
+                                status: wf.status === "active" ? "paused" : "active",
+                              });
+                            }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="text-gray-600 hover:text-[#10dffd] transition-colors cursor-pointer"
+                            title={wf.status === "active" ? (l ? "Pause" : "Pausar") : (l ? "Activate" : "Activar")}
+                          >
+                            <PencilSquareIcon className="w-3.5 h-3.5" />
+                          </motion.button>
+                        )}
                       </div>
                     </div>
-                    <StatusBadge status={flow.status} l={l} />
-                  </div>
-                  <div className="flex items-end justify-between mt-4 pt-4 border-t border-[#10dffd]/10">
-                    <div>
-                      <div className="text-[#10dffd] text-lg font-light">
-                        {flow.interactions.toLocaleString()}
-                      </div>
-                      <div className="text-gray-700 text-[10px]">
-                        {l ? "interactions" : "interacciones"}
-                      </div>
+                    {wf.description && (
+                      <p className="text-gray-600 text-[11px] mb-3 leading-relaxed">{wf.description}</p>
+                    )}
+                    <div className="flex items-end justify-between mt-4 pt-4 border-t border-[#10dffd]/10">
+                      <span className="text-[#10dffd] text-xs">
+                        {l ? "Open dashboard →" : "Ver dashboard →"}
+                      </span>
+                      <span className="text-gray-600 text-[10px]">
+                        {new Date(wf.updated_at).toLocaleDateString()}
+                      </span>
                     </div>
-                    <span className="text-gray-600 text-[10px]">
-                      {l ? flow.lastActive.en : flow.lastActive.es}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </div>
         );
+      }
 
       // ── Páginas Web ────────────────────────────────────────────────────────
       case "paginas":
@@ -604,57 +740,308 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
           </div>
         );
 
+      // ── Proyectos ──────────────────────────────────────────────────────────
+      case "proyectos": {
+        // Admin → live from GitHub API. Client → Supabase-assigned repos.
+        const activeRepos  = isAdmin ? githubRepos.repos  : userRepos.repos;
+        const activeLoading = isAdmin ? githubRepos.loading : userRepos.loading;
+        const activeError   = isAdmin ? githubRepos.error   : null;
+
+        const LANG_COLORS: Record<string, string> = {
+          TypeScript: "#3178c6", JavaScript: "#f1e05a", Python: "#3572A5",
+          Java: "#b07219", CSS: "#563d7c", HTML: "#e34c26", "C#": "#178600",
+          Go: "#00ADD8", Rust: "#dea584",
+        };
+
+        return (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-white text-xl font-light">
+                  {l ? "Projects" : "Proyectos"}
+                </h2>
+                {isAdmin && (
+                  <p className="text-gray-600 text-xs mt-1">
+                    {l ? "All GitHub repositories — Juan100205" : "Todos los repositorios GitHub — Juan100205"}
+                  </p>
+                )}
+              </div>
+              {!activeLoading && (
+                <span className="text-[#10dffd]/50 text-xs">
+                  {activeRepos.length} repos
+                </span>
+              )}
+            </div>
+
+            {activeError && (
+              <div className="mb-4 border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-xs">
+                {activeError}
+              </div>
+            )}
+
+            {activeLoading && (
+              <div className="flex items-center justify-center py-20">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#10dffd]" />
+              </div>
+            )}
+
+            {!activeLoading && activeRepos.length === 0 && (
+              <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+                <CodeBracketIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
+                <p className="text-gray-500 text-sm font-light">
+                  {isAdmin
+                    ? (l ? "Could not load GitHub repositories." : "No se pudieron cargar los repositorios de GitHub.")
+                    : (l ? "No projects assigned yet. Contact your account manager." : "Aún no tienes proyectos asignados. Contacta a tu gestor de cuenta.")}
+                </p>
+              </div>
+            )}
+
+            {!activeLoading && activeRepos.length > 0 && (
+              <motion.div
+                className="grid md:grid-cols-2 gap-4"
+                variants={contentStagger}
+                initial="hidden"
+                animate="show"
+              >
+                {activeRepos.map((repo) => {
+                  // GitHubRepo has stargazers_count, DbRepo has stars
+                  const stars = "stargazers_count" in repo
+                    ? (repo as any).stargazers_count
+                    : (repo as any).stars ?? 0;
+                  const htmlUrl = "html_url" in repo ? (repo as any).html_url : "#";
+                  const homepage = "homepage" in repo ? (repo as any).homepage : null;
+                  const language = "language" in repo ? (repo as any).language : null;
+                  const topics: string[] = "topics" in repo ? ((repo as any).topics ?? []) : [];
+                  const repoName: string = (repo as any).name ?? "";
+
+                  return (
+                    <motion.div
+                      key={(repo as any).id}
+                      variants={contentItem}
+                      whileHover={{ borderColor: "rgba(16,223,253,0.35)" }}
+                      className="border border-[#10dffd]/10 rounded-xl p-5 flex flex-col gap-3 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="text-white text-sm font-light leading-snug">
+                          {repoName.replace(/-/g, " ")}
+                        </h3>
+                        {stars > 0 && (
+                          <span className="text-[#10dffd]/50 text-xs shrink-0">★ {stars}</span>
+                        )}
+                      </div>
+
+                      {(repo as any).description && (
+                        <p className="text-gray-500 text-xs leading-relaxed flex-1">
+                          {(repo as any).description}
+                        </p>
+                      )}
+
+                      {topics.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5">
+                          {topics.slice(0, 4).map((t: string) => (
+                            <span key={t} className="text-[10px] text-[#10dffd]/60 border border-[#10dffd]/15 rounded-full px-2 py-0.5">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5">
+                        {language ? (
+                          <span className="flex items-center gap-1.5 text-xs text-gray-500">
+                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LANG_COLORS[language] ?? "#8b949e" }} />
+                            {language}
+                          </span>
+                        ) : <span />}
+
+                        <div className="flex gap-2">
+                          <a
+                            href={htmlUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] tracking-widest uppercase text-white/40 hover:text-white border border-white/10 hover:border-white/30 px-3 py-1 rounded-full transition-all"
+                          >
+                            GitHub
+                          </a>
+                          {homepage && (
+                            <a
+                              href={homepage}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-3 py-1 rounded-full hover:opacity-90 transition-opacity"
+                            >
+                              {l ? "Live" : "Ver"}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            )}
+          </div>
+        );
+      }
+
       // ── Admin Panel ────────────────────────────────────────────────────────
       case "admin":
         if (!isAdmin) return null;
         return (
           <div>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
               <h2 className="text-white text-xl font-light">{l ? "Admin Dashboard" : "Panel de Administración"}</h2>
             </div>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Users Mock */}
-              <div className="border border-[#10dffd]/15 rounded-2xl p-6 bg-[#10dffd]/[0.02]">
-                <h3 className="text-[#10dffd] text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <UserCircleIcon className="w-4 h-4" /> {l ? "Recent Users" : "Usuarios Recientes"}
-                </h3>
-                <div className="flex flex-col gap-3">
-                  {["carlos.gomez@empresa.com", "maria.rodriguez@startup.io", "ejemplo@cliente.net"].map((email, i) => (
-                    <div key={i} className="flex items-center justify-between border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                      <span className="text-sm text-gray-300 font-light">{email}</span>
-                      <span className="text-[10px] bg-emerald-400/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-400/20">Active</span>
-                    </div>
-                  ))}
-                </div>
+
+            {adminPanel.error && (
+              <div className="mb-4 border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-xs">
+                {adminPanel.error}
+              </div>
+            )}
+
+            {/* ── GitHub Repos ── */}
+            <section className="mb-10">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] text-[#10dffd] tracking-[0.25em] uppercase">
+                  {l ? "GitHub Repositories" : "Repositorios GitHub"}
+                  {adminPanel.repos.length > 0 && (
+                    <span className="ml-2 text-gray-600">({adminPanel.repos.length})</span>
+                  )}
+                </span>
+                <motion.button
+                  onClick={adminPanel.syncFromGitHub}
+                  disabled={adminPanel.syncing}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="flex items-center gap-2 text-[10px] tracking-widest uppercase bg-[#10dffd] text-black px-4 py-1.5 rounded-full hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                >
+                  <RefreshIcon className={`w-3 h-3 ${adminPanel.syncing ? "animate-spin" : ""}`} />
+                  {adminPanel.syncing
+                    ? (l ? "Syncing…" : "Sincronizando…")
+                    : (l ? "Sync GitHub" : "Sincronizar GitHub")}
+                </motion.button>
               </div>
 
-              {/* Projects Mock */}
-              <div className="border border-[#10dffd]/15 rounded-2xl p-6 bg-[#10dffd]/[0.02]">
-                <h3 className="text-[#10dffd] text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <CpuChipIcon className="w-4 h-4" /> {l ? "Active Projects" : "Proyectos Activos"}
-                </h3>
-                <div className="flex flex-col gap-3">
-                  {[
-                    { name: "Website Redesign", client: "Empresa S.A.", status: "In Progress" },
-                    { name: "WhatsApp Bot Auth", client: "Startup IO", status: "Review" }
-                  ].map((p, i) => (
-                    <div key={i} className="flex flex-col border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-300 font-light">{p.name}</span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded border ${p.status === 'Review' ? 'bg-amber-400/10 text-amber-400 border-amber-400/20' : 'bg-[#10dffd]/10 text-[#10dffd] border-[#10dffd]/20'}`}>{p.status}</span>
+              {adminPanel.loading ? (
+                <div className="flex items-center justify-center py-10">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#10dffd]" />
+                </div>
+              ) : adminPanel.repos.length === 0 ? (
+                <p className="text-gray-600 text-sm text-center py-8">
+                  {l ? "No repos synced yet. Click 'Sync GitHub'." : "Sin repositorios. Haz clic en 'Sincronizar GitHub'."}
+                </p>
+              ) : (
+                <div className="flex flex-col gap-2 max-h-56 overflow-y-auto scrollbar_exp pr-1">
+                  {adminPanel.repos.map((repo) => (
+                    <div key={repo.id} className="flex items-center justify-between border border-[#10dffd]/10 rounded-xl px-4 py-2.5">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <CodeBracketIcon className="w-3.5 h-3.5 text-[#10dffd]/50 flex-shrink-0" />
+                        <span className="text-white text-xs font-light truncate">{repo.name}</span>
+                        {repo.language && (
+                          <span className="text-gray-600 text-[10px] hidden sm:block">{repo.language}</span>
+                        )}
                       </div>
-                      <span className="text-[11px] text-gray-500 mt-1">{p.client}</span>
+                      {repo.stars > 0 && (
+                        <span className="text-gray-600 text-[10px] ml-3 shrink-0">★ {repo.stars}</span>
+                      )}
                     </div>
                   ))}
                 </div>
+              )}
+            </section>
+
+            {/* ── Users + Access management ── */}
+            <section>
+              <span className="text-[10px] text-[#10dffd] tracking-[0.25em] uppercase block mb-4">
+                {l ? "Users & Access" : "Usuarios y Accesos"}
+              </span>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {/* Users list */}
+                <div className="border border-[#10dffd]/15 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
+                  <p className="text-gray-600 text-[10px] uppercase tracking-widest mb-1">
+                    {l ? "Select user" : "Selecciona usuario"}
+                  </p>
+                  {adminPanel.users.filter((u) => !u.is_admin).map((u) => (
+                    <button
+                      key={u.id}
+                      onClick={() => setSelectedUserId(selectedUserId === u.id ? null : u.id)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer border ${
+                        selectedUserId === u.id
+                          ? "bg-[#10dffd]/10 border-[#10dffd]/30 text-[#10dffd]"
+                          : "border-transparent hover:bg-white/5 text-gray-300"
+                      }`}
+                    >
+                      <UserCircleIcon className="w-5 h-5 flex-shrink-0 opacity-50" />
+                      <div className="min-w-0">
+                        <div className="text-xs font-light truncate">{u.full_name || u.email}</div>
+                        {u.full_name && (
+                          <div className="text-[10px] text-gray-600 truncate">{u.email}</div>
+                        )}
+                      </div>
+                      <span className="ml-auto text-[10px] text-gray-600 shrink-0">
+                        {adminPanel.reposForUser(u.id).size} repos
+                      </span>
+                    </button>
+                  ))}
+                  {adminPanel.users.filter((u) => !u.is_admin).length === 0 && !adminPanel.loading && (
+                    <p className="text-gray-600 text-xs text-center py-4">
+                      {l ? "No users registered yet." : "Sin usuarios registrados aún."}
+                    </p>
+                  )}
+                </div>
+
+                {/* Repos access toggles for selected user */}
+                <div className="border border-[#10dffd]/15 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
+                  {!selectedUserId ? (
+                    <div className="flex items-center justify-center h-full py-10 text-center">
+                      <p className="text-gray-600 text-xs">
+                        {l ? "← Select a user to manage their access" : "← Selecciona un usuario para gestionar sus accesos"}
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-gray-600 text-[10px] uppercase tracking-widest">
+                          {l ? "Repo access" : "Acceso a repos"}
+                        </p>
+                        <button
+                          onClick={() => setSelectedUserId(null)}
+                          className="text-gray-600 hover:text-gray-400 transition-colors cursor-pointer"
+                        >
+                          <XMarkIcon className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      {adminPanel.repos.length === 0 && (
+                        <p className="text-gray-600 text-xs text-center py-4">
+                          {l ? "Sync repos first." : "Sincroniza repos primero."}
+                        </p>
+                      )}
+                      {adminPanel.repos.map((repo) => {
+                        const hasAccess = adminPanel.reposForUser(selectedUserId).has(repo.id);
+                        return (
+                          <div key={repo.id} className="flex items-center justify-between border border-[#10dffd]/8 rounded-xl px-3 py-2">
+                            <span className="text-xs text-gray-300 font-light truncate mr-2">{repo.name}</span>
+                            <button
+                              onClick={() =>
+                                hasAccess
+                                  ? adminPanel.revokeAccess(selectedUserId, repo.id)
+                                  : adminPanel.grantAccess(selectedUserId, repo.id)
+                              }
+                              className={`shrink-0 w-9 h-5 rounded-full relative cursor-pointer transition-colors ${
+                                hasAccess ? "bg-[#10dffd]/40" : "bg-white/10"
+                              }`}
+                            >
+                              <div className={`w-3.5 h-3.5 rounded-full bg-white absolute top-[3px] transition-all ${hasAccess ? "left-[18px]" : "left-[3px]"}`} />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="mt-6 border border-[#10dffd]/15 rounded-2xl p-6 bg-amber-500/5">
-              <p className="text-amber-500 text-sm font-light">
-                {l ? "Note: Real-time user management requires connecting to Supabase auth.users or a public profiles table." : "Nota: La gestión real de usuarios y proyectos requiere conectarse a la tabla auth.users o a una tabla 'perfiles' de Supabase."}
-              </p>
-            </div>
+            </section>
           </div>
         );
     }
@@ -665,6 +1052,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
   const mainTabs = [
     { id: "flujos" as Tab, icon: CpuChipIcon, label: { en: "AI Flows", es: "Flujos de IA" } },
     { id: "paginas" as Tab, icon: GlobeAltIcon, label: { en: "Web Pages", es: "Páginas Web" } },
+    { id: "proyectos" as Tab, icon: CodeBracketIcon, label: { en: "Projects", es: "Proyectos" } },
     { id: "dominios" as Tab, icon: LinkIcon, label: { en: "Domains", es: "Dominios" } },
     { id: "automatizaciones" as Tab, icon: BoltIcon, label: { en: "Automations", es: "Automatizaciones" } },
     { id: "blog-admin" as Tab, icon: PencilSquareIcon, label: { en: "Write Article", es: "Aportar al Blog" } },
@@ -704,6 +1092,18 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
   };
 
   return (
+    <>
+    {selectedWorkflow && (
+      <WorkflowDashboard
+        workflow={selectedWorkflow}
+        onClose={() => setSelectedWorkflow(null)}
+        languageState={l}
+        isAdmin={isAdmin}
+        getCredentials={workflows.getCredentials}
+        saveCredential={workflows.saveCredential}
+        deleteCredential={workflows.deleteCredential}
+      />
+    )}
     <div className="flex flex-col bg-black" style={{ height: "100vh", overflow: "hidden" }}>
 
       {/* Dashboard top bar */}
@@ -808,6 +1208,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

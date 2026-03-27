@@ -26,7 +26,8 @@
       "Bash(do)",
       "Bash(cp \"$SRC_ASSETS/$f\" \"$DEST_ASSETS/$f\")",
       "Bash(echo \"OK: $f\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(echo \"Exit: $?\")"
     ]
   }
 }
