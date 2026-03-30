@@ -17,6 +17,7 @@ import Quote from "./pages/Quote";
 import MetodoLevantate from "./pages/MetodoLevantate";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import RepoDetail from "./pages/RepoDetail";
 
 const fadeStyle = { willChange: "opacity" } as const;
 
@@ -66,6 +67,7 @@ function AppRoutes({ isEnglish, setIsEnglish, scrollContainerRef }: RoutesProps)
         <Route path="/schedule" element={<Fade><Schedule languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
         <Route path="/quote" element={<Fade><Quote languageState={isEnglish} setLanguageState={setIsEnglish} scrollRef={scrollContainerRef} /></Fade>} />
         <Route path="/metodo-levantate" element={<Fade><MetodoLevantate /></Fade>} />
+        <Route path="/proyecto/:repoName" element={<Fade><RepoDetail languageState={isEnglish} /></Fade>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
