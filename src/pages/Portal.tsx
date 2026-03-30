@@ -35,6 +35,69 @@ import Auth from "../Components/Auth";
 import { useAdminPanel } from "../hooks/useAdminPanel";
 import { useUserRepos } from "../hooks/useUserRepos";
 import { useGitHubRepos } from "../hooks/useGitHubRepos";
+import { useUserWorkflows } from "../hooks/useUserWorkflows";
+import { useWorkflows, type AiWorkflow } from "../hooks/useWorkflows";
+import WorkflowDashboard from "../Components/WorkflowDashboard";
+
+// ── WorkflowNameRow ───────────────────────────────────────────────────────────
+
+function WorkflowNameRow({
+  wf,
+  onSave,
+}: {
+  wf: { id: string; name: string; phone_number: string | null };
+  onSave: (id: string, name: string) => Promise<void>;
+}) {
+  const [value, setValue] = useState(wf.name);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const isDirty = value.trim() !== wf.name;
+
+  const handleSave = async () => {
+    if (!value.trim()) return;
+    setSaving(true);
+    setErr(null);
+    try {
+      await onSave(wf.id, value.trim());
+      setSaved(true);
+      setTimeout(() => window.location.reload(), 800);
+    } catch (e: any) {
+      setErr(e.message ?? "Error al guardar");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-1.5 border border-[#10dffd]/10 rounded-xl px-4 py-3">
+      <div className="flex items-center gap-3">
+        <div className="min-w-0 flex-1">
+          {wf.phone_number && (
+            <p className="text-gray-500 text-[10px] tracking-widest mb-1.5">
+              {wf.phone_number}
+            </p>
+          )}
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => { setValue(e.target.value); setSaved(false); setErr(null); }}
+            className="w-full bg-transparent border border-[#10dffd]/15 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#10dffd] transition-colors placeholder-neutral-700"
+          />
+        </div>
+        <button
+          onClick={handleSave}
+          disabled={!isDirty || saving}
+          className="shrink-0 text-[10px] px-3 py-1.5 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed bg-[#10dffd]/10 border border-[#10dffd]/25 text-[#10dffd] hover:bg-[#10dffd]/20"
+        >
+          {saving ? "..." : saved ? "✓" : "Renombrar"}
+        </button>
+      </div>
+      {err && <p className="text-red-400 text-[10px] pl-1">{err}</p>}
+    </div>
+  );
+}
 
 // ── Main component ────────────────────────────────────────────────────────────
 
@@ -55,6 +118,11 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
   // ── User repos: admin sees all from GitHub API, clients see Supabase-assigned ──
   const githubRepos = useGitHubRepos("Juan100205");
   const userRepos = useUserRepos(isAdmin ? null : (user?.id ?? null));
+
+  // ── Workflows: admin sees all, clients see their assigned ones ─────────────
+  const { workflows: allWorkflows, loading: allWfLoading, getCredentials, saveCredential, deleteCredential } = useWorkflows(isAdmin, user?.id ?? null);
+  const userWorkflows = useUserWorkflows(isAdmin ? null : (user?.id ?? null));
+  const [openWorkflow, setOpenWorkflow] = useState<AiWorkflow | null>(null);
 
   const tabFade: Variants = {
     hidden: { opacity: 0, y: 14 },
@@ -236,22 +304,93 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
       // ── Webs ───────────────────────────────────────────────────────────────
       // ── Automatizaciones ───────────────────────────────────────────────────
-      case "automatizaciones":
+      case "automatizaciones": {
+        const activeWorkflows = isAdmin ? allWorkflows : userWorkflows.workflows;
+        const wfLoading = isAdmin ? allWfLoading : userWorkflows.loading;
+
+        const STATUS_COLOR: Record<string, string> = {
+          active: "text-[#10dffd] bg-[#10dffd]/10 border-[#10dffd]/20",
+          paused: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+          error: "text-red-400 bg-red-400/10 border-red-400/20",
+        };
+        const TYPE_LABEL: Record<string, string> = {
+          conversational: l ? "Conversational" : "Conversacional",
+          classification: l ? "Classification" : "Clasificación",
+          generation: l ? "Generation" : "Generación",
+          voice: l ? "Voice" : "Voz",
+        };
+
         return (
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-banner font-light text-white text-2xl">
                 {l ? "Automations" : "Automatizaciones"}
               </h2>
+              {!wfLoading && activeWorkflows.length > 0 && (
+                <span className="text-[#10dffd]/50 text-xs">{activeWorkflows.length} flows</span>
+              )}
             </div>
-            <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
-              <BoltIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm font-light">
-                {l ? "Coming soon." : "Próximamente."}
-              </p>
-            </div>
+
+{wfLoading && (
+              <div className="flex items-center justify-center py-20">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#10dffd]" />
+              </div>
+            )}
+
+            {!wfLoading && activeWorkflows.length === 0 && (
+              <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+                <BoltIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
+                <p className="text-gray-500 text-sm font-light">
+                  {isAdmin
+                    ? (l ? "No automations found." : "Sin automatizaciones.")
+                    : (l ? "No automations assigned yet." : "Aún no tienes automatizaciones asignadas.")}
+                </p>
+              </div>
+            )}
+
+            {!wfLoading && activeWorkflows.length > 0 && (
+              <motion.div
+                className="grid md:grid-cols-2 gap-4"
+                variants={contentStagger}
+                initial="hidden"
+                animate="show"
+              >
+                {activeWorkflows.map((wf) => (
+                  <motion.button
+                    key={wf.id}
+                    variants={contentItem}
+                    whileHover={{ borderColor: "rgba(16,223,253,0.4)", scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setOpenWorkflow(wf)}
+                    className="border border-[#10dffd]/15 rounded-xl p-5 flex flex-col gap-3 text-left cursor-pointer transition-colors w-full"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <BoltIcon className="w-4 h-4 text-[#10dffd] shrink-0" />
+                        <span className="text-white text-sm font-light">{wf.name}</span>
+                      </div>
+                      <span className={`text-[10px] px-2.5 py-0.5 rounded-full border shrink-0 ${STATUS_COLOR[wf.status] ?? "text-gray-400 border-gray-400/20"}`}>
+                        {wf.status}
+                      </span>
+                    </div>
+                    {wf.description && (
+                      <p className="text-gray-500 text-xs leading-relaxed">{wf.description}</p>
+                    )}
+                    <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5">
+                      <span className="text-[10px] text-gray-600 tracking-widest uppercase">
+                        {TYPE_LABEL[wf.type] ?? wf.type}
+                      </span>
+                      <span className="text-[10px] text-[#10dffd]/50 tracking-widest uppercase">
+                        {l ? "Open →" : "Abrir →"}
+                      </span>
+                    </div>
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
           </div>
         );
+      }
 
       // ── Documentos ─────────────────────────────────────────────────────────
       case "documentos":
@@ -574,6 +713,32 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               </div>
             </section>
 
+            {/* ── Workflow name management ── */}
+            <section className="mt-10">
+              <span className="text-[10px] text-[#10dffd] tracking-[0.25em] uppercase block mb-4">
+                {l ? "Active Flows" : "Flujos Activos"}
+              </span>
+              <p className="text-gray-600 text-xs mb-4">
+                {l
+                  ? "Rename each flow. Only flows with an assigned phone number are shown here."
+                  : "Renombra cada flujo. Solo se muestran los flujos que ya tienen número asignado en la BD."}
+              </p>
+              <div className="flex flex-col gap-3">
+                {adminPanel.workflows.map((wf) => (
+                  <WorkflowNameRow
+                    key={wf.id}
+                    wf={wf}
+                    onSave={(id, name) => adminPanel.updateWorkflow(id, { name })}
+                  />
+                ))}
+                {adminPanel.workflows.length === 0 && !adminPanel.loading && (
+                  <p className="text-gray-600 text-xs text-center py-4">
+                    {l ? "No flows found." : "Sin flujos en la BD."}
+                  </p>
+                )}
+              </div>
+            </section>
+
             {/* ── AI Workflows access management ── */}
             <section className="mt-10">
               <span className="text-[10px] text-[#10dffd] tracking-[0.25em] uppercase block mb-4">
@@ -699,11 +864,24 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
   const allTabs = [...mainTabs, ...accountTabs];
 
+  if (openWorkflow) {
+    return (
+      <WorkflowDashboard
+        workflow={openWorkflow}
+        onClose={() => setOpenWorkflow(null)}
+        languageState={languageState}
+        isAdmin={isAdmin}
+        getCredentials={getCredentials}
+        saveCredential={saveCredential}
+        deleteCredential={deleteCredential}
+      />
+    );
+  }
+
   return (
-    <>
     <div className="flex flex-col bg-white dark:bg-black" style={{ height: "100vh", overflow: "hidden" }}>
 
-      {/* Header — misma estética que el Header externo */}
+      {/* Header */}
       <motion.header
         className="sticky top-0 border-b border-[#10dffd]/20 flex w-full z-50 justify-between items-center
                    bg-white dark:bg-black transition-all duration-500 min-h-[5rem] px-4 md:px-10 flex-shrink-0"
@@ -787,14 +965,14 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
             initial="hidden"
             animate="show"
             exit="exit"
-            className="w-full max-w-7xl mx-auto px-6 py-12 md:px-10"
+            className="w-full max-w-5xl mx-auto px-4 py-8 md:px-10 md:py-12"
           >
             {renderContent()}
           </motion.div>
         </AnimatePresence>
       </main>
     </div>
-    </>
+
   );
 };
 

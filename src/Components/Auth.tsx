@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import { supabase } from '../lib/supabase'
-import { EnvelopeIcon, LockClosedIcon, UserIcon } from '@heroicons/react/24/outline'
+import { LockClosedIcon, UserIcon } from '@heroicons/react/24/outline'
+
+const PORTAL_DOMAIN = 'portal.rianodevz.com'
+
+function toEmail(input: string): string {
+  return input.includes('@') ? input : `${input}@${PORTAL_DOMAIN}`
+}
 
 const loginStagger: Variants = {
   hidden: {},
@@ -15,7 +21,7 @@ const loginItem: Variants = {
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true)
   const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
@@ -26,18 +32,10 @@ export default function Auth() {
     setMessage(null)
 
     try {
-      // Admin bypass for local development / testing restrictions
-      if (email === 'admin@rianodevz.com' && password === 'admin') {
-        localStorage.setItem('admin_bypass', 'true')
-        window.location.reload()
-        return
-      }
+      const email = toEmail(username.trim())
 
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        })
+        const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) {
           console.error('[Supabase Auth Error - SignIn]: ', error);
           throw error
@@ -46,17 +44,13 @@ export default function Auth() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: {
-            data: {
-              full_name: fullName
-            }
-          }
+          options: { data: { full_name: fullName } }
         })
         if (error) {
           console.error('[Supabase Auth Error - SignUp]: ', error);
           throw error
         }
-        setMessage({ type: 'success', text: '¡Registro exitoso! Por favor revisa tu correo para confirmar tu cuenta.' })
+        setMessage({ type: 'success', text: '¡Registro exitoso! Ya puedes ingresar con tu usuario y contraseña.' })
       }
     } catch (error: any) {
       console.error('[Auth Catch Block]:', error)
@@ -124,17 +118,18 @@ export default function Auth() {
 
         <div className="flex flex-col gap-2">
           <label className="text-xs text-gray-400 font-light ml-1">
-            Correo electrónico
+            Usuario
           </label>
           <div className="relative">
-            <EnvelopeIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#10dffd]/60" />
+            <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#10dffd]/60" />
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
+              autoComplete="username"
               className="w-full pl-11 pr-4 py-3 bg-transparent border border-[#10dffd]/20 rounded-xl text-white text-sm outline-none focus:border-[#10dffd] transition-colors duration-200 placeholder-neutral-600"
-              placeholder="correo@ejemplo.com"
+              placeholder="tu usuario"
             />
           </div>
         </div>
