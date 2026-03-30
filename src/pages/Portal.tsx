@@ -19,6 +19,7 @@ const RefreshIcon = ArrowPathIcon;
 import IsotipoWhite from "../assets/IsotipoNoBgWhite.png";
 import IsotipoBlack from "../assets/IsotipoNoBgBlack.png";
 import Header from "../Components/Header";
+import { Link } from "react-router-dom";
 
 interface Props {
   languageState: boolean;
@@ -474,7 +475,6 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                     ? (repo as any).stargazers_count
                     : (repo as any).stars ?? 0;
                   const htmlUrl = "html_url" in repo ? (repo as any).html_url : "#";
-                  const homepage = "homepage" in repo ? (repo as any).homepage : null;
                   const language = "language" in repo ? (repo as any).language : null;
                   const topics: string[] = "topics" in repo ? ((repo as any).topics ?? []) : [];
                   const repoName: string = (repo as any).name ?? "";
@@ -528,15 +528,13 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                           >
                             GitHub
                           </a>
-                          {homepage && (
-                            <a
-                              href={homepage}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                          {repoName && (
+                            <Link
+                              to={`/proyecto/${repoName}`}
                               className="text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-3 py-1 rounded-full hover:opacity-90 transition-opacity"
                             >
-                              {l ? "Live" : "Ver"}
-                            </a>
+                              {l ? "View" : "Ver"}
+                            </Link>
                           )}
                         </div>
                       </div>
@@ -844,11 +842,11 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
   const mainTabs = [
     { id: "automatizaciones" as Tab, icon: BoltIcon, label: { en: "Automations", es: "Automatizaciones" } },
     { id: "documentos" as Tab, icon: DocumentTextIcon, label: { en: "Documents", es: "Documentos" } },
+    { id: "proyectos" as Tab, icon: CodeBracketIcon, label: { en: "Web Pages", es: "Páginas Web" } },
     { id: "blog-admin" as Tab, icon: PencilSquareIcon, label: { en: "Write Article", es: "Aportar al Blog" } },
   ];
 
   if (isAdmin) {
-    mainTabs.push({ id: "proyectos" as Tab, icon: CodeBracketIcon, label: { en: "Web Pages", es: "Páginas Web" } });
     mainTabs.push({ id: "admin" as Tab, icon: ShieldExclamationIcon, label: { en: "Admin", es: "Admin" } });
   }
 
