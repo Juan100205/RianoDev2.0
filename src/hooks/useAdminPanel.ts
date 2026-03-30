@@ -39,6 +39,7 @@ export interface AiWorkflow {
   type: string;
   status: string;
   n8n_webhook_url: string | null;
+  phone_number: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -223,6 +224,27 @@ export function useAdminPanel(enabled = false) {
     [workflowAccess]
   );
 
+  // Update a workflow's fields (e.g. name)
+  const updateWorkflow = useCallback(
+    async (id: string, data: Partial<Omit<AiWorkflow, 'id' | 'created_at'>>) => {
+      console.log('[updateWorkflow] updating', id, data);
+      const { error } = await supabase
+        .from("ai_workflows")
+        .update({ ...data, updated_at: new Date().toISOString() })
+        .eq("id", id);
+      if (error) {
+        console.error('[updateWorkflow] error:', error);
+        setError(error.message);
+        throw new Error(error.message);
+      }
+      console.log('[updateWorkflow] success');
+      setWorkflows((prev) =>
+        prev.map((wf) => (wf.id === id ? { ...wf, ...data } : wf))
+      );
+    },
+    []
+  );
+
   return {
     repos,
     users,
@@ -239,6 +261,7 @@ export function useAdminPanel(enabled = false) {
     grantWorkflowAccess,
     revokeWorkflowAccess,
     workflowsForUser,
+    updateWorkflow,
     reload: load,
   };
 }

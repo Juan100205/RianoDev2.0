@@ -18,39 +18,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (localStorage.getItem('admin_bypass') === 'true') {
-        setUser({ id: 'admin-bypass', email: 'admin@rianodevz.com', user_metadata: { full_name: 'Admin Master' } } as any)
-        setSession({} as any)
-      } else {
-        setSession(session)
-        setUser(session?.user ?? null)
-      }
+      setSession(session)
+      setUser(session?.user ?? null)
       setLoading(false)
     })
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (localStorage.getItem('admin_bypass') !== 'true') {
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
-      }
+      setSession(session)
+      setUser(session?.user ?? null)
+      setLoading(false)
     })
 
-    return () => {
-      subscription.unsubscribe()
-    }
+    return () => subscription.unsubscribe()
   }, [])
 
   const signOut = async () => {
-    if (localStorage.getItem('admin_bypass') === 'true') {
-      localStorage.removeItem('admin_bypass')
-      window.location.reload()
-    } else {
-      await supabase.auth.signOut()
-    }
+    await supabase.auth.signOut()
   }
 
   const value = {

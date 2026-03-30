@@ -14,7 +14,7 @@ import { timeAgo, formatDate } from '../lib/utils';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type DashTab = 'conversations' | 'clients' | 'appointments' | 'analytics' | 'credentials';
+type DashTab = 'conversations' | 'clients' | 'appointments' | 'analytics' | 'credentials' | 'prompt';
 
 interface Props {
   workflow: AiWorkflow;
@@ -105,6 +105,7 @@ export default function WorkflowDashboard({
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [clientSearch, setClientSearch] = useState('');
   const [msgPollingClientId, setMsgPollingClientId] = useState<string | null>(null);
+  const [mobileView, setMobileView] = useState<'list' | 'chat'>('list');
 
   // Credentials state
   const [credentials, setCredentials] = useState<WorkflowCredential[]>([]);
@@ -113,6 +114,12 @@ export default function WorkflowDashboard({
   const [newKeyName, setNewKeyName] = useState('');
   const [newKeyValue, setNewKeyValue] = useState('');
   const [savingCred, setSavingCred] = useState(false);
+
+  // Prompt tab state
+  const [promptText, setPromptText] = useState('');
+  const [promptSending, setPromptSending] = useState(false);
+  const [promptStatus, setPromptStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
 
   const { clients, messages, appointments, analytics, loading, fetchMessages } =
     useWorkflowDashboard(workflow.id);
@@ -167,6 +174,7 @@ export default function WorkflowDashboard({
     setSelectedClientId(clientId);
     setMsgPollingClientId(clientId);
     void fetchMessages(clientId);
+    setMobileView('chat');
   };
 
   const handleSaveCred = async () => {
@@ -183,6 +191,7 @@ export default function WorkflowDashboard({
       setSavingCred(false);
     }
   };
+
 
   const handleDeleteCred = async (id: string) => {
     try {
@@ -242,16 +251,35 @@ export default function WorkflowDashboard({
 
   const selectedClient = clients.find((c) => c.id === selectedClientId);
 
+  const handleSendPrompt = async () => {
+    if (!promptText.trim() || !workflow.n8n_webhook_url) return;
+    setPromptSending(true);
+    setPromptStatus('idle');
+    try {
+      const res = await fetch(workflow.n8n_webhook_url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ workflow_id: workflow.id, prompt: promptText.trim() }),
+      });
+      setPromptStatus(res.ok ? 'success' : 'error');
+    } catch {
+      setPromptStatus('error');
+    } finally {
+      setPromptSending(false);
+    }
+  };
+
   const tabs: { id: DashTab; label: string }[] = [
     { id: 'conversations', label: 'Conversaciones' },
     { id: 'clients', label: 'Clientes' },
     { id: 'appointments', label: 'Citas' },
     { id: 'analytics', label: 'Analytics' },
     ...(isAdmin ? [{ id: 'credentials' as DashTab, label: 'Credenciales' }] : []),
+    { id: 'prompt', label: 'Prompt' },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black flex flex-col" style={{ height: '100vh' }}>
+    <div className="flex flex-col bg-white dark:bg-black" style={{ height: "100vh", overflow: "hidden" }}>
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/15 flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
@@ -306,8 +334,12 @@ export default function WorkflowDashboard({
 
         {!loading && activeTab === 'conversations' && (
           <div className="flex h-full">
-            {/* Client list */}
-            <div className="w-72 border-r border-[#10dffd]/15 flex flex-col flex-shrink-0">
+            {/* Client list — hidden on mobile when chat is open */}
+            <div className={`
+              flex-shrink-0 border-r border-[#10dffd]/15 flex flex-col
+              w-full md:w-72
+              ${mobileView === 'chat' ? 'hidden md:flex' : 'flex'}
+            `}>
               <div className="p-3 border-b border-[#10dffd]/10">
                 <div className="relative">
                   <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -347,8 +379,11 @@ export default function WorkflowDashboard({
               </div>
             </div>
 
-            {/* Chat panel */}
-            <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Chat panel — hidden on mobile when list is shown */}
+            <div className={`
+              flex-1 flex flex-col overflow-hidden min-w-0
+              ${mobileView === 'list' ? 'hidden md:flex' : 'flex'}
+            `}>
               {!selectedClient ? (
                 <div className="flex items-center justify-center h-full text-gray-600 text-sm">
                   Selecciona un cliente
@@ -357,10 +392,19 @@ export default function WorkflowDashboard({
                 <>
                   {/* Chat header */}
                   <div className="flex items-center gap-3 p-4 border-b border-[#10dffd]/10 flex-shrink-0">
+                    {/* Back button — mobile only */}
+                    <button
+                      onClick={() => setMobileView('list')}
+                      className="md:hidden text-gray-400 hover:text-white transition-colors cursor-pointer mr-1"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
                     <Avatar name={selectedClient.name} />
-                    <div>
-                      <div className="text-white text-sm font-light">{selectedClient.name}</div>
-                      <div className="text-gray-500 text-xs">{selectedClient.phone}</div>
+                    <div className="min-w-0">
+                      <div className="text-white text-sm font-light truncate">{selectedClient.name}</div>
+                      <div className="text-gray-500 text-xs truncate">{selectedClient.phone}</div>
                     </div>
                   </div>
 
@@ -375,7 +419,7 @@ export default function WorkflowDashboard({
                         className={`flex ${msg.role === 'assistant' ? 'justify-end' : 'justify-start'}`}
                       >
                         <div
-                          className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm ${
+                          className={`max-w-[80%] md:max-w-[75%] rounded-2xl px-4 py-2.5 ${
                             msg.role === 'assistant'
                               ? 'bg-[#10dffd]/20 text-white rounded-br-sm'
                               : 'bg-white/10 text-white rounded-bl-sm'
@@ -401,7 +445,9 @@ export default function WorkflowDashboard({
         )}
 
         {!loading && activeTab === 'clients' && (
-          <div className="p-6 overflow-y-auto h-full">
+          <div className="p-4 md:p-6 overflow-y-auto h-full">
+
+
             <div className="mb-4">
               <div className="relative max-w-xs">
                 <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -449,7 +495,7 @@ export default function WorkflowDashboard({
         )}
 
         {!loading && activeTab === 'appointments' && (
-          <div className="p-6 overflow-y-auto h-full">
+          <div className="p-4 md:p-6 overflow-y-auto h-full">
             {/* Stat cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               {[
@@ -503,7 +549,7 @@ export default function WorkflowDashboard({
         )}
 
         {!loading && activeTab === 'analytics' && (
-          <div className="p-6 overflow-y-auto h-full">
+          <div className="p-4 md:p-6 overflow-y-auto h-full">
             {/* KPI cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               {[
@@ -565,6 +611,68 @@ export default function WorkflowDashboard({
                   <p className="text-gray-600 text-xs text-center py-4">Sin eventos</p>
                 )}
               </div>
+            </div>
+          </div>
+        )}
+
+        {!loading && activeTab === 'prompt' && (
+          <div className="p-6 overflow-y-auto h-full max-w-2xl">
+            <div className="text-[10px] text-[#10dffd] tracking-widest uppercase mb-1">System Prompt del chatbot</div>
+            <p className="text-gray-500 text-xs mb-5">
+              Escribe el prompt que quieres enviar al chatbot. Se hará un POST al webhook de n8n con el contenido.
+            </p>
+
+            {/* Webhook URL display */}
+            <div className="mb-4">
+              <div className="text-[10px] text-gray-500 tracking-widest uppercase mb-1.5">Webhook n8n</div>
+              {workflow.n8n_webhook_url ? (
+                <div className="flex items-center gap-2 border border-[#10dffd]/10 rounded-lg px-3 py-2 bg-white/[0.02]">
+                  <span className="text-[10px] text-[#10dffd]/60 font-mono truncate flex-1">{workflow.n8n_webhook_url}</span>
+                </div>
+              ) : (
+                <p className="text-amber-400 text-xs">No hay webhook configurado para este flujo.</p>
+              )}
+            </div>
+
+            {/* Prompt textarea */}
+            <div className="mb-4">
+              <div className="text-[10px] text-gray-500 tracking-widest uppercase mb-1.5">Prompt</div>
+              <textarea
+                value={promptText}
+                onChange={(e) => { setPromptText(e.target.value); setPromptStatus('idle'); }}
+                placeholder="Eres un asistente de atención al cliente para... Responde siempre en español..."
+                rows={12}
+                className="w-full border border-[#10dffd]/15 bg-white/[0.02] text-white text-xs px-4 py-3 rounded-xl outline-none focus:border-[#10dffd]/40 placeholder-gray-600 resize-y font-mono leading-relaxed"
+              />
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => void handleSendPrompt()}
+                disabled={promptSending || !promptText.trim() || !workflow.n8n_webhook_url}
+                className="flex items-center gap-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-40 cursor-pointer"
+              >
+                {promptSending ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                    Enviar a n8n
+                  </>
+                )}
+              </button>
+              {promptStatus === 'success' && (
+                <span className="text-[#10dffd] text-xs">Enviado correctamente</span>
+              )}
+              {promptStatus === 'error' && (
+                <span className="text-red-400 text-xs">Error al enviar. Revisa el webhook.</span>
+              )}
             </div>
           </div>
         )}

@@ -28,7 +28,24 @@
       "Bash(echo \"OK: $f\")",
       "Bash(done)",
       "Bash(echo \"Exit: $?\")",
-      "Bash(grep -rn from.*[''].*assets/ 'C:/Users/juanj/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src' --include=*.tsx --include=*.ts)"
+      "Bash(grep -rn from.*[''].*assets/ 'C:/Users/juanj/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src' --include=*.tsx --include=*.ts)",
+      "Bash(curl:*)",
+      "Bash(SVCKEY=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53Z2R2ZnV3eXhjc2JwYmJ1aHVuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDUzMzIxOSwiZXhwIjoyMDkwMTA5MjE5fQ.I-LN1WHWLoiV3gYcnl3YNUocgGjw0RAWzF4evbUb8y0\")",
+      "Bash(__NEW_LINE_18473f66b8a30803__ curl:*)",
+      "Bash(__NEW_LINE_565b5c74c5e43b88__ curl:*)",
+      "Bash(__NEW_LINE_530ee3f454359be7__ echo:*)",
+      "Bash(ANON=\"sb_publishable_pQ3Sd8glj98ZiPjacIgxzQ_eXOyCJbM\")",
+      "Bash(__NEW_LINE_d1d693496694fb33__ echo:*)",
+      "Bash(__NEW_LINE_894c7f056a76c2b2__ curl:*)",
+      "Bash(ADMIN_ID=\"435f86e8-f581-4329-a651-8a52a1e69bb8\")",
+      "Bash(__NEW_LINE_443a8abcadaa10c3__ curl:*)",
+      "Bash(__NEW_LINE_9b2f23b9de899dde__ curl:*)",
+      "Bash(SVCKEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53Z2R2ZnV3eXhjc2JwYmJ1aHVuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDUzMzIxOSwiZXhwIjoyMDkwMTA5MjE5fQ.I-LN1WHWLoiV3gYcnl3YNUocgGjw0RAWzF4evbUb8y0 __NEW_LINE_7bcad5be34a1787c__ for TABLE in workflow_clients workflow_messages workflow_appointments workflow_analytics)",
+      "Bash(do echo:*)",
+      "Bash(SVCKEY=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53Z2R2ZnV3eXhjc2JwYmJ1aHVuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDUzMzIxOSwiZXhwIjoyMDkwMTA5MjE5fQ.I-LN1WHWLoiV3gYcnl3YNUocgGjw0RAWzF4evbUb8y0\" __NEW_LINE_fb28638eaf1c4e06__ curl -s \"https://nwgdvfuwyxcsbpbbuhun.supabase.co/rest/v1/?select=workflow_clients,workflow_messages,workflow_appointments,workflow_analytics\" -H \"apikey: $SVCKEY\" -H \"Authorization: Bearer $SVCKEY\" -H \"Accept: application/openapi+json\")",
+      "Bash(supabase:*)",
+      "Bash(npm list:*)",
+      "Bash(npx supabase:*)"
     ]
   }
 }

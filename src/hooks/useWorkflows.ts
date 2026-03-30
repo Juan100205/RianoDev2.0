@@ -8,6 +8,7 @@ export interface AiWorkflow {
   type: 'conversational' | 'classification' | 'generation' | 'voice';
   status: 'active' | 'paused' | 'error';
   n8n_webhook_url: string | null;
+  phone_number: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -20,7 +21,7 @@ export interface WorkflowCredential {
   created_at: string;
 }
 
-export function useWorkflows(_isAdmin: boolean) {
+export function useWorkflows(_isAdmin: boolean, userId?: string | null) {
   const [workflows, setWorkflows] = useState<AiWorkflow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,8 +42,13 @@ export function useWorkflows(_isAdmin: boolean) {
   }, []);
 
   useEffect(() => {
+    if (userId === null) {
+      setWorkflows([]);
+      setLoading(false);
+      return;
+    }
     void loadWorkflows();
-  }, [loadWorkflows]);
+  }, [loadWorkflows, userId]);
 
   const createWorkflow = useCallback(
     async (data: Omit<AiWorkflow, 'id' | 'created_at' | 'updated_at'>) => {

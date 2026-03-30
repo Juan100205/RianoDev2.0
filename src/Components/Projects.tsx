@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { motion, type Variants } from "framer-motion";
-import { useGitHubRepos } from "../hooks/useGitHubRepos";
 
 interface Props {
   languageState: boolean;
@@ -139,15 +138,9 @@ const cardVariant: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.75, ease } },
 };
 
-const LANG_COLORS: Record<string, string> = {
-  TypeScript: "#3178c6", JavaScript: "#f1e05a", Python: "#3572A5",
-  Java: "#b07219", CSS: "#563d7c", HTML: "#e34c26", "C#": "#178600",
-  Go: "#00ADD8", Rust: "#dea584",
-};
 
 const Projects = ({ languageState }: Props) => {
   const l = languageState;
-  const { repos, loading, error } = useGitHubRepos("Juan100205");
 
   return (
     <div className="w-[90%] md:w-[70%] mx-auto py-10">
@@ -263,91 +256,6 @@ const Projects = ({ languageState }: Props) => {
           : "Los sistemas implementados varían según el contexto, pero comparten un objetivo común: estructurar, automatizar y conectar operaciones digitales de forma funcional."}
       </motion.p>
 
-      {/* ── GitHub Repos ── */}
-      <div className="mt-24">
-        {loading && (
-          <p className="text-gray-600 text-sm text-center py-10">
-            {l ? "Loading repositories…" : "Cargando repositorios…"}
-          </p>
-        )}
-
-        {error && (
-          <p className="text-gray-600 text-sm text-center py-10">
-            {l ? "Could not load repositories." : "No se pudieron cargar los repositorios."}
-          </p>
-        )}
-
-        {!loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {repos.map((repo, idx) => (
-              <motion.div
-                key={repo.id}
-                variants={cardVariant}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ delay: idx * 0.06 }}
-                whileHover={{ borderColor: "rgba(16,223,253,0.35)" }}
-                className="border border-[#10dffd]/10 rounded-xl p-6 flex flex-col gap-4 transition-colors"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-white text-sm font-light leading-snug break-all">
-                    {repo.name.replace(/-/g, " ")}
-                  </h3>
-                  {repo.stargazers_count > 0 && (
-                    <span className="text-[#10dffd]/50 text-xs shrink-0">
-                      ★ {repo.stargazers_count}
-                    </span>
-                  )}
-                </div>
-
-                {repo.description && (
-                  <p className="text-gray-500 text-xs leading-relaxed flex-1">
-                    {repo.description}
-                  </p>
-                )}
-
-                {repo.topics.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {repo.topics.slice(0, 4).map((t) => (
-                      <span
-                        key={t}
-                        className="text-[10px] text-[#10dffd]/60 border border-[#10dffd]/15 rounded-full px-2 py-0.5"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5">
-                  {repo.language && (
-                    <span className="flex items-center gap-1.5 text-xs text-gray-500">
-                      <span
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: LANG_COLORS[repo.language] ?? "#8b949e" }}
-                      />
-                      {repo.language}
-                    </span>
-                  )}
-                  {repo.homepage && (
-                    <motion.a
-                      href={repo.homepage}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.96 }}
-                      className="text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-4 py-1.5 rounded-full hover:opacity-90 transition-opacity ml-auto"
-                    >
-                      {l ? "Live" : "Ver"}
-                    </motion.a>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </div>
 
     </div>
   );
