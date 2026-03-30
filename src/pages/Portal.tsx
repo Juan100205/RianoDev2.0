@@ -102,14 +102,9 @@ function WorkflowNameRow({
 // ── Main component ────────────────────────────────────────────────────────────
 
 const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("automatizaciones");
   const l = languageState;
-
-  // Computed before hooks so all hooks are always called unconditionally
-  const userEmail = user?.email || "";
-  const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",") || [];
-  const isAdmin = adminEmails.includes(userEmail);
 
   // ── Admin panel state (only fetches when isAdmin) ─────────────────────────
   const adminPanel = useAdminPanel(isAdmin);
@@ -174,7 +169,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               </div>
               <div>
                 <div className="text-white text-sm font-light">{displayName}</div>
-                <div className="text-gray-500 text-xs mt-0.5">{userEmail}</div>
+                <div className="text-gray-500 text-xs mt-0.5">{user.email}</div>
               </div>
             </div>
 
@@ -186,7 +181,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
             >
               {[
                 { label: { en: "Display name", es: "Nombre" }, value: displayName, type: "text" },
-                { label: { en: "Email", es: "Correo electrónico" }, value: userEmail, type: "email" },
+                { label: { en: "Email", es: "Correo electrónico" }, value: user.email || "", type: "email" },
                 { label: { en: "Company", es: "Empresa" }, value: "", type: "text" },
                 { label: { en: "Phone", es: "Teléfono" }, value: "", type: "tel" },
               ].map((field) => (
