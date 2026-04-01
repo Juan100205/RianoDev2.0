@@ -470,10 +470,6 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 animate="show"
               >
                 {activeRepos.map((repo) => {
-                  // GitHubRepo has stargazers_count, DbRepo has stars
-                  const stars = "stargazers_count" in repo
-                    ? (repo as any).stargazers_count
-                    : (repo as any).stars ?? 0;
                   const htmlUrl = "html_url" in repo ? (repo as any).html_url : "#";
                   const language = "language" in repo ? (repo as any).language : null;
                   const topics: string[] = "topics" in repo ? ((repo as any).topics ?? []) : [];
@@ -627,7 +623,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                           <span className="text-gray-600 text-[10px] hidden sm:block">{repo.language}</span>
                         )}
                       </div>
-                      {repo.stars > 0 && (
+                      {(repo.stars ?? 0) > 0 && (
                         <span className="text-gray-600 text-[10px] ml-3 shrink-0">★ {repo.stars}</span>
                       )}
                     </div>
