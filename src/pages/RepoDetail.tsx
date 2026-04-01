@@ -93,7 +93,7 @@ const RepoDetail = ({ languageState }: Props) => {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[#10dffd]/20 border-t-[#10dffd] rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[#10dffd]/38 border-t-[#10dffd] rounded-full animate-spin" />
       </div>
     );
   }
@@ -196,7 +196,7 @@ const RepoDetail = ({ languageState }: Props) => {
               {topics.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-8">
                   {topics.map((t) => (
-                    <span key={t} className="text-xs text-[#10dffd]/70 border border-[#10dffd]/20 bg-[#10dffd]/5 rounded-full px-3 py-1">{t}</span>
+                    <span key={t} className="text-xs text-[#10dffd]/70 border border-[#10dffd]/38 bg-[#10dffd]/5 rounded-full px-3 py-1">{t}</span>
                   ))}
                 </div>
               )}
@@ -281,7 +281,7 @@ const RepoDetail = ({ languageState }: Props) => {
             {topics.length > 0 && (
               <div className="flex flex-wrap gap-2 justify-center">
                 {topics.map((t) => (
-                  <span key={t} className="text-xs text-[#10dffd]/70 border border-[#10dffd]/20 bg-[#10dffd]/5 rounded-full px-3 py-1">{t}</span>
+                  <span key={t} className="text-xs text-[#10dffd]/70 border border-[#10dffd]/38 bg-[#10dffd]/5 rounded-full px-3 py-1">{t}</span>
                 ))}
               </div>
             )}

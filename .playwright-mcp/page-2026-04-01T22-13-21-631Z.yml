@@ -1,0 +1,340 @@
+- generic [ref=e3]:
+  - button "Switch to light mode" [ref=e4] [cursor=pointer]:
+    - img [ref=e6]
+  - generic [ref=e8]:
+    - banner [ref=e9]:
+      - generic [ref=e10]:
+        - link "rianodevz" [ref=e11] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e12]: rianodevz
+        - generic [ref=e13]: Technical infrastructure for marketing systems
+      - generic:
+        - navigation:
+          - link "Home":
+            - /url: /
+            - text: Home
+          - link "Services":
+            - /url: /servicios
+          - link "Case Studies":
+            - /url: /clientes
+          - link "About":
+            - /url: /sobre
+          - link "Blog":
+            - /url: /blog
+          - link "Portal":
+            - /url: /portal
+        - generic:
+          - generic:
+            - img
+          - button "eng esp":
+            - generic: eng
+            - generic: esp
+    - generic [ref=e15]:
+      - generic [ref=e17]:
+        - img "RIANODEVZ hero background"
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - img "RIANODEVZ" [ref=e20]
+            - generic [ref=e23]: "2026"
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - generic [ref=e29]: rianodevz
+              - generic [ref=e30]:
+                - heading "Technical infrastructure" [level=1] [ref=e31]
+                - heading "for marketing systems" [level=2] [ref=e32]
+              - paragraph [ref=e33]: Design and implementation of digital systems that integrate web, automation and data for measurable and scalable marketing operations.
+              - list [ref=e34]:
+                - listitem [ref=e35]: Web development focused on performance and conversion
+                - listitem [ref=e37]: Process and operational workflow automation
+                - listitem [ref=e39]: Tracking and advanced analytics implementation
+              - generic [ref=e41]:
+                - link "View implementation" [ref=e43] [cursor=pointer]:
+                  - /url: /servicios
+                - link "Start a conversation" [ref=e45] [cursor=pointer]:
+                  - /url: /schedule
+            - generic [ref=e46]:
+              - generic [ref=e47]: "#WebDevelopment"
+              - generic [ref=e48]: "#AIAutomation"
+              - generic [ref=e49]: "#DataTracking"
+              - generic [ref=e50]: "#ConversionOptimization"
+              - generic [ref=e51]: "#MarketingTech"
+              - generic [ref=e52]: "#SystemsIntegration"
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e61]: How we work
+          - heading "Implementation model" [level=2] [ref=e63]
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - generic [ref=e70]:
+              - img [ref=e72]
+              - generic [ref=e74]: "01"
+            - generic [ref=e75]:
+              - heading "Technical evaluation" [level=3] [ref=e76]
+              - paragraph [ref=e77]: Analysis of current infrastructure, tools, data flows and operational friction points.
+          - generic [ref=e78]:
+            - generic [ref=e81]:
+              - img [ref=e83]
+              - generic [ref=e86]: "02"
+            - generic [ref=e87]:
+              - heading "Architecture design" [level=3] [ref=e88]
+              - paragraph [ref=e89]: "Definition of technical structure: integrations, automation, data capture and system logic."
+          - generic [ref=e90]:
+            - generic [ref=e93]:
+              - img [ref=e95]
+              - generic [ref=e97]: "03"
+            - generic [ref=e98]:
+              - heading "Development & integration" [level=3] [ref=e99]
+              - paragraph [ref=e100]: "Solution implementation: web development, service connection and automation deployment."
+          - generic [ref=e101]:
+            - generic [ref=e104]:
+              - img [ref=e106]
+              - generic [ref=e108]: "04"
+            - generic [ref=e109]:
+              - heading "Monitoring & optimization" [level=3] [ref=e110]
+              - paragraph [ref=e111]: Continuous data-driven tracking for system adjustment and improvement.
+      - generic [ref=e113]:
+        - generic [ref=e116]: Structural problems
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - heading "Structural problems in marketing systems" [level=2] [ref=e119]
+            - paragraph [ref=e120]: These are not strategy problems. They are technical implementation problems.
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - generic [ref=e124]: "01"
+              - generic [ref=e125]:
+                - heading "Inconsistent tracking" [level=4] [ref=e126]
+                - paragraph [ref=e127]: Badly implemented or incomplete events generate unreliable data that distorts every downstream decision.
+            - generic [ref=e128]:
+              - generic [ref=e129]: "02"
+              - generic [ref=e130]:
+                - heading "Non-integrated systems" [level=4] [ref=e131]
+                - paragraph [ref=e132]: Tools operating in isolation without unified data flow, creating silos that block operational visibility.
+            - generic [ref=e133]:
+              - generic [ref=e134]: "03"
+              - generic [ref=e135]:
+                - heading "Manual processes" [level=4] [ref=e136]
+                - paragraph [ref=e137]: Repetitive operations that consume team bandwidth and prevent the business from scaling efficiently.
+      - generic [ref=e139]:
+        - generic [ref=e140]:
+          - generic [ref=e143]: Case Studies
+          - heading "Systems built. Results delivered." [level=2] [ref=e144]
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - generic [ref=e150]: "01"
+            - heading "Conversational automation and AI flows" [level=3] [ref=e151]
+            - paragraph [ref=e152]: Implementation of automated conversation systems for user capture, qualification and management across different types of operations.
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - generic [ref=e155]: Implementation
+                - list [ref=e156]:
+                  - listitem [ref=e157]: Chatbot development with natural conversational behavior
+                  - listitem [ref=e159]: Integration with APIs and messaging platforms
+                  - listitem [ref=e161]: Decision flow automation (dynamic funnels)
+                  - listitem [ref=e163]: Connection with scheduling systems and CRM
+              - generic [ref=e165]:
+                - generic [ref=e166]: Applied cases
+                - list [ref=e167]:
+                  - listitem [ref=e168]: Educational campaigns (user capture and guidance)
+                  - listitem [ref=e170]: Political campaigns (interaction and segmentation)
+                  - listitem [ref=e172]: Automated scheduling for commercial teams
+            - paragraph [ref=e175]: Systems capable of managing conversations in real time, reducing operational load and structuring user data for commercial use.
+            - generic [ref=e176]:
+              - link "View implementation" [ref=e178] [cursor=pointer]:
+                - /url: /servicios
+              - link "Start a conversation" [ref=e180] [cursor=pointer]:
+                - /url: /schedule
+          - generic [ref=e181]:
+            - generic [ref=e185]: "02"
+            - heading "Process automation and data management" [level=3] [ref=e186]
+            - paragraph [ref=e187]: Design of solutions to automate internal operations and data handling in non-standardized environments.
+            - generic [ref=e188]:
+              - generic [ref=e189]:
+                - generic [ref=e190]: Implementation
+                - list [ref=e191]:
+                  - listitem [ref=e192]: Operational process automation
+                  - listitem [ref=e194]: Integration of physical and digital systems
+                  - listitem [ref=e196]: Massive data processing and structuring
+                  - listitem [ref=e198]: Custom logic development for non-conventional flows
+              - generic [ref=e200]:
+                - generic [ref=e201]: Applied cases
+                - list [ref=e202]:
+                  - listitem [ref=e203]: Automation systems for residential complexes
+                  - listitem [ref=e205]: Internal data flow automation
+                  - listitem [ref=e207]: Large-scale information processing
+            - paragraph [ref=e210]: Reduction of manual processes, greater operational control and availability of structured data for decision-making.
+            - generic [ref=e211]:
+              - link "View implementation" [ref=e213] [cursor=pointer]:
+                - /url: /servicios
+              - link "Start a conversation" [ref=e215] [cursor=pointer]:
+                - /url: /schedule
+          - generic [ref=e216]:
+            - generic [ref=e220]: "03"
+            - heading "Web infrastructure and digital platforms" [level=3] [ref=e221]
+            - paragraph [ref=e222]: Development of web platforms aligned with performance, user experience and technical positioning standards.
+            - generic [ref=e223]:
+              - generic [ref=e224]:
+                - generic [ref=e225]: Implementation
+                - list [ref=e226]:
+                  - listitem [ref=e227]: Frontend and backend development
+                  - listitem [ref=e229]: SEO and performance optimization
+                  - listitem [ref=e231]: Tracking and analytics system integration
+                  - listitem [ref=e233]: Interactive experience implementation (3D / XR when applicable)
+              - generic [ref=e235]:
+                - generic [ref=e236]: Applied cases
+                - list [ref=e237]:
+                  - listitem [ref=e238]: Platforms for marketing agencies (e.g. Catali AI)
+                  - listitem [ref=e240]: Digital experiences for XR companies (e.g. Siilla)
+                  - listitem [ref=e242]: Websites for product-oriented businesses
+            - paragraph [ref=e245]: Functional, fast platforms aligned with commercial objectives, ready to integrate with marketing and data systems.
+            - generic [ref=e246]:
+              - link "View implementation" [ref=e248] [cursor=pointer]:
+                - /url: /servicios
+              - link "Start a conversation" [ref=e250] [cursor=pointer]:
+                - /url: /schedule
+        - paragraph [ref=e251]: "The systems implemented vary by context, but share a common objective: structure, automate and connect digital operations in a functional way."
+      - generic [ref=e253]:
+        - generic [ref=e254]:
+          - img [ref=e256]
+          - generic [ref=e261]: System components
+          - heading "Three layers. One system." [level=2] [ref=e263]
+          - paragraph [ref=e264]: Each one handles a specific function — together they form the operational infrastructure for your marketing.
+        - generic [ref=e265]:
+          - generic [ref=e268]:
+            - generic [ref=e273]:
+              - img [ref=e275]
+              - generic [ref=e277]: "01"
+            - generic [ref=e278]:
+              - generic [ref=e279]: Web Infrastructure
+              - paragraph [ref=e280]: Custom web development oriented to performance and conversion. Architecture defined before writing a single line — structured for growth.
+            - generic [ref=e281]:
+              - generic [ref=e282]: React
+              - generic [ref=e283]: Next.js
+              - generic [ref=e284]: SEO
+              - generic [ref=e285]: CRO
+          - generic [ref=e288]:
+            - generic [ref=e293]:
+              - img [ref=e295]
+              - generic [ref=e297]: "02"
+            - generic [ref=e298]:
+              - generic [ref=e299]: Automation & AI
+              - paragraph [ref=e300]: Mapping of operational flows and automation of repetitive processes. Integration between platforms with defined logic and traceable execution.
+            - generic [ref=e301]:
+              - generic [ref=e302]: n8n
+              - generic [ref=e303]: Make
+              - generic [ref=e304]: AI Agents
+              - generic [ref=e305]: Zapier
+          - generic [ref=e308]:
+            - generic [ref=e313]:
+              - img [ref=e315]
+              - generic [ref=e317]: "03"
+            - generic [ref=e318]:
+              - generic [ref=e319]: Data & Tracking
+              - paragraph [ref=e320]: Correct event implementation, validated data layers and connected analytics. Clean data at the source — not cleaned up downstream.
+            - generic [ref=e321]:
+              - generic [ref=e322]: GA4
+              - generic [ref=e323]: GTM
+              - generic [ref=e324]: Dashboards
+              - generic [ref=e325]: Pixels
+        - generic [ref=e326]:
+          - generic [ref=e327]:
+            - generic [ref=e328]: "#WebDevelopment"
+            - generic [ref=e329]: "#AIAutomation"
+            - generic [ref=e330]: "#DataTracking"
+            - generic [ref=e331]: "#ConversionOptimization"
+          - generic [ref=e332]:
+            - generic [ref=e333]: "#MarketingTech"
+            - generic [ref=e334]: "#SEO"
+            - generic [ref=e335]: "#Workflows"
+          - generic [ref=e336]:
+            - generic [ref=e337]: "#SystemsIntegration"
+            - generic [ref=e338]: "#Funnels"
+            - generic [ref=e339]: "#Analytics"
+      - generic [ref=e342]:
+        - generic [ref=e348]:
+          - generic [ref=e350]: RIANODEVZ S.A.S.
+          - generic [ref=e351]:
+            - generic [ref=e352]: rianodevz
+            - generic [ref=e353]: Design and implementation of digital systems.
+        - generic [ref=e354]:
+          - generic [ref=e357]: About RIANODEVZ
+          - paragraph [ref=e358]: RIANODEVZ is a team focused on the design and implementation of digital systems oriented to marketing and operations. We integrate web development, automation and analytics to build functional and scalable technical infrastructures. Led by Juan José Riaño, with a focus on software engineering and systems.
+          - generic [ref=e359]:
+            - generic [ref=e360]:
+              - generic [ref=e361]: 3+
+              - generic [ref=e362]: Years building
+            - generic [ref=e363]:
+              - generic [ref=e364]: 20+
+              - generic [ref=e365]: Projects shipped
+            - generic [ref=e366]:
+              - generic [ref=e367]: 100%
+              - generic [ref=e368]: Data-driven
+          - generic [ref=e369]:
+            - heading "Get in touch" [level=3] [ref=e370]
+            - generic [ref=e371]:
+              - link [ref=e372] [cursor=pointer]:
+                - /url: https://linkedin.com/in/juanriza
+                - img [ref=e374]
+              - button [ref=e377] [cursor=pointer]:
+                - img [ref=e378]
+              - button [ref=e381] [cursor=pointer]:
+                - img [ref=e383]
+      - generic [ref=e386]:
+        - generic [ref=e388]:
+          - generic [ref=e389]:
+            - paragraph [ref=e390]: Ready to build your system?
+            - paragraph [ref=e391]: Let's define the technical architecture together.
+          - link "Schedule a call" [ref=e393] [cursor=pointer]:
+            - /url: /schedule
+            - text: Schedule a call
+            - img [ref=e394]
+        - generic [ref=e400]:
+          - generic [ref=e401]:
+            - generic [ref=e402]: rianodevz
+            - paragraph [ref=e403]: Design and implementation of digital systems for marketing and operations.
+            - generic [ref=e404]:
+              - button "+57 312 450 8591" [ref=e405] [cursor=pointer]:
+                - img [ref=e406]
+                - text: +57 312 450 8591
+              - button "juanriza@rianodevz.net" [ref=e408] [cursor=pointer]: juanriza@rianodevz.net
+          - generic [ref=e411]:
+            - generic [ref=e412]: Services
+            - link "Web Infrastructure" [ref=e413] [cursor=pointer]:
+              - /url: /servicios
+            - link "Automation & AI" [ref=e414] [cursor=pointer]:
+              - /url: /servicios
+            - link "Data & Tracking" [ref=e415] [cursor=pointer]:
+              - /url: /servicios
+            - link "Systems Integration" [ref=e416] [cursor=pointer]:
+              - /url: /servicios
+          - generic [ref=e417]:
+            - generic [ref=e418]: Company
+            - link "About RIANODEVZ" [ref=e419] [cursor=pointer]:
+              - /url: /sobre
+            - link "Case Studies" [ref=e420] [cursor=pointer]:
+              - /url: /clientes
+            - link "Implementation Model" [ref=e421] [cursor=pointer]:
+              - /url: /servicios
+          - generic [ref=e422]:
+            - generic [ref=e423]: Help & Support
+            - link "FAQ" [ref=e424] [cursor=pointer]:
+              - /url: /faq
+            - link "Schedule a consultation" [ref=e425] [cursor=pointer]:
+              - /url: /schedule
+            - link "Request a quote" [ref=e426] [cursor=pointer]:
+              - /url: /quote
+            - button "Technical support" [ref=e427] [cursor=pointer]
+            - button "WhatsApp" [ref=e428] [cursor=pointer]
+          - generic [ref=e429]:
+            - generic [ref=e430]: Policies
+            - link "Privacy Policy" [ref=e431] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms of Service" [ref=e432] [cursor=pointer]:
+              - /url: /terms
+            - link "Data processing" [ref=e433] [cursor=pointer]:
+              - /url: /privacy
+            - link "Cookies" [ref=e434] [cursor=pointer]:
+              - /url: /privacy
+        - generic [ref=e436]:
+          - generic [ref=e437]: Isaías 43:19
+          - generic [ref=e438]: © 2026 RIANODEVZ S.A.S. All rights reserved.
+          - generic [ref=e439]: Built with React & Vite

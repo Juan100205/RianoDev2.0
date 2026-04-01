@@ -71,7 +71,7 @@ const Home = ({ languageState }: Props) => {
   const content = languageState ? homeContent.en : homeContent.es;
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden" style={{ contain: "paint" }}>
+    <section className="relative w-full min-h-screen overflow-hidden keep-white" style={{ contain: "paint" }}>
       <img
         src={LandingImg}
         alt="RIANODEVZ hero background"
@@ -79,15 +79,15 @@ const Home = ({ languageState }: Props) => {
         draggable={false}
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent opacity-25 dark:opacity-65 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent opacity-20 dark:opacity-50 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-transparent opacity-15 dark:opacity-40 pointer-events-none" />
-
       <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-[#10dffd] opacity-20 blur-[120px] pointer-events-none select-none" aria-hidden="true" />
       <div className="absolute top-1/2 right-[-10%] w-[400px] h-[400px] rounded-full bg-[#10dffd] opacity-15 blur-[140px] pointer-events-none select-none" aria-hidden="true" />
       <div className="absolute bottom-[-80px] left-1/3 w-[350px] h-[350px] rounded-full bg-[#10dffd] opacity-20 blur-[100px] pointer-events-none select-none" aria-hidden="true" />
 
-      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white dark:from-black to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent opacity-[0.85] dark:opacity-65 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent opacity-70 dark:opacity-50 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-transparent opacity-60 dark:opacity-40 pointer-events-none" />
+
+      <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-[#f8feff] dark:from-black to-transparent pointer-events-none z-10" />
 
       <div className="relative z-10 flex flex-col justify-between min-h-screen px-6 py-10 md:px-16 md:pt-5 md:pb-30">
 

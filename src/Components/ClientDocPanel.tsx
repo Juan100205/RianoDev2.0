@@ -503,8 +503,8 @@ export default function ClientDocPanel({ client, l }: Props) {
         {/* Edit */}
         {editor.mode === "edit" && (
           <div className="flex flex-col gap-3">
-            <input type="text" value={editor.title} onChange={e => setEditor(s => s && { ...s, title: e.target.value })} placeholder={l ? "Document title…" : "Título…"} className="w-full bg-white/[0.04] border border-[#10dffd]/15 rounded-xl px-4 py-2.5 text-white text-sm font-light placeholder-gray-600 focus:outline-none focus:border-[#10dffd]/40 transition-colors" />
-            <textarea value={editor.content} onChange={e => setEditor(s => s && { ...s, content: e.target.value })} rows={32} className="w-full bg-white/[0.03] border border-[#10dffd]/10 rounded-xl px-5 py-4 text-gray-300 text-xs font-mono leading-loose placeholder-gray-700 focus:outline-none focus:border-[#10dffd]/30 resize-none scrollbar_exp" />
+            <input type="text" value={editor.title} onChange={e => setEditor(s => s && { ...s, title: e.target.value })} placeholder={l ? "Document title…" : "Título…"} className="w-full bg-white/[0.04] border border-[#10dffd]/30 rounded-xl px-4 py-2.5 text-white text-sm font-light placeholder-gray-600 focus:outline-none focus:border-[#10dffd]/60 transition-colors" />
+            <textarea value={editor.content} onChange={e => setEditor(s => s && { ...s, content: e.target.value })} rows={32} className="w-full bg-white/[0.03] border border-[#10dffd]/22 rounded-xl px-5 py-4 text-gray-300 text-xs font-mono leading-loose placeholder-gray-700 focus:outline-none focus:border-[#10dffd]/50 resize-none scrollbar_exp" />
             <p className="text-gray-700 text-[10px]">Markdown: <code className="text-[#10dffd]/50">**negrita**</code> <code className="text-[#10dffd]/50"># Título</code> <code className="text-[#10dffd]/50">| tabla |</code> <code className="text-[#10dffd]/50">- [ ] checkbox</code></p>
           </div>
         )}
@@ -533,8 +533,8 @@ export default function ClientDocPanel({ client, l }: Props) {
       {DOC_TYPES.map(({ id, label, Icon }) => {
         const typeDocs = docsForType(id);
         return (
-          <motion.div key={id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="border border-[#10dffd]/10 rounded-xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/8 bg-white/[0.02]">
+          <motion.div key={id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="border border-[#10dffd]/22 rounded-xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/18 bg-white/[0.02]">
               <div className="flex items-center gap-2.5">
                 <Icon className="w-4 h-4 text-[#10dffd]/60" />
                 <span className="text-white text-sm font-light">{l ? label.en : label.es}</span>

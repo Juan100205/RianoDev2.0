@@ -87,7 +87,7 @@ export default function Auth() {
       <motion.form
         variants={loginItem}
         onSubmit={handleAuth}
-        className="border border-[#10dffd]/20 rounded-2xl p-8 bg-black flex flex-col gap-5 relative overflow-hidden"
+        className="border border-[#10dffd]/38 rounded-2xl p-8 bg-black flex flex-col gap-5 relative overflow-hidden"
       >
         <AnimatePresence mode="popLayout">
           {!isLogin && (
@@ -107,7 +107,7 @@ export default function Auth() {
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-transparent border border-[#10dffd]/20 rounded-xl text-white text-sm outline-none focus:border-[#10dffd] transition-colors duration-200 placeholder-neutral-600"
+                  className="w-full pl-11 pr-4 py-3 bg-transparent border border-[#10dffd]/38 rounded-xl text-white text-sm outline-none focus:border-[#10dffd] transition-colors duration-200 placeholder-neutral-600"
                   placeholder="Tu nombre completo"
                   required
                 />
@@ -128,7 +128,7 @@ export default function Auth() {
               onChange={(e) => setUsername(e.target.value)}
               required
               autoComplete="username"
-              className="w-full pl-11 pr-4 py-3 bg-transparent border border-[#10dffd]/20 rounded-xl text-white text-sm outline-none focus:border-[#10dffd] transition-colors duration-200 placeholder-neutral-600"
+              className="w-full pl-11 pr-4 py-3 bg-transparent border border-[#10dffd]/38 rounded-xl text-white text-sm outline-none focus:border-[#10dffd] transition-colors duration-200 placeholder-neutral-600"
               placeholder="tu usuario"
             />
           </div>
@@ -145,7 +145,7 @@ export default function Auth() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full pl-11 pr-4 py-3 bg-transparent border border-[#10dffd]/20 rounded-xl text-white text-sm outline-none focus:border-[#10dffd] transition-colors duration-200 placeholder-neutral-600"
+              className="w-full pl-11 pr-4 py-3 bg-transparent border border-[#10dffd]/38 rounded-xl text-white text-sm outline-none focus:border-[#10dffd] transition-colors duration-200 placeholder-neutral-600"
               placeholder="••••••••"
             />
           </div>

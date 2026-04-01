@@ -68,8 +68,8 @@ function Header({ languageState, scrollRef, setLanguageState }: Props) {
                     `}
       >
         <Link to="/" className="flex items-center gap-5 cursor-pointer">
-          <img src={isotipoBlack} alt="RianoDevz" className="w-10 dark:hidden" />
-          <img src={isotipoWhite} alt="RianoDevz" className="w-10 hidden dark:block" />
+          <img src={isotipoBlack} alt="RianoDevz" className="w-10 logo-light" />
+          <img src={isotipoWhite} alt="RianoDevz" className="w-10 logo-dark" />
           <div className="md:flex flex-col justify center">
             <span className="md:text-3xl text-xl text-gray-400">
             </span>

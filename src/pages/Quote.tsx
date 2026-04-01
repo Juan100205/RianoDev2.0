@@ -1,6 +1,6 @@
 import type { RefObject } from "react";
 import { useState } from "react";
-import { WrenchScrewdriverIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Link } from "react-router-dom";
@@ -57,26 +57,24 @@ const Quote = ({ languageState, setLanguageState, scrollRef }: Props) => {
       <div ref={scrollRef} className="page_scroll scrollbar_exp">
         <div className="max-w-2xl mx-auto px-6 py-16">
 
-          <div className="flex items-center gap-3 mb-8">
-            <div className="bg-[#10dffd]/10 text-[#10dffd] rounded-xl p-2">
-              <WrenchScrewdriverIcon className="w-5 h-5" />
-            </div>
-            <span className="text-[#10dffd] text-xs tracking-[0.3em] uppercase">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="w-6 h-px bg-[#10dffd]" />
+            <span className="text-[#10dffd]/60 text-[10px] tracking-[0.35em] uppercase font-display">
               {l ? "Quote" : "Cotización"}
             </span>
           </div>
 
-          <h1 className="md:text-4xl text-2xl font-light text-white mb-2">
+          <h1 className="md:text-4xl text-2xl font-light text-white mb-3 leading-tight">
             {l ? "Request a quote" : "Solicitar cotización"}
           </h1>
-          <p className="text-gray-500 text-sm mb-10 max-w-lg">
+          <p className="text-white/35 text-sm mb-10 max-w-lg leading-relaxed">
             {l
               ? "Tell us about your context. We'll review it and send you a technical proposal within 48 hours."
               : "Cuéntanos tu contexto. Lo revisamos y te enviamos una propuesta técnica en menos de 48 horas."}
           </p>
 
           {status === "success" ? (
-            <div className="border border-[#10dffd]/30 rounded-2xl px-8 py-12 flex flex-col items-center gap-4 text-center">
+            <div className="border border-[#10dffd]/50 rounded-2xl px-8 py-12 flex flex-col items-center gap-4 text-center">
               <CheckCircleIcon className="w-12 h-12 text-[#10dffd]" />
               <h2 className="text-white font-light text-xl">
                 {l ? "Request received" : "Solicitud recibida"}
@@ -88,7 +86,7 @@ const Quote = ({ languageState, setLanguageState, scrollRef }: Props) => {
               </p>
               <button
                 onClick={() => setStatus("idle")}
-                className="mt-4 text-xs tracking-widest uppercase text-[#10dffd] border border-[#10dffd]/30 px-5 py-2 rounded-full hover:border-[#10dffd]/70 transition-all cursor-pointer"
+                className="mt-4 text-xs tracking-widest uppercase text-[#10dffd] border border-[#10dffd]/50 px-5 py-2 rounded-full hover:border-[#10dffd]/70 transition-all cursor-pointer"
               >
                 {l ? "Send another" : "Enviar otra"}
               </button>
@@ -98,30 +96,30 @@ const Quote = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[#10dffd] text-[10px] tracking-[0.25em] uppercase">
+                  <label className="text-[#10dffd]/60 text-[10px] tracking-[0.25em] uppercase font-display">
                     {l ? "Name" : "Nombre"}
                   </label>
                   <input
                     name="name"
                     required
                     placeholder="Juan García"
-                    className="bg-transparent border border-[#10dffd]/20 focus:border-[#10dffd]/60 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none transition-colors"
+                    className="bg-[#10dffd]/[0.02] hover:bg-[#10dffd]/[0.04] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-all duration-200"
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[#10dffd] text-[10px] tracking-[0.25em] uppercase">
+                  <label className="text-[#10dffd]/60 text-[10px] tracking-[0.25em] uppercase font-display">
                     {l ? "Company" : "Empresa"}
                   </label>
                   <input
                     name="company"
                     placeholder={l ? "Your company" : "Tu empresa"}
-                    className="bg-transparent border border-[#10dffd]/20 focus:border-[#10dffd]/60 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none transition-colors"
+                    className="bg-[#10dffd]/[0.02] hover:bg-[#10dffd]/[0.04] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-all duration-200"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#10dffd] text-[10px] tracking-[0.25em] uppercase">
+                <label className="text-[#10dffd]/60 text-[10px] tracking-[0.25em] uppercase font-display">
                   {l ? "Email" : "Correo electrónico"}
                 </label>
                 <input
@@ -129,18 +127,18 @@ const Quote = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   type="email"
                   required
                   placeholder="tu@empresa.com"
-                  className="bg-transparent border border-[#10dffd]/20 focus:border-[#10dffd]/60 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none transition-colors"
+                  className="bg-[#10dffd]/[0.02] hover:bg-[#10dffd]/[0.04] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-all duration-200"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#10dffd] text-[10px] tracking-[0.25em] uppercase">
+                <label className="text-[#10dffd]/60 text-[10px] tracking-[0.25em] uppercase font-display">
                   {l ? "Service of interest" : "Servicio de interés"}
                 </label>
                 <select
                   name="service"
                   required
-                  className="bg-black border border-[#10dffd]/20 focus:border-[#10dffd]/60 rounded-xl px-4 py-3 text-sm text-white outline-none transition-colors cursor-pointer"
+                  className="bg-[#10dffd]/[0.02] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-3 text-sm text-white outline-none transition-all duration-200 cursor-pointer"
                 >
                   <option value="" disabled>{l ? "Select an option" : "Selecciona una opción"}</option>
                   {serviceOptions.map((opt, i) => (
@@ -152,7 +150,7 @@ const Quote = ({ languageState, setLanguageState, scrollRef }: Props) => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#10dffd] text-[10px] tracking-[0.25em] uppercase">
+                <label className="text-[#10dffd]/60 text-[10px] tracking-[0.25em] uppercase font-display">
                   {l ? "Context" : "Contexto"}
                 </label>
                 <textarea
@@ -162,7 +160,7 @@ const Quote = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   placeholder={l
                     ? "Briefly describe your situation, what you need and what tools you currently use..."
                     : "Describe brevemente tu situación, qué necesitas y qué herramientas usas actualmente..."}
-                  className="bg-transparent border border-[#10dffd]/20 focus:border-[#10dffd]/60 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none transition-colors resize-none"
+                  className="bg-[#10dffd]/[0.02] hover:bg-[#10dffd]/[0.04] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-all duration-200 resize-none"
                 />
               </div>
 
@@ -176,7 +174,7 @@ const Quote = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className="text-xs tracking-widest uppercase text-black bg-[#10dffd] px-7 py-3 rounded-full hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+                  className="text-[10px] tracking-[0.25em] uppercase font-display text-black bg-[#10dffd] px-7 py-3.5 rounded-full hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 shadow-[0_0_20px_rgba(16,223,253,0.2)]"
                 >
                   {status === "sending"
                     ? (l ? "Sending..." : "Enviando...")

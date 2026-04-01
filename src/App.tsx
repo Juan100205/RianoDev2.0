@@ -91,7 +91,8 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="bg-white dark:bg-black min-h-screen overflow-x-hidden">
+      <div className="bg-white dark:bg-transparent min-h-screen overflow-x-hidden">
+        {isDark && <div className="ambient-bg" aria-hidden="true" />}
         <motion.button
           onClick={() => setIsDark(!isDark)}
           title={isDark ? "Switch to light mode" : "Switch to dark mode"}

@@ -63,7 +63,7 @@ const ANALYTICS_LABEL: Record<string, string> = {
 function Avatar({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) {
   const sz = size === 'sm' ? 'w-7 h-7 text-[10px]' : size === 'lg' ? 'w-12 h-12 text-base' : 'w-9 h-9 text-xs';
   return (
-    <div className={`${sz} rounded-full bg-[#10dffd]/15 border border-[#10dffd]/25 flex items-center justify-center flex-shrink-0`}>
+    <div className={`${sz} rounded-full bg-[#10dffd]/15 border border-[#10dffd]/45 flex items-center justify-center flex-shrink-0`}>
       <span className="text-[#10dffd] font-light">{initials(name)}</span>
     </div>
   );
@@ -84,7 +84,7 @@ function AudioBubble({ transcription }: { transcription: string | null }) {
         </button>
       </div>
       {show && transcription && (
-        <p className="text-xs text-gray-300 italic border-l-2 border-[#10dffd]/30 pl-2">{transcription}</p>
+        <p className="text-xs text-gray-300 italic border-l-2 border-[#10dffd]/50 pl-2">{transcription}</p>
       )}
     </div>
   );
@@ -281,7 +281,7 @@ export default function WorkflowDashboard({
   return (
     <div className="flex flex-col bg-white dark:bg-black" style={{ height: "100vh", overflow: "hidden" }}>
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/15 flex-shrink-0">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/30 flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex flex-col min-w-0">
             <span className="text-white text-sm font-light truncate">{workflow.name}</span>
@@ -290,7 +290,7 @@ export default function WorkflowDashboard({
           <span
             className={`text-[10px] px-2.5 py-0.5 rounded-full border flex-shrink-0 ${
               workflow.status === 'active'
-                ? 'text-[#10dffd] bg-[#10dffd]/10 border-[#10dffd]/20'
+                ? 'text-[#10dffd] bg-[#10dffd]/10 border-[#10dffd]/38'
                 : workflow.status === 'paused'
                 ? 'text-amber-400 bg-amber-400/10 border-amber-400/20'
                 : 'text-red-400 bg-red-400/10 border-red-400/20'
@@ -301,14 +301,14 @@ export default function WorkflowDashboard({
         </div>
         <button
           onClick={onClose}
-          className="w-8 h-8 rounded-lg border border-[#10dffd]/15 hover:border-[#10dffd]/40 flex items-center justify-center transition-colors cursor-pointer flex-shrink-0"
+          className="w-8 h-8 rounded-lg border border-[#10dffd]/30 hover:border-[#10dffd]/60 flex items-center justify-center transition-colors cursor-pointer flex-shrink-0"
         >
           <XMarkIcon className="w-4 h-4 text-gray-400" />
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-[#10dffd]/15 overflow-x-auto flex-shrink-0">
+      <div className="flex border-b border-[#10dffd]/30 overflow-x-auto flex-shrink-0">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -336,18 +336,18 @@ export default function WorkflowDashboard({
           <div className="flex h-full">
             {/* Client list — hidden on mobile when chat is open */}
             <div className={`
-              flex-shrink-0 border-r border-[#10dffd]/15 flex flex-col
+              flex-shrink-0 border-r border-[#10dffd]/30 flex flex-col
               w-full md:w-72
               ${mobileView === 'chat' ? 'hidden md:flex' : 'flex'}
             `}>
-              <div className="p-3 border-b border-[#10dffd]/10">
+              <div className="p-3 border-b border-[#10dffd]/22">
                 <div className="relative">
                   <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     value={clientSearch}
                     onChange={(e) => setClientSearch(e.target.value)}
                     placeholder="Buscar cliente..."
-                    className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/10 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/30"
+                    className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
                   />
                 </div>
               </div>
@@ -391,7 +391,7 @@ export default function WorkflowDashboard({
               ) : (
                 <>
                   {/* Chat header */}
-                  <div className="flex items-center gap-3 p-4 border-b border-[#10dffd]/10 flex-shrink-0">
+                  <div className="flex items-center gap-3 p-4 border-b border-[#10dffd]/22 flex-shrink-0">
                     {/* Back button — mobile only */}
                     <button
                       onClick={() => setMobileView('list')}
@@ -455,14 +455,14 @@ export default function WorkflowDashboard({
                   value={clientSearch}
                   onChange={(e) => setClientSearch(e.target.value)}
                   placeholder="Buscar por nombre o teléfono..."
-                  className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/10 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/30"
+                  className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
                 />
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[#10dffd]/10 text-left">
+                  <tr className="border-b border-[#10dffd]/22 text-left">
                     {['Cliente', 'Teléfono', 'Registrado', 'Última interacción', 'Mensajes'].map((col) => (
                       <th key={col} className="pb-3 pr-6 text-[10px] text-[#10dffd] tracking-widest uppercase font-normal">
                         {col}
@@ -504,7 +504,7 @@ export default function WorkflowDashboard({
                 { label: 'Completadas', value: apptCompleted, color: 'text-[#10dffd]' },
                 { label: 'Canceladas', value: apptCancelled, color: 'text-red-400' },
               ].map((s) => (
-                <div key={s.label} className="border border-[#10dffd]/15 rounded-xl p-4 bg-[#10dffd]/[0.02]">
+                <div key={s.label} className="border border-[#10dffd]/30 rounded-xl p-4 bg-[#10dffd]/[0.02]">
                   <div className={`text-xl font-light ${s.color}`}>{s.value}</div>
                   <div className="text-gray-500 text-[11px] mt-1">{s.label}</div>
                 </div>
@@ -519,7 +519,7 @@ export default function WorkflowDashboard({
               {appointments.map((appt) => {
                 const client = clients.find((c) => c.id === appt.client_id);
                 return (
-                  <div key={appt.id} className="border border-[#10dffd]/10 rounded-xl p-4 flex items-start justify-between gap-4">
+                  <div key={appt.id} className="border border-[#10dffd]/22 rounded-xl p-4 flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3">
                       {client && <Avatar name={client.name} size="sm" />}
                       <div>
@@ -535,7 +535,7 @@ export default function WorkflowDashboard({
                         appt.status === 'scheduled'
                           ? 'text-blue-400 bg-blue-400/10 border-blue-400/20'
                           : appt.status === 'completed'
-                          ? 'text-[#10dffd] bg-[#10dffd]/10 border-[#10dffd]/20'
+                          ? 'text-[#10dffd] bg-[#10dffd]/10 border-[#10dffd]/38'
                           : 'text-red-400 bg-red-400/10 border-red-400/20'
                       }`}
                     >
@@ -558,7 +558,7 @@ export default function WorkflowDashboard({
                 { label: 'Audios transcritos', value: totalAudioTranscribed },
                 { label: 'Citas creadas', value: totalAppointments },
               ].map((kpi) => (
-                <div key={kpi.label} className="border border-[#10dffd]/15 rounded-xl p-4 bg-[#10dffd]/[0.02]">
+                <div key={kpi.label} className="border border-[#10dffd]/30 rounded-xl p-4 bg-[#10dffd]/[0.02]">
                   <div className="text-[#10dffd] text-xl font-light">{kpi.value}</div>
                   <div className="text-gray-500 text-[11px] mt-1">{kpi.label}</div>
                 </div>
@@ -566,7 +566,7 @@ export default function WorkflowDashboard({
             </div>
 
             {/* Bar chart */}
-            <div className="border border-[#10dffd]/15 rounded-xl p-5 mb-8">
+            <div className="border border-[#10dffd]/30 rounded-xl p-5 mb-8">
               <div className="text-[10px] text-[#10dffd] tracking-widest uppercase mb-4">Mensajes por día (últimos 7 días)</div>
               <div className="flex items-end gap-2 h-32">
                 {dailyData.map((d, i) => (
@@ -581,7 +581,7 @@ export default function WorkflowDashboard({
                       {/* sent */}
                       <div
                         title={`Enviados: ${d.sent}`}
-                        style={{ height: `${(d.sent / maxBarVal) * 80}px`, backgroundColor: 'rgba(16,223,253,0.4)' }}
+                        style={{ height: `${(d.sent / maxBarVal) * 80}px`, backgroundColor: 'rgba(16,223,253,0.65)' }}
                         className="w-full rounded-sm min-h-0 transition-all"
                       />
                     </div>
@@ -596,7 +596,7 @@ export default function WorkflowDashboard({
             </div>
 
             {/* Recent events */}
-            <div className="border border-[#10dffd]/15 rounded-xl p-5">
+            <div className="border border-[#10dffd]/30 rounded-xl p-5">
               <div className="text-[10px] text-[#10dffd] tracking-widest uppercase mb-4">Eventos recientes</div>
               <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
                 {analytics.slice(0, 20).map((ev) => (
@@ -626,7 +626,7 @@ export default function WorkflowDashboard({
             <div className="mb-4">
               <div className="text-[10px] text-gray-500 tracking-widest uppercase mb-1.5">Webhook n8n</div>
               {workflow.n8n_webhook_url ? (
-                <div className="flex items-center gap-2 border border-[#10dffd]/10 rounded-lg px-3 py-2 bg-white/[0.02]">
+                <div className="flex items-center gap-2 border border-[#10dffd]/22 rounded-lg px-3 py-2 bg-white/[0.02]">
                   <span className="text-[10px] text-[#10dffd]/60 font-mono truncate flex-1">{workflow.n8n_webhook_url}</span>
                 </div>
               ) : (
@@ -642,7 +642,7 @@ export default function WorkflowDashboard({
                 onChange={(e) => { setPromptText(e.target.value); setPromptStatus('idle'); }}
                 placeholder="Eres un asistente de atención al cliente para... Responde siempre en español..."
                 rows={12}
-                className="w-full border border-[#10dffd]/15 bg-white/[0.02] text-white text-xs px-4 py-3 rounded-xl outline-none focus:border-[#10dffd]/40 placeholder-gray-600 resize-y font-mono leading-relaxed"
+                className="w-full border border-[#10dffd]/30 bg-white/[0.02] text-white text-xs px-4 py-3 rounded-xl outline-none focus:border-[#10dffd]/60 placeholder-gray-600 resize-y font-mono leading-relaxed"
               />
             </div>
 
@@ -693,7 +693,7 @@ export default function WorkflowDashboard({
                 {credentials.map((cred) => (
                   <div
                     key={cred.id}
-                    className="flex items-center justify-between border border-[#10dffd]/10 rounded-xl px-4 py-3 gap-3"
+                    className="flex items-center justify-between border border-[#10dffd]/22 rounded-xl px-4 py-3 gap-3"
                   >
                     <div className="min-w-0">
                       <div className="text-xs text-[#10dffd]/70 font-mono">{cred.key_name}</div>
@@ -727,21 +727,21 @@ export default function WorkflowDashboard({
             )}
 
             {/* Add credential form */}
-            <div className="border border-[#10dffd]/15 rounded-xl p-4">
+            <div className="border border-[#10dffd]/30 rounded-xl p-4">
               <div className="text-[10px] text-gray-500 tracking-widest uppercase mb-3">Agregar credencial</div>
               <div className="flex flex-col gap-3">
                 <input
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
                   placeholder="Nombre (ej. OPENAI_API_KEY)"
-                  className="border border-[#10dffd]/15 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40 placeholder-gray-600 font-mono"
+                  className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600 font-mono"
                 />
                 <input
                   value={newKeyValue}
                   onChange={(e) => setNewKeyValue(e.target.value)}
                   placeholder="Valor"
                   type="password"
-                  className="border border-[#10dffd]/15 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/40 placeholder-gray-600 font-mono"
+                  className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600 font-mono"
                 />
                 <button
                   onClick={() => void handleSaveCred()}

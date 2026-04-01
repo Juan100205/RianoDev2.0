@@ -40,7 +40,7 @@ const Schedule = ({ languageState, setLanguageState, scrollRef }: Props) => {
           </p>
 
           {/* Calendly inline embed */}
-          <div className="border border-[#10dffd]/15 rounded-2xl overflow-x-hidden">
+          <div className="border border-[#10dffd]/30 rounded-2xl overflow-x-hidden">
             <iframe
               src={`${CALENDLY_URL}?embed_type=inline&hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000&text_color=ffffff&primary_color=10dffd`}
               width="100%"

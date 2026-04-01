@@ -93,7 +93,7 @@ const FAQ = ({ languageState, setLanguageState, scrollRef }: Props) => {
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className="border border-[#10dffd]/15 hover:border-[#10dffd]/40 transition-all duration-300 rounded-xl overflow-hidden"
+                className="border border-[#10dffd]/30 hover:border-[#10dffd]/60 transition-all duration-300 rounded-xl overflow-hidden"
               >
                 <button
                   onClick={() => setOpen(open === i ? null : i)}
@@ -107,7 +107,7 @@ const FAQ = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   />
                 </button>
                 {open === i && (
-                  <div className="px-6 pb-5 border-t border-[#10dffd]/10">
+                  <div className="px-6 pb-5 border-t border-[#10dffd]/22">
                     <p className="text-gray-400 text-sm leading-relaxed pt-4">
                       {l ? faq.a.en : faq.a.es}
                     </p>
@@ -117,7 +117,7 @@ const FAQ = ({ languageState, setLanguageState, scrollRef }: Props) => {
             ))}
           </div>
 
-          <div className="mt-14 border border-[#10dffd]/15 rounded-xl px-6 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="mt-14 border border-[#10dffd]/30 rounded-xl px-6 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <p className="text-gray-400 text-sm">
               {l ? "Didn't find what you were looking for?" : "¿No encontraste lo que buscabas?"}
             </p>

@@ -83,7 +83,7 @@ const Sobre = ({ languageState, setLanguageState, scrollRef }: Props) => {
           {/* Right: content */}
           <div className="flex flex-col gap-8 flex-1">
             {/* Intro */}
-            <div className="border-b border-[#10dffd]/20 pb-8">
+            <div className="border-b border-[#10dffd]/38 pb-8">
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
                 {languageState ? content.intro.en : content.intro.es}
               </p>
@@ -123,7 +123,7 @@ const Sobre = ({ languageState, setLanguageState, scrollRef }: Props) => {
             </div>
 
             {/* Contact */}
-            <div className="border-t border-[#10dffd]/20 pt-6">
+            <div className="border-t border-[#10dffd]/38 pt-6">
               <h3 className="font-light text-white mb-4">
                 {languageState ? content.connect.en : content.connect.es}
               </h3>
