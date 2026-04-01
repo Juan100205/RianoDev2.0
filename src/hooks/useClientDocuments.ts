@@ -7,15 +7,16 @@ export interface ClientDocument {
   id: string;
   user_id: string;
   type: DocType;
-  file_name: string;
-  file_url: string;
-  uploaded_at: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export function useClientDocuments(clientId: string | null) {
   const [docs, setDocs] = useState<ClientDocument[]>([]);
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState<DocType | null>(null);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -27,7 +28,7 @@ export function useClientDocuments(clientId: string | null) {
         .from("client_documents")
         .select("*")
         .eq("user_id", clientId)
-        .order("uploaded_at", { ascending: false });
+        .order("updated_at", { ascending: false });
       if (err) throw err;
       setDocs((data as ClientDocument[]) ?? []);
     } catch (e: any) {
@@ -39,73 +40,75 @@ export function useClientDocuments(clientId: string | null) {
 
   useEffect(() => { load(); }, [load]);
 
-  const upload = useCallback(
-    async (type: DocType, file: File) => {
-      if (!clientId) return;
-      setUploading(type);
+  const create = useCallback(
+    async (type: DocType, title: string, content: string): Promise<ClientDocument | null> => {
+      if (!clientId) return null;
+      setSaving(true);
       setError(null);
       try {
-        const ext = file.name.split(".").pop();
-        const path = `${clientId}/${type}/${Date.now()}.${ext}`;
-
-        const { error: storageErr } = await supabase.storage
-          .from("client-documents")
-          .upload(path, file, { upsert: false });
-        if (storageErr) throw storageErr;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from("client-documents")
-          .getPublicUrl(path);
-
-        const { error: dbErr } = await supabase.from("client_documents").insert({
-          user_id: clientId,
-          type,
-          file_name: file.name,
-          file_url: publicUrl,
-        });
-        if (dbErr) throw dbErr;
-
-        await load();
+        const { data, error: err } = await supabase
+          .from("client_documents")
+          .insert({ user_id: clientId, type, title, content })
+          .select()
+          .single();
+        if (err) throw err;
+        const doc = data as ClientDocument;
+        setDocs((prev) => [doc, ...prev]);
+        return doc;
       } catch (e: any) {
-        setError(e.message ?? "Upload failed");
+        setError(e.message ?? "Create failed");
+        return null;
       } finally {
-        setUploading(null);
+        setSaving(false);
       }
     },
-    [clientId, load]
+    [clientId]
   );
 
-  const remove = useCallback(
-    async (doc: ClientDocument) => {
+  const update = useCallback(
+    async (id: string, title: string, content: string): Promise<boolean> => {
+      setSaving(true);
       setError(null);
       try {
-        // Extract storage path from public URL
-        const url = new URL(doc.file_url);
-        const pathParts = url.pathname.split("/client-documents/");
-        if (pathParts[1]) {
-          await supabase.storage
-            .from("client-documents")
-            .remove([decodeURIComponent(pathParts[1])]);
-        }
-
-        const { error: dbErr } = await supabase
+        const { error: err } = await supabase
           .from("client_documents")
-          .delete()
-          .eq("id", doc.id);
-        if (dbErr) throw dbErr;
-
-        setDocs((prev) => prev.filter((d) => d.id !== doc.id));
+          .update({ title, content, updated_at: new Date().toISOString() })
+          .eq("id", id);
+        if (err) throw err;
+        setDocs((prev) =>
+          prev.map((d) =>
+            d.id === id ? { ...d, title, content, updated_at: new Date().toISOString() } : d
+          )
+        );
+        return true;
       } catch (e: any) {
-        setError(e.message ?? "Delete failed");
+        setError(e.message ?? "Update failed");
+        return false;
+      } finally {
+        setSaving(false);
       }
     },
     []
   );
+
+  const remove = useCallback(async (id: string) => {
+    setError(null);
+    try {
+      const { error: err } = await supabase
+        .from("client_documents")
+        .delete()
+        .eq("id", id);
+      if (err) throw err;
+      setDocs((prev) => prev.filter((d) => d.id !== id));
+    } catch (e: any) {
+      setError(e.message ?? "Delete failed");
+    }
+  }, []);
 
   const docsForType = useCallback(
     (type: DocType) => docs.filter((d) => d.type === type),
     [docs]
   );
 
-  return { docs, loading, uploading, error, upload, remove, docsForType, reload: load };
+  return { docs, loading, saving, error, create, update, remove, docsForType, reload: load };
 }
