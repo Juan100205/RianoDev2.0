@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import type { GitHubRepo } from "./useGitHubRepos";
-import { CURATED_REPOS } from "./useGitHubRepos";
+import { CURATED_REPOS, LIVE_URL_OVERRIDES } from "./useGitHubRepos";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -119,7 +119,7 @@ export function useAdminPanel(enabled = false) {
           full_name: r.name,
           description: r.description,
           html_url: r.html_url,
-          homepage: r.homepage || null,
+          homepage: LIVE_URL_OVERRIDES[r.name] || r.homepage || null,
           language: r.language,
           topics: r.topics ?? [],
           stars: r.stargazers_count,

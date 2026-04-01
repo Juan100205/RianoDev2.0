@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import type { DbRepo } from "../hooks/useAdminPanel";
+import { LIVE_URL_OVERRIDES } from "../hooks/useGitHubRepos";
 import {
   ArrowLeftIcon,
   CodeBracketIcon,
@@ -23,12 +24,11 @@ const LANG_COLORS: Record<string, string> = {
 
 // Repos that have a dedicated internal route instead of an external deploy
 const INTERNAL_ROUTES: Record<string, string> = {
-  "Metodo-Levantate": "/metodo-levantate",
   "RianoDev2.0": "/",
 };
 
 // Repos that are desktop/Electron apps — can't run in browser
-const DESKTOP_APPS = new Set(["Sistema-de-Gestion-Residencial"]);
+const DESKTOP_APPS = new Set<string>([]);
 
 type ViewTab = "live" | "readme";
 
@@ -48,7 +48,6 @@ const RepoDetail = ({ languageState }: Props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ViewTab>("live");
-  const [iframeError, setIframeError] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -134,9 +133,10 @@ const RepoDetail = ({ languageState }: Props) => {
   const isDesktopApp = DESKTOP_APPS.has(repoName ?? "");
   const internalRoute = INTERNAL_ROUTES[repoName ?? ""];
 
-  // Validate live URL — skip github.io URLs
+  // Validate live URL — overrides take priority, then homepage (skip github.io)
   const liveUrl = (() => {
     if (internalRoute) return null; // handled separately
+    if (LIVE_URL_OVERRIDES[repoName ?? ""]) return LIVE_URL_OVERRIDES[repoName ?? ""];
     const h = repo.homepage;
     if (!h) return null;
     try {
@@ -272,7 +272,6 @@ const RepoDetail = ({ languageState }: Props) => {
             className="flex-1 flex flex-col min-h-0"
           >
             {internalRoute ? (
-              // Internal route — show a full-page link button
               <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6">
                 <div className="text-center">
                   <h2 className="text-2xl font-light text-white mb-2">{repo.name.replace(/-/g, " ")}</h2>
@@ -287,34 +286,23 @@ const RepoDetail = ({ languageState }: Props) => {
                 </Link>
               </div>
             ) : liveUrl ? (
-              // External URL — iframe
-              iframeError ? (
-                <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6">
-                  <p className="text-gray-500 text-sm text-center max-w-sm">
-                    {l
-                      ? "This site can't be embedded. Open it directly:"
-                      : "Este sitio no permite ser embebido. Ábrelo directamente:"}
-                  </p>
-                  <a
-                    href={liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs tracking-widest uppercase text-black bg-[#10dffd] px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity"
-                  >
-                    <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
-                    {l ? "Open in new tab" : "Abrir en nueva pestaña"}
-                  </a>
+              <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6">
+                <div className="text-center">
+                  <GlobeAltIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-4" />
+                  <h2 className="text-2xl font-light text-white mb-2">{repo.name.replace(/-/g, " ")}</h2>
+                  {repo.description && <p className="text-gray-500 text-sm max-w-md mx-auto">{repo.description}</p>}
+                  <p className="text-[#10dffd]/40 text-xs font-mono mt-3 tracking-tight">{liveUrl}</p>
                 </div>
-              ) : (
-                <iframe
-                  src={liveUrl}
-                  className="flex-1 w-full border-0"
-                  style={{ minHeight: "calc(100vh - 57px)" }}
-                  title={repo.name}
-                  onError={() => setIframeError(true)}
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                />
-              )
+                <a
+                  href={liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm tracking-widest uppercase text-black bg-[#10dffd] px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
+                >
+                  <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                  {l ? "Open site" : "Abrir sitio"}
+                </a>
+              </div>
             ) : null}
           </motion.div>
         )}
