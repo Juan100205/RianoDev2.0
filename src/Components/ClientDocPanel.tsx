@@ -12,6 +12,7 @@ import {
   DocumentTextIcon,
   ArrowLeftIcon,
   PrinterIcon,
+  SwatchIcon,
 } from "@heroicons/react/24/solid";
 import {
   DocumentCheckIcon,
@@ -20,27 +21,91 @@ import {
   StarIcon,
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
-import { useClientDocuments, type DocType, type ClientDocument } from "../hooks/useClientDocuments";
+import {
+  useClientDocuments,
+  type DocType,
+  type ClientDocument,
+} from "../hooks/useClientDocuments";
 import { DOC_TEMPLATES } from "../lib/docTemplates";
 import type { Profile } from "../hooks/useAdminPanel";
 import IsotipoBlack from "../assets/IsotipoNoBgBlack.png";
 
-// ── Doc type metadata ────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+interface DocTheme {
+  id: string;
+  label: string;
+  accent: string;       // main brand color (headings, borders)
+  accentMid: string;    // medium — table headers bg
+  accentLight: string;  // light — stripe rows bg
+  accentText: string;   // text on accent bg
+  dot: string;          // swatch dot color (CSS)
+}
+
+const DOC_THEMES: DocTheme[] = [
+  {
+    id: "clasico",
+    label: "Clásico",
+    accent: "#1a1a1a",
+    accentMid: "#f0f0f0",
+    accentLight: "#fafafa",
+    accentText: "#1a1a1a",
+    dot: "#1a1a1a",
+  },
+  {
+    id: "navy",
+    label: "Navy",
+    accent: "#1e3a5f",
+    accentMid: "#dde9f5",
+    accentLight: "#f0f6fb",
+    accentText: "#1e3a5f",
+    dot: "#1e3a5f",
+  },
+  {
+    id: "esmeralda",
+    label: "Esmeralda",
+    accent: "#1a4731",
+    accentMid: "#d6ebe0",
+    accentLight: "#eef7f1",
+    accentText: "#1a4731",
+    dot: "#1a4731",
+  },
+  {
+    id: "borgona",
+    label: "Borgoña",
+    accent: "#7a1a2e",
+    accentMid: "#f0d9de",
+    accentLight: "#faf2f3",
+    accentText: "#7a1a2e",
+    dot: "#7a1a2e",
+  },
+  {
+    id: "slate",
+    label: "Slate",
+    accent: "#334155",
+    accentMid: "#e2e8f0",
+    accentLight: "#f8fafc",
+    accentText: "#334155",
+    dot: "#334155",
+  },
+];
+
+// ── Doc type metadata ─────────────────────────────────────────────────────────
 
 const DOC_TYPES: {
   id: DocType;
   label: { es: string; en: string };
   Icon: React.ComponentType<{ className?: string }>;
 }[] = [
-  { id: "contrato",   label: { es: "Contrato",           en: "Contract"        }, Icon: DocumentCheckIcon     },
-  { id: "factura",    label: { es: "Factura",             en: "Invoice"         }, Icon: ReceiptPercentIcon    },
-  { id: "preguntas",  label: { es: "Preguntas",           en: "Questions"       }, Icon: QuestionMarkCircleIcon },
+  { id: "contrato",   label: { es: "Contrato",           en: "Contract"         }, Icon: DocumentCheckIcon     },
+  { id: "factura",    label: { es: "Factura",             en: "Invoice"          }, Icon: ReceiptPercentIcon    },
+  { id: "preguntas",  label: { es: "Preguntas",           en: "Questions"        }, Icon: QuestionMarkCircleIcon },
   { id: "welcome",    label: { es: "Welcome Document",    en: "Welcome Document" }, Icon: StarIcon              },
-  { id: "estrategia", label: { es: "Setup de Estrategia", en: "Strategy Setup"  }, Icon: ChartBarIcon          },
+  { id: "estrategia", label: { es: "Setup de Estrategia", en: "Strategy Setup"   }, Icon: ChartBarIcon          },
 ];
 
 interface Props { client: Profile; l: boolean; }
-type EditorMode = "list" | "edit" | "preview";
+type EditorMode = "edit" | "preview";
 
 interface EditorState {
   mode: EditorMode;
@@ -50,27 +115,28 @@ interface EditorState {
   content: string;
 }
 
-// ── Print helper ─────────────────────────────────────────────────────────────
+// ── Print helper ──────────────────────────────────────────────────────────────
 
-function printDocument(title: string, bodyHtml: string, logoDataUrl: string) {
-  const win = window.open("", "_blank", "width=900,height=700");
+function printDocument(title: string, bodyHtml: string, logoUrl: string, theme: DocTheme) {
+  const win = window.open("", "_blank", "width=920,height=760");
   if (!win) return;
 
   win.document.write(`<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <title>${title}</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
 
-    @page { size: A4; margin: 20mm 22mm; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @page { size: A4; margin: 18mm 22mm 20mm; }
 
     body {
-      font-family: "Georgia", "Times New Roman", serif;
-      font-size: 11pt;
+      font-family: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
       color: #1a1a1a;
-      line-height: 1.65;
+      line-height: 1.8;
       background: #fff;
     }
 
@@ -80,58 +146,114 @@ function printDocument(title: string, bodyHtml: string, logoDataUrl: string) {
       align-items: flex-start;
       justify-content: space-between;
       padding-bottom: 10pt;
-      border-bottom: 1.5pt solid #1a1a1a;
-      margin-bottom: 22pt;
+      border-bottom: 2pt solid ${theme.accent};
+      margin-bottom: 26pt;
     }
-    .letterhead-logo { height: 36pt; }
-    .letterhead-info {
+    .logo { height: 32pt; }
+    .lh-info {
       text-align: right;
-      font-size: 8pt;
-      color: #555;
-      line-height: 1.5;
-      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 7.5pt;
+      color: #777;
+      line-height: 1.6;
     }
-    .letterhead-info strong { color: #1a1a1a; font-size: 9pt; }
+    .lh-info strong { color: ${theme.accent}; font-size: 8.5pt; font-weight: 600; display: block; margin-bottom: 1pt; }
 
-    /* ── Body content ── */
-    h1 { font-size: 17pt; font-weight: 700; margin: 0 0 14pt; letter-spacing: -0.01em; }
-    h2 { font-size: 12pt; font-weight: 600; margin: 20pt 0 6pt; border-bottom: 0.5pt solid #ddd; padding-bottom: 3pt; }
-    h3 { font-size: 10.5pt; font-weight: 600; margin: 14pt 0 5pt; }
-    p  { margin: 5pt 0; }
-    ul, ol { padding-left: 18pt; margin: 5pt 0 5pt; }
-    li { margin: 2pt 0; }
+    /* ── Headings ── */
+    h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 20pt;
+      font-weight: 400;
+      color: ${theme.accent};
+      margin: 0 0 18pt;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 12pt;
+      font-weight: 400;
+      color: ${theme.accent};
+      margin: 22pt 0 7pt;
+      padding-bottom: 4pt;
+      border-bottom: 0.75pt solid ${theme.accent}33;
+      letter-spacing: 0.01em;
+    }
+    h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10pt;
+      font-weight: 600;
+      color: ${theme.accent};
+      margin: 14pt 0 5pt;
+    }
 
-    a { color: #1a1a1a; text-decoration: underline; }
-    strong { font-weight: 700; }
+    /* ── Body ── */
+    p  { margin: 5pt 0; line-height: 1.8; }
+    ul, ol { padding-left: 16pt; margin: 4pt 0; }
+    li { margin: 2.5pt 0; line-height: 1.7; }
+    strong { font-weight: 600; color: #111; }
     em { font-style: italic; }
+    a  { color: ${theme.accent}; }
+    hr { border: none; border-top: 0.5pt solid #ddd; margin: 14pt 0; }
 
-    hr { border: none; border-top: 0.5pt solid #ccc; margin: 16pt 0; }
+    blockquote {
+      border-left: 2.5pt solid ${theme.accent}55;
+      padding: 4pt 10pt;
+      color: #666;
+      font-style: italic;
+      margin: 8pt 0;
+      background: ${theme.accentLight};
+    }
 
     /* ── Tables ── */
-    table { width: 100%; border-collapse: collapse; margin: 10pt 0; font-size: 9.5pt; }
-    thead { background: #f0f0f0; }
-    th { border: 0.5pt solid #bbb; padding: 5pt 8pt; font-weight: 600; text-align: left; }
-    td { border: 0.5pt solid #bbb; padding: 4pt 8pt; vertical-align: top; }
-    tr:nth-child(even) td { background: #fafafa; }
+    table { width: 100%; border-collapse: collapse; margin: 10pt 0; font-size: 9pt; }
+    thead tr { background: ${theme.accentMid}; }
+    th {
+      border: 0.5pt solid ${theme.accent}44;
+      padding: 5pt 9pt;
+      font-weight: 600;
+      text-align: left;
+      color: ${theme.accent};
+      font-size: 8pt;
+      letter-spacing: 0.03em;
+    }
+    td {
+      border: 0.5pt solid #ddd;
+      padding: 4.5pt 9pt;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    tr:nth-child(even) td { background: ${theme.accentLight}; }
 
-    /* ── Task list checkboxes ── */
-    input[type="checkbox"] { margin-right: 5pt; accent-color: #1a1a1a; }
-
-    /* ── Blockquote ── */
-    blockquote { border-left: 3pt solid #ccc; padding-left: 10pt; color: #555; margin: 8pt 0; }
+    /* ── Task list ── */
+    input[type="checkbox"] { margin-right: 5pt; accent-color: ${theme.accent}; }
 
     /* ── Code ── */
-    code { font-family: "Courier New", monospace; font-size: 9pt; background: #f5f5f5; padding: 1pt 4pt; border-radius: 2pt; }
-    pre  { background: #f5f5f5; padding: 10pt; border-radius: 4pt; overflow-x: auto; font-size: 8.5pt; margin: 8pt 0; }
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 8.5pt;
+      background: ${theme.accentLight};
+      color: ${theme.accentText};
+      padding: 1pt 4pt;
+      border-radius: 2pt;
+    }
+    pre {
+      background: ${theme.accentLight};
+      border: 0.5pt solid ${theme.accent}22;
+      padding: 9pt;
+      border-radius: 3pt;
+      overflow-x: auto;
+      font-size: 8pt;
+      margin: 8pt 0;
+      line-height: 1.6;
+    }
 
     /* ── Footer ── */
     .doc-footer {
-      margin-top: 30pt;
-      padding-top: 8pt;
+      margin-top: 28pt;
+      padding-top: 7pt;
       border-top: 0.5pt solid #ccc;
-      font-size: 7.5pt;
-      color: #888;
-      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 7pt;
+      color: #aaa;
       display: flex;
       justify-content: space-between;
     }
@@ -143,105 +265,266 @@ function printDocument(title: string, bodyHtml: string, logoDataUrl: string) {
 </head>
 <body>
   <div class="letterhead">
-    <img src="${logoDataUrl}" class="letterhead-logo" alt="RianoDev" />
-    <div class="letterhead-info">
-      <strong>RianoDev — Juan Jose Riaño</strong><br/>
+    <img src="${logoUrl}" class="logo" alt="RianoDev"/>
+    <div class="lh-info">
+      <strong>RianoDev — Juan Jose Riaño</strong>
       juanjose@rianodev.com<br/>
-      rianodev.com<br/>
-      Bogotá, Colombia
+      rianodev.com &nbsp;·&nbsp; Bogotá, Colombia
     </div>
   </div>
-
   ${bodyHtml}
-
   <div class="doc-footer">
-    <span>RianoDev · rianodev.com</span>
-    <span>${new Date().toLocaleDateString("es-CO", { day:"2-digit", month:"long", year:"numeric" })}</span>
+    <span>RianoDev &nbsp;·&nbsp; rianodev.com</span>
+    <span>${new Date().toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" })}</span>
   </div>
-
-  <script>
-    window.onload = function() {
-      window.print();
-      window.onafterprint = function() { window.close(); };
-    };
-  </script>
+  <script>window.onload=()=>{window.print();window.onafterprint=()=>window.close();}<\/script>
 </body>
 </html>`);
   win.document.close();
 }
 
-// ── Document Preview (paper look) ────────────────────────────────────────────
+// ── DocPaper ──────────────────────────────────────────────────────────────────
 
 function DocPaper({
   title,
   content,
+  theme,
   onPrint,
 }: {
   title: string;
   content: string;
+  theme: DocTheme;
   onPrint: () => void;
 }) {
   return (
-    <div className="bg-neutral-200 rounded-2xl p-6 overflow-auto max-h-[72vh] scrollbar_exp">
-      {/* Paper sheet */}
+    <div className="rounded-2xl p-6 overflow-auto max-h-[74vh] scrollbar_exp" style={{ background: "#e5e7eb" }}>
+      {/* Paper */}
       <div
-        className="bg-white mx-auto shadow-2xl"
-        style={{ maxWidth: 720, minHeight: 900, fontFamily: "Georgia, 'Times New Roman', serif" }}
+        className="mx-auto bg-white shadow-2xl"
+        style={{
+          maxWidth: 740,
+          minHeight: 960,
+          fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+        }}
       >
         {/* ── Letterhead ── */}
         <div
-          className="flex items-start justify-between px-14 pt-12 pb-6"
-          style={{ borderBottom: "1.5px solid #1a1a1a" }}
+          className="flex items-start justify-between px-14 pt-12 pb-7"
+          style={{ borderBottom: `2px solid ${theme.accent}` }}
         >
-          <img src={IsotipoBlack} alt="RianoDev" className="h-10 w-auto object-contain" />
-          <div className="text-right" style={{ fontFamily: "system-ui, sans-serif", fontSize: 9 }}>
-            <p className="font-semibold text-gray-900" style={{ fontSize: 10 }}>RianoDev — Juan Jose Riaño</p>
-            <p className="text-gray-500">juanjose@rianodev.com</p>
-            <p className="text-gray-500">rianodev.com · Bogotá, Colombia</p>
+          <img src={IsotipoBlack} alt="RianoDev" className="h-9 w-auto object-contain" />
+          <div style={{ fontFamily: "'DM Sans', sans-serif", textAlign: "right", lineHeight: 1.6 }}>
+            <p style={{ fontSize: 10, fontWeight: 600, color: theme.accent, marginBottom: 2 }}>
+              RianoDev — Juan Jose Riaño
+            </p>
+            <p style={{ fontSize: 8.5, color: "#888" }}>juanjose@rianodev.com</p>
+            <p style={{ fontSize: 8.5, color: "#888" }}>rianodev.com · Bogotá, Colombia</p>
           </div>
         </div>
 
-        {/* ── Document content ── */}
-        <div
-          className="px-14 py-10"
-          style={{
-            fontSize: 11,
-            lineHeight: 1.7,
-            color: "#1a1a1a",
-          }}
-        >
-          <div
-            className="
-              prose prose-sm max-w-none
-              prose-headings:font-serif prose-headings:text-gray-900 prose-headings:tracking-tight
-              prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-6 prose-h1:mt-0
-              prose-h2:text-base prose-h2:font-semibold prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-1.5
-              prose-h3:text-sm prose-h3:font-semibold prose-h3:mt-5 prose-h3:mb-2
-              prose-p:text-gray-800 prose-p:leading-relaxed prose-p:my-2 prose-p:text-[11px]
-              prose-strong:text-gray-900 prose-strong:font-semibold
-              prose-em:italic
-              prose-a:text-gray-900 prose-a:underline
-              prose-li:text-gray-800 prose-li:text-[11px] prose-li:leading-relaxed prose-li:marker:text-gray-500
-              prose-ul:my-2 prose-ol:my-2
-              prose-hr:border-gray-200 prose-hr:my-6
-              prose-blockquote:border-l-gray-300 prose-blockquote:text-gray-500 prose-blockquote:not-italic prose-blockquote:pl-4
-              prose-code:text-gray-800 prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[9px] prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
-              prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-pre:rounded prose-pre:text-[9px]
-              prose-table:text-[10px] prose-table:border-collapse
-              prose-thead:bg-gray-50
-              prose-th:border prose-th:border-gray-300 prose-th:px-3 prose-th:py-1.5 prose-th:text-gray-800 prose-th:font-semibold prose-th:text-left
-              prose-td:border prose-td:border-gray-200 prose-td:px-3 prose-td:py-1.5 prose-td:text-gray-700 prose-td:align-top
-            "
+        {/* ── Content ── */}
+        <div className="px-14 py-10">
+          {/* Title */}
+          <h1
+            style={{
+              fontFamily: "'DM Serif Display', Georgia, serif",
+              fontSize: 26,
+              fontWeight: 400,
+              color: theme.accent,
+              lineHeight: 1.2,
+              letterSpacing: "-0.02em",
+              marginBottom: 28,
+            }}
           >
-            <h1 style={{ fontFamily: "Georgia, serif" }}>{title}</h1>
+            {title}
+          </h1>
+
+          {/* Markdown body */}
+          <div
+            style={{
+              fontSize: 11,
+              lineHeight: 1.85,
+              color: "#1a1a1a",
+            }}
+          >
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
+                h1: ({ children }) => (
+                  <h2
+                    style={{
+                      fontFamily: "'DM Serif Display', Georgia, serif",
+                      fontSize: 17,
+                      fontWeight: 400,
+                      color: theme.accent,
+                      marginTop: 32,
+                      marginBottom: 10,
+                      paddingBottom: 6,
+                      borderBottom: `1px solid ${theme.accent}30`,
+                      letterSpacing: "0.01em",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {children}
+                  </h2>
+                ),
+                h2: ({ children }) => (
+                  <h2
+                    style={{
+                      fontFamily: "'DM Serif Display', Georgia, serif",
+                      fontSize: 14,
+                      fontWeight: 400,
+                      color: theme.accent,
+                      marginTop: 28,
+                      marginBottom: 8,
+                      paddingBottom: 5,
+                      borderBottom: `0.75px solid ${theme.accent}30`,
+                      letterSpacing: "0.01em",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {children}
+                  </h2>
+                ),
+                h3: ({ children }) => (
+                  <h3
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                      color: theme.accent,
+                      marginTop: 20,
+                      marginBottom: 6,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {children}
+                  </h3>
+                ),
+                p: ({ children }) => (
+                  <p style={{ margin: "7px 0", lineHeight: 1.85, fontSize: 11, color: "#2a2a2a" }}>
+                    {children}
+                  </p>
+                ),
+                strong: ({ children }) => (
+                  <strong style={{ fontWeight: 600, color: "#111" }}>{children}</strong>
+                ),
+                hr: () => (
+                  <hr style={{ border: "none", borderTop: "0.75px solid #ddd", margin: "20px 0" }} />
+                ),
+                blockquote: ({ children }) => (
+                  <blockquote
+                    style={{
+                      borderLeft: `2.5px solid ${theme.accent}66`,
+                      paddingLeft: 14,
+                      paddingTop: 4,
+                      paddingBottom: 4,
+                      marginTop: 10,
+                      marginBottom: 10,
+                      color: "#666",
+                      fontStyle: "italic",
+                      background: theme.accentLight,
+                      borderRadius: "0 4px 4px 0",
+                    }}
+                  >
+                    {children}
+                  </blockquote>
+                ),
+                ul: ({ children }) => (
+                  <ul style={{ paddingLeft: 20, margin: "6px 0", lineHeight: 1.85 }}>{children}</ul>
+                ),
+                ol: ({ children }) => (
+                  <ol style={{ paddingLeft: 20, margin: "6px 0", lineHeight: 1.85 }}>{children}</ol>
+                ),
+                li: ({ children }) => (
+                  <li style={{ margin: "3px 0", lineHeight: 1.8, fontSize: 11, color: "#2a2a2a" }}>
+                    {children}
+                  </li>
+                ),
+                table: ({ children }) => (
+                  <table
+                    style={{
+                      width: "100%",
+                      borderCollapse: "collapse",
+                      margin: "14px 0",
+                      fontSize: 10,
+                      fontFamily: "'DM Sans', sans-serif",
+                    }}
+                  >
+                    {children}
+                  </table>
+                ),
+                thead: ({ children }) => (
+                  <thead style={{ background: theme.accentMid }}>{children}</thead>
+                ),
+                th: ({ children }) => (
+                  <th
+                    style={{
+                      border: `0.75px solid ${theme.accent}44`,
+                      padding: "6px 10px",
+                      textAlign: "left",
+                      fontWeight: 600,
+                      color: theme.accentText,
+                      fontSize: 9,
+                      letterSpacing: "0.04em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {children}
+                  </th>
+                ),
+                td: ({ children }) => (
+                  <td
+                    style={{
+                      border: "0.75px solid #e2e2e2",
+                      padding: "5.5px 10px",
+                      verticalAlign: "top",
+                      lineHeight: 1.65,
+                      color: "#333",
+                    }}
+                  >
+                    {children}
+                  </td>
+                ),
+                code: ({ children }) => (
+                  <code
+                    style={{
+                      fontFamily: "'Courier New', monospace",
+                      fontSize: 9.5,
+                      background: theme.accentLight,
+                      color: theme.accentText,
+                      padding: "1px 5px",
+                      borderRadius: 3,
+                    }}
+                  >
+                    {children}
+                  </code>
+                ),
+                pre: ({ children }) => (
+                  <pre
+                    style={{
+                      background: theme.accentLight,
+                      border: `0.75px solid ${theme.accent}20`,
+                      padding: "10px 14px",
+                      borderRadius: 5,
+                      fontSize: 9,
+                      overflowX: "auto",
+                      margin: "10px 0",
+                      lineHeight: 1.65,
+                    }}
+                  >
+                    {children}
+                  </pre>
+                ),
                 input: ({ ...props }) => (
                   <input
                     {...props}
-                    className="mr-1.5 accent-gray-800"
-                    style={{ width: 13, height: 13 }}
+                    style={{
+                      width: 13,
+                      height: 13,
+                      marginRight: 6,
+                      accentColor: theme.accent,
+                    }}
                   />
                 ),
               }}
@@ -251,44 +534,106 @@ function DocPaper({
           </div>
         </div>
 
-        {/* ── Document footer ── */}
+        {/* ── Footer ── */}
         <div
-          className="flex items-center justify-between px-14 py-5 mt-4"
+          className="flex items-center justify-between px-14 py-5"
           style={{
-            borderTop: "0.5px solid #d1d5db",
-            fontFamily: "system-ui, sans-serif",
+            borderTop: "0.75px solid #e2e2e2",
+            fontFamily: "'DM Sans', sans-serif",
             fontSize: 8,
-            color: "#9ca3af",
+            color: "#b0b0b0",
+            marginTop: 16,
           }}
         >
           <span>RianoDev · rianodev.com</span>
           <span>
-            {new Date().toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" })}
+            {new Date().toLocaleDateString("es-CO", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}
           </span>
         </div>
       </div>
 
-      {/* Print button below paper */}
+      {/* Controls below paper */}
       <div className="flex justify-center mt-5">
         <button
           onClick={onPrint}
           className="flex items-center gap-2 text-xs tracking-widest uppercase text-black bg-[#10dffd] px-5 py-2 rounded-full hover:opacity-90 transition-opacity cursor-pointer"
         >
           <PrinterIcon className="w-3.5 h-3.5" />
-          {" Descargar / Imprimir PDF"}
+          Descargar / Imprimir PDF
         </button>
       </div>
     </div>
   );
 }
 
-// ── Main component ────────────────────────────────────────────────────────────
+// ── ThemePicker ───────────────────────────────────────────────────────────────
+
+function ThemePicker({
+  current,
+  onChange,
+}: {
+  current: DocTheme;
+  onChange: (t: DocTheme) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-white/50 hover:text-white border border-white/10 hover:border-white/30 px-3 py-1.5 rounded-full transition-all cursor-pointer"
+      >
+        <SwatchIcon className="w-3 h-3" />
+        {current.label}
+        <span
+          className="w-2.5 h-2.5 rounded-full"
+          style={{ background: current.dot }}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            className="absolute right-0 top-full mt-2 z-20 bg-black border border-white/10 rounded-xl p-2 flex flex-col gap-1 min-w-[140px] shadow-xl"
+          >
+            {DOC_THEMES.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => { onChange(t); setOpen(false); }}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all cursor-pointer text-left ${
+                  current.id === t.id
+                    ? "bg-white/10 text-white"
+                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                }`}
+              >
+                <span
+                  className="w-3 h-3 rounded-full shrink-0 border border-white/10"
+                  style={{ background: t.dot }}
+                />
+                {t.label}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ── Main component ─────────────────────────────────────────────────────────────
 
 export default function ClientDocPanel({ client, l }: Props) {
   const { loading, saving, error, create, update, remove, docsForType } =
     useClientDocuments(client.id);
 
   const [editor, setEditor] = useState<EditorState | null>(null);
+  const [theme, setTheme] = useState<DocTheme>(DOC_THEMES[0]);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -303,11 +648,8 @@ export default function ClientDocPanel({ client, l }: Props) {
 
   const handleSave = async () => {
     if (!editor) return;
-    if (editor.doc) {
-      await update(editor.doc.id, editor.title, editor.content);
-    } else {
-      await create(editor.type, editor.title, editor.content);
-    }
+    if (editor.doc) await update(editor.doc.id, editor.title, editor.content);
+    else await create(editor.type, editor.title, editor.content);
     setEditor(null);
   };
 
@@ -316,17 +658,15 @@ export default function ClientDocPanel({ client, l }: Props) {
     setConfirmDeleteId(null);
   };
 
-  // Convert logo to data URL for the print window (avoids CORS/path issues)
   const getLogoDataUrl = (): Promise<string> =>
     new Promise((resolve) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext("2d")!.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL("image/png"));
+        const c = document.createElement("canvas");
+        c.width = img.width; c.height = img.height;
+        c.getContext("2d")!.drawImage(img, 0, 0);
+        resolve(c.toDataURL("image/png"));
       };
       img.onerror = () => resolve("");
       img.src = IsotipoBlack;
@@ -335,16 +675,12 @@ export default function ClientDocPanel({ client, l }: Props) {
   const handlePrint = async () => {
     if (!editor) return;
     const logoUrl = await getLogoDataUrl();
-
-    // Render the markdown to HTML via a temporary div
-    const tmp = document.createElement("div");
-    tmp.innerHTML = previewRef.current?.querySelector(".prose")?.innerHTML ?? "";
-    const bodyHtml = `<h1 style="font-size:17pt;font-weight:700;margin:0 0 14pt;font-family:Georgia,serif">${editor.title}</h1>${tmp.innerHTML}`;
-
-    printDocument(editor.title, bodyHtml, logoUrl);
+    const prose = previewRef.current?.querySelector("[data-prose]");
+    const bodyHtml = `<h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:20pt;font-weight:400;color:${theme.accent};margin:0 0 18pt;line-height:1.2;letter-spacing:-0.02em">${editor.title}</h1>${prose?.innerHTML ?? ""}`;
+    printDocument(editor.title, bodyHtml, logoUrl, theme);
   };
 
-  // ── Editor / Preview overlay ─────────────────────────────────────────────
+  // ── Editor / Preview ─────────────────────────────────────────────────────
 
   if (editor) {
     const typeLabel = DOC_TYPES.find((t) => t.id === editor.type);
@@ -357,7 +693,7 @@ export default function ClientDocPanel({ client, l }: Props) {
         className="flex flex-col gap-4"
       >
         {/* Top bar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
           <button
             onClick={() => setEditor(null)}
             className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors cursor-pointer"
@@ -366,70 +702,84 @@ export default function ClientDocPanel({ client, l }: Props) {
             {l ? "Back" : "Volver"}
           </button>
 
-          <div className="flex items-center gap-1 bg-white/5 rounded-full p-1">
-            <button
-              onClick={() => setEditor((s) => s && { ...s, mode: "edit" })}
-              className={`flex items-center gap-1.5 text-[10px] px-3 py-1.5 rounded-full transition-all cursor-pointer ${
-                editor.mode === "edit"
-                  ? "bg-[#10dffd] text-black font-medium"
-                  : "text-white/50 hover:text-white"
-              }`}
-            >
-              <PencilSquareIcon className="w-3 h-3" />
-              {l ? "Edit" : "Editar"}
-            </button>
-            <button
-              onClick={() => setEditor((s) => s && { ...s, mode: "preview" })}
-              className={`flex items-center gap-1.5 text-[10px] px-3 py-1.5 rounded-full transition-all cursor-pointer ${
-                editor.mode === "preview"
-                  ? "bg-[#10dffd] text-black font-medium"
-                  : "text-white/50 hover:text-white"
-              }`}
-            >
-              <EyeIcon className="w-3 h-3" />
-              {l ? "Preview" : "Vista previa"}
-            </button>
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            {/* Theme picker */}
+            <ThemePicker current={theme} onChange={setTheme} />
+
+            {/* Edit / Preview toggle */}
+            <div className="flex items-center gap-1 bg-white/5 rounded-full p-1">
+              <button
+                onClick={() => setEditor((s) => s && { ...s, mode: "edit" })}
+                className={`flex items-center gap-1.5 text-[10px] px-3 py-1.5 rounded-full transition-all cursor-pointer ${
+                  editor.mode === "edit"
+                    ? "bg-[#10dffd] text-black font-medium"
+                    : "text-white/50 hover:text-white"
+                }`}
+              >
+                <PencilSquareIcon className="w-3 h-3" />
+                {l ? "Edit" : "Editar"}
+              </button>
+              <button
+                onClick={() => setEditor((s) => s && { ...s, mode: "preview" })}
+                className={`flex items-center gap-1.5 text-[10px] px-3 py-1.5 rounded-full transition-all cursor-pointer ${
+                  editor.mode === "preview"
+                    ? "bg-[#10dffd] text-black font-medium"
+                    : "text-white/50 hover:text-white"
+                }`}
+              >
+                <EyeIcon className="w-3 h-3" />
+                {l ? "Preview" : "Preview"}
+              </button>
+            </div>
+
+            {/* Save */}
+            {editor.mode === "edit" && (
+              <button
+                onClick={handleSave}
+                disabled={saving || !editor.title.trim()}
+                className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-4 py-1.5 rounded-full hover:opacity-90 disabled:opacity-50 cursor-pointer"
+              >
+                {saving
+                  ? <div className="w-3 h-3 border border-black/30 border-t-black rounded-full animate-spin" />
+                  : <CheckIcon className="w-3 h-3" />}
+                {saving ? (l ? "Saving…" : "Guardando…") : (l ? "Save" : "Guardar")}
+              </button>
+            )}
+
+            {/* PDF */}
+            {editor.mode === "preview" && (
+              <button
+                onClick={handlePrint}
+                className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-4 py-1.5 rounded-full hover:opacity-90 cursor-pointer"
+              >
+                <PrinterIcon className="w-3 h-3" />
+                PDF
+              </button>
+            )}
           </div>
-
-          {editor.mode === "edit" && (
-            <button
-              onClick={handleSave}
-              disabled={saving || !editor.title.trim()}
-              className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-4 py-1.5 rounded-full hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-            >
-              {saving ? (
-                <div className="w-3 h-3 border border-black/30 border-t-black rounded-full animate-spin" />
-              ) : (
-                <CheckIcon className="w-3 h-3" />
-              )}
-              {saving ? (l ? "Saving…" : "Guardando…") : (l ? "Save" : "Guardar")}
-            </button>
-          )}
-
-          {editor.mode === "preview" && (
-            <button
-              onClick={handlePrint}
-              className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-4 py-1.5 rounded-full hover:opacity-90 transition-opacity cursor-pointer"
-            >
-              <PrinterIcon className="w-3 h-3" />
-              PDF
-            </button>
-          )}
         </div>
 
-        {/* Doc type badge */}
+        {/* Type badge */}
         <div className="flex items-center gap-2">
           {typeLabel && <typeLabel.Icon className="w-4 h-4 text-[#10dffd]/50" />}
           <span className="text-[10px] tracking-widest uppercase text-[#10dffd]/50">
             {l ? typeLabel?.label.en : typeLabel?.label.es}
           </span>
+          {editor.mode === "preview" && (
+            <span
+              className="ml-1 text-[10px] px-2 py-0.5 rounded-full"
+              style={{ background: `${theme.accent}22`, color: theme.accent, fontFamily: "'DM Sans', sans-serif" }}
+            >
+              {theme.label}
+            </span>
+          )}
         </div>
 
         {error && (
           <div className="border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-xs">{error}</div>
         )}
 
-        {/* ── EDIT MODE ── */}
+        {/* ── EDIT ── */}
         {editor.mode === "edit" && (
           <div className="flex flex-col gap-3">
             <input
@@ -442,33 +792,35 @@ export default function ClientDocPanel({ client, l }: Props) {
             <textarea
               value={editor.content}
               onChange={(e) => setEditor((s) => s && { ...s, content: e.target.value })}
-              rows={30}
+              rows={32}
               placeholder={l ? "Write in Markdown…" : "Escribe en Markdown…"}
-              className="w-full bg-white/[0.03] border border-[#10dffd]/10 rounded-xl px-5 py-4 text-gray-300 text-xs font-mono leading-relaxed placeholder-gray-700 focus:outline-none focus:border-[#10dffd]/30 transition-colors resize-none scrollbar_exp"
+              className="w-full bg-white/[0.03] border border-[#10dffd]/10 rounded-xl px-5 py-4 text-gray-300 text-xs font-mono leading-loose placeholder-gray-700 focus:outline-none focus:border-[#10dffd]/30 transition-colors resize-none scrollbar_exp"
             />
             <p className="text-gray-700 text-[10px]">
-              {l
-                ? "Markdown: **bold**, # Heading, | table |, - [ ] checkbox, > quote"
-                : "Markdown: **negrita**, # Título, | tabla |, - [ ] checkbox, > cita"}
+              Markdown: <code className="text-[#10dffd]/50">**negrita**</code> &nbsp;
+              <code className="text-[#10dffd]/50"># Título</code> &nbsp;
+              <code className="text-[#10dffd]/50">| tabla |</code> &nbsp;
+              <code className="text-[#10dffd]/50">- [ ] checkbox</code> &nbsp;
+              <code className="text-[#10dffd]/50">&gt; cita</code>
             </p>
           </div>
         )}
 
-        {/* ── PREVIEW MODE — paper document ── */}
+        {/* ── PREVIEW — paper document ── */}
         {editor.mode === "preview" && (
           <div ref={previewRef}>
-            <DocPaper
-              title={editor.title}
-              content={editor.content}
-              onPrint={handlePrint}
-            />
+            {/* Hidden prose for print extraction */}
+            <span data-prose className="hidden">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{editor.content}</ReactMarkdown>
+            </span>
+            <DocPaper title={editor.title} content={editor.content} theme={theme} onPrint={handlePrint} />
           </div>
         )}
       </motion.div>
     );
   }
 
-  // ── Document list ────────────────────────────────────────────────────────
+  // ── Document list ─────────────────────────────────────────────────────────
 
   if (loading) {
     return (
@@ -493,7 +845,6 @@ export default function ClientDocPanel({ client, l }: Props) {
             animate={{ opacity: 1, y: 0 }}
             className="border border-[#10dffd]/10 rounded-xl overflow-hidden"
           >
-            {/* Section header */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/8 bg-white/[0.02]">
               <div className="flex items-center gap-2.5">
                 <Icon className="w-4 h-4 text-[#10dffd]/60" />
@@ -506,14 +857,13 @@ export default function ClientDocPanel({ client, l }: Props) {
               </div>
               <button
                 onClick={() => openNew(id)}
-                className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-3 py-1.5 rounded-full hover:opacity-90 transition-opacity cursor-pointer"
+                className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-3 py-1.5 rounded-full hover:opacity-90 cursor-pointer"
               >
                 <PlusIcon className="w-3 h-3" />
                 {l ? "New" : "Crear"}
               </button>
             </div>
 
-            {/* Doc list */}
             {typeDocs.length === 0 ? (
               <div className="flex items-center gap-2 px-5 py-4">
                 <DocumentTextIcon className="w-3.5 h-3.5 text-white/10 shrink-0" />
@@ -529,9 +879,9 @@ export default function ClientDocPanel({ client, l }: Props) {
                   <li key={doc.id} className="flex items-center justify-between px-5 py-3 gap-3">
                     <button
                       onClick={() => openPreview(doc)}
-                      className="flex items-center gap-2.5 min-w-0 text-left hover:text-[#10dffd] transition-colors group"
+                      className="flex items-center gap-2.5 min-w-0 text-left group"
                     >
-                      <DocumentTextIcon className="w-3.5 h-3.5 text-[#10dffd]/40 shrink-0 group-hover:text-[#10dffd]/70" />
+                      <DocumentTextIcon className="w-3.5 h-3.5 text-[#10dffd]/40 shrink-0 group-hover:text-[#10dffd]/70 transition-colors" />
                       <div className="min-w-0">
                         <span className="text-xs text-gray-300 font-light group-hover:text-white transition-colors truncate block">
                           {doc.title}
@@ -548,18 +898,15 @@ export default function ClientDocPanel({ client, l }: Props) {
                       <button
                         onClick={() => openPreview(doc)}
                         className="p-1.5 rounded-lg text-gray-600 hover:text-[#10dffd] transition-colors cursor-pointer"
-                        title={l ? "Preview" : "Vista previa"}
                       >
                         <EyeIcon className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => openEdit(doc)}
                         className="p-1.5 rounded-lg text-gray-600 hover:text-white transition-colors cursor-pointer"
-                        title={l ? "Edit" : "Editar"}
                       >
                         <PencilSquareIcon className="w-3.5 h-3.5" />
                       </button>
-
                       <AnimatePresence mode="wait">
                         {confirmDeleteId === doc.id ? (
                           <motion.div
