@@ -35,7 +35,7 @@ import { useAuth } from "../context/AuthContext";
 import Auth from "../Components/Auth";
 import { useAdminPanel } from "../hooks/useAdminPanel";
 import { useUserRepos } from "../hooks/useUserRepos";
-import { useGitHubRepos } from "../hooks/useGitHubRepos";
+import { useGitHubRepos, LIVE_URL_OVERRIDES } from "../hooks/useGitHubRepos";
 import { useUserWorkflows } from "../hooks/useUserWorkflows";
 import { useWorkflows, type AiWorkflow } from "../hooks/useWorkflows";
 import WorkflowDashboard from "../Components/WorkflowDashboard";
@@ -479,6 +479,17 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   const topics: string[] = "topics" in repo ? ((repo as any).topics ?? []) : [];
                   const repoName: string = (repo as any).name ?? "";
 
+                  const rawHomepage: string | null = (repo as any).homepage ?? null;
+                  const liveUrl = (() => {
+                    if (LIVE_URL_OVERRIDES[repoName]) return LIVE_URL_OVERRIDES[repoName];
+                    if (!rawHomepage) return null;
+                    try {
+                      const u = new URL(rawHomepage);
+                      if (u.hostname.endsWith("github.io")) return null;
+                      return rawHomepage;
+                    } catch { return null; }
+                  })();
+
                   return (
                     <motion.div
                       key={(repo as any).id}
@@ -490,8 +501,10 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                         <h3 className="text-white text-sm font-light leading-snug">
                           {repoName.replace(/-/g, " ")}
                         </h3>
-                        {stars > 0 && (
-                          <span className="text-[#10dffd]/50 text-xs shrink-0">★ {stars}</span>
+                        {liveUrl && (
+                          <span className="text-[10px] text-[#10dffd]/60 border border-[#10dffd]/20 rounded-full px-2 py-0.5 shrink-0">
+                            live
+                          </span>
                         )}
                       </div>
 
@@ -528,6 +541,16 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                           >
                             GitHub
                           </a>
+                          {liveUrl && (
+                            <a
+                              href={liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] tracking-widest uppercase text-white/60 hover:text-white border border-white/20 hover:border-white/40 px-3 py-1 rounded-full transition-all"
+                            >
+                              {l ? "Live" : "Live"}
+                            </a>
+                          )}
                           {repoName && (
                             <Link
                               to={`/proyecto/${repoName}`}
