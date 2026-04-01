@@ -50,7 +50,7 @@ introduction: {
         </div>
       </div>
       <div className=" md:w-3/5 w-full md:ml-20 pt-10">
-        <div className="border-b border-[#10dffd]/20 md:mr-15">
+        <div className="border-b border-[#10dffd]/38 md:mr-15">
           <h1 className="md:text-3xl text-base font-light text-white">
             {languageState
               ? aboutContent.roleTitle.en

@@ -17,7 +17,6 @@ import {
 
 const RefreshIcon = ArrowPathIcon;
 import IsotipoWhite from "../assets/IsotipoNoBgWhite.png";
-import IsotipoBlack from "../assets/IsotipoNoBgBlack.png";
 import Header from "../Components/Header";
 import { Link } from "react-router-dom";
 
@@ -74,11 +73,11 @@ function WorkflowNameRow({
   };
 
   return (
-    <div className="flex flex-col gap-1.5 border border-[#10dffd]/10 rounded-xl px-4 py-3">
+    <div className="flex flex-col gap-1.5 border border-[#10dffd]/22 rounded-xl px-4 py-3">
       <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1">
           {wf.phone_number && (
-            <p className="text-gray-500 text-[10px] tracking-widest mb-1.5">
+            <p className="text-white/40 text-[10px] tracking-widest mb-1.5">
               {wf.phone_number}
             </p>
           )}
@@ -86,13 +85,13 @@ function WorkflowNameRow({
             type="text"
             value={value}
             onChange={(e) => { setValue(e.target.value); setSaved(false); setErr(null); }}
-            className="w-full bg-transparent border border-[#10dffd]/15 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#10dffd] transition-colors placeholder-neutral-700"
+            className="w-full bg-transparent border border-[#10dffd]/30 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#10dffd] transition-colors placeholder-neutral-700"
           />
         </div>
         <button
           onClick={handleSave}
           disabled={!isDirty || saving}
-          className="shrink-0 text-[10px] px-3 py-1.5 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed bg-[#10dffd]/10 border border-[#10dffd]/25 text-[#10dffd] hover:bg-[#10dffd]/20"
+          className="shrink-0 text-[10px] px-3 py-1.5 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed bg-[#10dffd]/10 border border-[#10dffd]/45 text-[#10dffd] hover:bg-[#10dffd]/20"
         >
           {saving ? "..." : saved ? "✓" : "Renombrar"}
         </button>
@@ -164,16 +163,20 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
         const initials = displayName.slice(0, 2).toUpperCase();
         return (
           <div className="max-w-lg">
-            <h2 className="font-banner font-light text-white text-2xl mb-8">{l ? "Profile" : "Perfil"}</h2>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-5 h-px bg-[#10dffd]" />
+              <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">{l ? "Account" : "Cuenta"}</span>
+            </div>
+            <h2 className="font-banner font-light text-white text-xl mb-8">{l ? "Profile" : "Perfil"}</h2>
 
             {/* Avatar */}
             <div className="flex items-center gap-5 mb-8">
-              <div className="w-16 h-16 rounded-full bg-[#10dffd]/15 border border-[#10dffd]/30 flex items-center justify-center flex-shrink-0">
+              <div className="w-16 h-16 rounded-full bg-[#10dffd]/15 border border-[#10dffd]/50 flex items-center justify-center flex-shrink-0">
                 <span className="text-[#10dffd] text-xl font-light">{initials}</span>
               </div>
               <div>
                 <div className="text-white text-sm font-light">{displayName}</div>
-                <div className="text-gray-500 text-xs mt-0.5">{user.email}</div>
+                <div className="text-white/40 text-xs mt-0.5">{user.email}</div>
               </div>
             </div>
 
@@ -190,18 +193,18 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 { label: { en: "Phone", es: "Teléfono" }, value: "", type: "tel" },
               ].map((field) => (
                 <motion.div key={field.label.en} variants={contentItem} className="flex flex-col gap-1.5">
-                  <label className="text-[11px] text-gray-500">{l ? field.label.en : field.label.es}</label>
+                  <label className="text-[10px] text-[#10dffd]/60 tracking-[0.25em] uppercase font-display">{l ? field.label.en : field.label.es}</label>
                   <input
                     type={field.type}
                     defaultValue={field.value}
-                    className="border border-[#10dffd]/15 rounded-xl px-4 py-2.5 bg-transparent text-white text-sm outline-none focus:border-[#10dffd] transition-colors"
+                    className="bg-[#10dffd]/[0.02] hover:bg-[#10dffd]/[0.04] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none transition-all duration-200"
                   />
                 </motion.div>
               ))}
 
               <motion.button
                 variants={contentItem}
-                className="mt-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity cursor-pointer w-fit"
+                className="mt-2 bg-[#10dffd] text-black text-xs px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity cursor-pointer w-fit shadow-[0_0_20px_rgba(16,223,253,0.2)] font-display tracking-[0.2em] uppercase"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
               >
@@ -216,7 +219,11 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
       case "settings":
         return (
           <div className="max-w-lg">
-            <h2 className="font-banner font-light text-white text-2xl mb-8">{l ? "Settings" : "Configuración"}</h2>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-5 h-px bg-[#10dffd]" />
+              <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">{l ? "Account" : "Cuenta"}</span>
+            </div>
+            <h2 className="font-banner font-light text-white text-xl mb-8">{l ? "Settings" : "Configuración"}</h2>
 
             {/* Notifications */}
             <section className="mb-8">
@@ -229,8 +236,8 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   { label: { en: "WhatsApp alerts", es: "Alertas por WhatsApp" }, defaultOn: false },
                   { label: { en: "Weekly summary", es: "Resumen semanal" }, defaultOn: true },
                 ].map((item) => (
-                  <div key={item.label.en} className="flex items-center justify-between border border-[#10dffd]/10 rounded-xl px-5 py-3">
-                    <span className="text-gray-300 text-sm font-light">{l ? item.label.en : item.label.es}</span>
+                  <div key={item.label.en} className="flex items-center justify-between border border-[#10dffd]/22 rounded-xl px-5 py-3">
+                    <span className="text-white/50 text-sm font-light">{l ? item.label.en : item.label.es}</span>
                     <div className={`w-9 h-5 rounded-full relative cursor-pointer transition-colors ${item.defaultOn ? "bg-[#10dffd]/30" : "bg-white/10"}`}>
                       <div className={`w-3.5 h-3.5 rounded-full bg-white absolute top-[3px] transition-all ${item.defaultOn ? "left-[18px]" : "left-[3px]"}`} />
                     </div>
@@ -245,13 +252,13 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 {l ? "Security" : "Seguridad"}
               </span>
               <div className="flex flex-col gap-3">
-                <button className="flex items-center justify-between border border-[#10dffd]/10 hover:border-[#10dffd]/30 rounded-xl px-5 py-3 transition-colors cursor-pointer w-full text-left">
-                  <span className="text-gray-300 text-sm font-light">{l ? "Change password" : "Cambiar contraseña"}</span>
+                <button className="flex items-center justify-between border border-[#10dffd]/22 hover:border-[#10dffd]/50 rounded-xl px-5 py-3 transition-colors cursor-pointer w-full text-left">
+                  <span className="text-white/50 text-sm font-light">{l ? "Change password" : "Cambiar contraseña"}</span>
                   <span className="text-[#10dffd] text-xs">{l ? "Update →" : "Actualizar →"}</span>
                 </button>
-                <button className="flex items-center justify-between border border-[#10dffd]/10 hover:border-[#10dffd]/30 rounded-xl px-5 py-3 transition-colors cursor-pointer w-full text-left">
-                  <span className="text-gray-300 text-sm font-light">{l ? "Two-factor authentication" : "Autenticación en dos pasos"}</span>
-                  <span className="text-gray-600 text-xs">{l ? "Not enabled" : "No activado"}</span>
+                <button className="flex items-center justify-between border border-[#10dffd]/22 hover:border-[#10dffd]/50 rounded-xl px-5 py-3 transition-colors cursor-pointer w-full text-left">
+                  <span className="text-white/50 text-sm font-light">{l ? "Two-factor authentication" : "Autenticación en dos pasos"}</span>
+                  <span className="text-white/25 text-xs">{l ? "Not enabled" : "No activado"}</span>
                 </button>
               </div>
             </section>
@@ -273,16 +280,20 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
       case "blog-admin":
         return (
           <div className="max-w-2xl">
-            <h2 className="font-banner font-light text-white text-2xl mb-2">{l ? "Write Article" : "Nuevo Artículo para el Blog"}</h2>
-            <p className="text-gray-400 text-sm mb-8">{l ? "Submit a new article to be published." : "Redacta un nuevo artículo y envíalo para publicación."}</p>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-5 h-px bg-[#10dffd]" />
+              <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">{l ? "Knowledge base" : "Base de conocimiento"}</span>
+            </div>
+            <h2 className="font-banner font-light text-white text-xl mb-2">{l ? "Write Article" : "Nuevo Artículo para el Blog"}</h2>
+            <p className="text-white/40 text-sm mb-8">{l ? "Submit a new article to be published." : "Redacta un nuevo artículo y envíalo para publicación."}</p>
             <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); alert(l ? "Article saved locally. Supabase connection will be configured soon." : "Artículo guardado localmente. La conexión a Supabase 'posts' se configurará pronto."); }}>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-[#10dffd] tracking-widest uppercase">{l ? "Title" : "Título"}</label>
-                <input required type="text" placeholder={l ? "E.g. The future of AI" : "Ej. El futuro de la IA"} className="border border-[#10dffd]/15 bg-black text-white px-4 py-2.5 rounded-xl outline-none focus:border-[#10dffd] transition-colors" />
+                <label className="text-[10px] text-[#10dffd]/60 tracking-[0.25em] uppercase font-display">{l ? "Title" : "Título"}</label>
+                <input required type="text" placeholder={l ? "E.g. The future of AI" : "Ej. El futuro de la IA"} className="bg-[#10dffd]/[0.02] hover:bg-[#10dffd]/[0.04] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none transition-all duration-200" />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-[#10dffd] tracking-widest uppercase">{l ? "Category" : "Categoría"}</label>
-                <select required className="border border-[#10dffd]/15 bg-black text-white px-4 py-2.5 rounded-xl outline-none focus:border-[#10dffd] transition-colors appearance-none">
+                <label className="text-[10px] text-[#10dffd]/60 tracking-[0.25em] uppercase font-display">{l ? "Category" : "Categoría"}</label>
+                <select required className="bg-[#10dffd]/[0.02] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-2.5 text-sm text-white outline-none transition-all duration-200 cursor-pointer appearance-none">
                   <option value="AI">AI</option>
                   <option value="Automation">Automation</option>
                   <option value="Data">Data</option>
@@ -290,10 +301,10 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 </select>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-[#10dffd] tracking-widest uppercase">{l ? "Content (Markdown)" : "Contenido (Markdown)"}</label>
-                <textarea required rows={8} placeholder={l ? "Write your post in Markdown..." : "Escribe tu artículo usando formato Markdown..."} className="border border-[#10dffd]/15 bg-black text-white px-4 py-2.5 rounded-xl outline-none focus:border-[#10dffd] transition-colors resize-y"></textarea>
+                <label className="text-[10px] text-[#10dffd]/60 tracking-[0.25em] uppercase font-display">{l ? "Content (Markdown)" : "Contenido (Markdown)"}</label>
+                <textarea required rows={8} placeholder={l ? "Write your post in Markdown..." : "Escribe tu artículo usando formato Markdown..."} className="bg-[#10dffd]/[0.02] hover:bg-[#10dffd]/[0.04] border border-[#10dffd]/30 focus:border-[#10dffd]/70 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none transition-all duration-200 resize-none"></textarea>
               </div>
-              <button type="submit" className="mt-4 bg-[#10dffd] text-black px-6 py-3 rounded-xl hover:opacity-90 transition-opacity font-medium w-fit flex items-center gap-2 cursor-pointer">
+              <button type="submit" className="mt-4 bg-[#10dffd] text-black px-7 py-3 rounded-full hover:opacity-90 transition-opacity font-display tracking-[0.2em] uppercase text-xs w-fit flex items-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(16,223,253,0.2)]">
                 <PlusIcon className="w-4 h-4" />
                 {l ? "Publish Article" : "Publicar Artículo"}
               </button>
@@ -308,7 +319,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
         const wfLoading = isAdmin ? allWfLoading : userWorkflows.loading;
 
         const STATUS_COLOR: Record<string, string> = {
-          active: "text-[#10dffd] bg-[#10dffd]/10 border-[#10dffd]/20",
+          active: "text-[#10dffd] bg-[#10dffd]/10 border-[#10dffd]/38",
           paused: "text-amber-400 bg-amber-400/10 border-amber-400/20",
           error: "text-red-400 bg-red-400/10 border-red-400/20",
         };
@@ -322,11 +333,19 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
         return (
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="font-banner font-light text-white text-2xl">
-                {l ? "Automations" : "Automatizaciones"}
-              </h2>
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-5 h-px bg-[#10dffd]" />
+                  <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">
+                    {l ? "AI Systems" : "Sistemas IA"}
+                  </span>
+                </div>
+                <h2 className="font-banner font-light text-white text-xl">
+                  {l ? "Automations" : "Automatizaciones"}
+                </h2>
+              </div>
               {!wfLoading && activeWorkflows.length > 0 && (
-                <span className="text-[#10dffd]/50 text-xs">{activeWorkflows.length} flows</span>
+                <span className="text-[#10dffd]/50 text-xs border border-[#10dffd]/30 rounded-full px-2.5 py-1">{activeWorkflows.length} flows</span>
               )}
             </div>
 
@@ -337,9 +356,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
             )}
 
             {!wfLoading && activeWorkflows.length === 0 && (
-              <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+              <div className="border border-[#10dffd]/22 rounded-2xl p-10 text-center">
                 <BoltIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
-                <p className="text-gray-500 text-sm font-light">
+                <p className="text-white/40 text-sm font-light">
                   {isAdmin
                     ? (l ? "No automations found." : "Sin automatizaciones.")
                     : (l ? "No automations assigned yet." : "Aún no tienes automatizaciones asignadas.")}
@@ -358,25 +377,27 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   <motion.button
                     key={wf.id}
                     variants={contentItem}
-                    whileHover={{ borderColor: "rgba(16,223,253,0.4)", scale: 1.01 }}
+                    whileHover={{ borderColor: "rgba(16,223,253,0.65)", scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setOpenWorkflow(wf)}
-                    className="border border-[#10dffd]/15 rounded-xl p-5 flex flex-col gap-3 text-left cursor-pointer transition-colors w-full"
+                    className="relative border border-[#10dffd]/30 rounded-xl p-5 flex flex-col gap-3 text-left cursor-pointer transition-colors w-full overflow-hidden"
                   >
+                    <span className="absolute top-0 left-0 w-3 h-3 border-l border-t border-[#10dffd]/38 rounded-tl-xl pointer-events-none" />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 border-r border-b border-[#10dffd]/38 rounded-br-xl pointer-events-none" />
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-2">
                         <BoltIcon className="w-4 h-4 text-[#10dffd] shrink-0" />
                         <span className="text-white text-sm font-light">{wf.name}</span>
                       </div>
-                      <span className={`text-[10px] px-2.5 py-0.5 rounded-full border shrink-0 ${STATUS_COLOR[wf.status] ?? "text-gray-400 border-gray-400/20"}`}>
+                      <span className={`text-[10px] px-2.5 py-0.5 rounded-full border shrink-0 ${STATUS_COLOR[wf.status] ?? "text-white/40 border-gray-400/20"}`}>
                         {wf.status}
                       </span>
                     </div>
                     {wf.description && (
-                      <p className="text-gray-500 text-xs leading-relaxed">{wf.description}</p>
+                      <p className="text-white/40 text-xs leading-relaxed">{wf.description}</p>
                     )}
                     <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5">
-                      <span className="text-[10px] text-gray-600 tracking-widest uppercase">
+                      <span className="text-[10px] text-white/25 tracking-widest uppercase">
                         {TYPE_LABEL[wf.type] ?? wf.type}
                       </span>
                       <span className="text-[10px] text-[#10dffd]/50 tracking-widest uppercase">
@@ -401,13 +422,21 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
           return (
             <div>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="font-banner font-light text-white text-2xl">
-                  {l ? "Documents" : "Documentos"}
-                </h2>
+                <div>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="w-5 h-px bg-[#10dffd]" />
+                    <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">
+                      {l ? "Client files" : "Archivos cliente"}
+                    </span>
+                  </div>
+                  <h2 className="font-banner font-light text-white text-xl">
+                    {l ? "Documents" : "Documentos"}
+                  </h2>
+                </div>
                 {selectedClient && (
                   <button
                     onClick={() => setSelectedDocClientId(null)}
-                    className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white transition-colors cursor-pointer"
                   >
                     <XMarkIcon className="w-3.5 h-3.5" />
                     {l ? "All clients" : "Todos los clientes"}
@@ -422,9 +451,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               ) : !selectedClient ? (
                 /* ── Client grid ── */
                 clients.length === 0 ? (
-                  <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+                  <div className="border border-[#10dffd]/22 rounded-2xl p-10 text-center">
                     <UserCircleIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
-                    <p className="text-gray-500 text-sm font-light">
+                    <p className="text-white/40 text-sm font-light">
                       {l ? "No clients registered yet." : "Sin clientes registrados aún."}
                     </p>
                   </div>
@@ -440,9 +469,11 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                         key={client.id}
                         variants={contentItem}
                         onClick={() => setSelectedDocClientId(client.id)}
-                        whileHover={{ borderColor: "rgba(16,223,253,0.35)" }}
-                        className="border border-[#10dffd]/10 rounded-xl p-5 flex flex-col items-start gap-3 text-left transition-colors cursor-pointer w-full"
+                        whileHover={{ borderColor: "rgba(16,223,253,0.60)" }}
+                        className="relative border border-[#10dffd]/22 rounded-xl p-5 flex flex-col items-start gap-3 text-left transition-colors cursor-pointer w-full overflow-hidden"
                       >
+                        <span className="absolute top-0 left-0 w-3 h-3 border-l border-t border-[#10dffd]/30 rounded-tl-xl pointer-events-none" />
+                        <span className="absolute bottom-0 right-0 w-3 h-3 border-r border-b border-[#10dffd]/30 rounded-br-xl pointer-events-none" />
                         <div className="w-9 h-9 rounded-full bg-[#10dffd]/10 flex items-center justify-center shrink-0">
                           <UserCircleIcon className="w-5 h-5 text-[#10dffd]/60" />
                         </div>
@@ -451,7 +482,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                             {client.full_name || client.email}
                           </p>
                           {client.full_name && (
-                            <p className="text-gray-600 text-[10px] truncate mt-0.5">{client.email}</p>
+                            <p className="text-white/25 text-[10px] truncate mt-0.5">{client.email}</p>
                           )}
                         </div>
                         <span className="text-[10px] tracking-widest uppercase text-[#10dffd]/50 flex items-center gap-1">
@@ -471,14 +502,14 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   transition={{ duration: 0.3 }}
                 >
                   {/* Client header */}
-                  <div className="flex items-center gap-3 mb-6 border border-[#10dffd]/10 rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-3 mb-6 border border-[#10dffd]/22 rounded-xl px-4 py-3">
                     <div className="w-8 h-8 rounded-full bg-[#10dffd]/10 flex items-center justify-center shrink-0">
                       <UserCircleIcon className="w-4 h-4 text-[#10dffd]/60" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-white text-sm font-light">{selectedClient.full_name || selectedClient.email}</p>
                       {selectedClient.full_name && (
-                        <p className="text-gray-600 text-[10px]">{selectedClient.email}</p>
+                        <p className="text-white/25 text-[10px]">{selectedClient.email}</p>
                       )}
                     </div>
                   </div>
@@ -495,9 +526,17 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
         return (
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="font-banner font-light text-white text-2xl">
-                {l ? "Documents" : "Documentos"}
-              </h2>
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-5 h-px bg-[#10dffd]" />
+                  <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">
+                    {l ? "Client files" : "Archivos cliente"}
+                  </span>
+                </div>
+                <h2 className="font-banner font-light text-white text-xl">
+                  {l ? "Documents" : "Documentos"}
+                </h2>
+              </div>
             </div>
             <ClientDocViewer userId={user!.id} l={l} />
           </div>
@@ -521,14 +560,15 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
           <div>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="font-banner font-light text-white text-2xl">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-5 h-px bg-[#10dffd]" />
+                  <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">
+                    {isAdmin ? "Juan100205" : (l ? "Your projects" : "Tus proyectos")}
+                  </span>
+                </div>
+                <h2 className="font-banner font-light text-white text-xl">
                   {l ? "Web Pages" : "Páginas Web"}
                 </h2>
-                {isAdmin && (
-                  <p className="text-gray-600 text-xs mt-1">
-                    {l ? "All GitHub repositories — Juan100205" : "Todos los repositorios GitHub — Juan100205"}
-                  </p>
-                )}
               </div>
               {!activeLoading && (
                 <span className="text-[#10dffd]/50 text-xs">
@@ -550,9 +590,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
             )}
 
             {!activeLoading && activeRepos.length === 0 && (
-              <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+              <div className="border border-[#10dffd]/22 rounded-2xl p-10 text-center">
                 <CodeBracketIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
-                <p className="text-gray-500 text-sm font-light">
+                <p className="text-white/40 text-sm font-light">
                   {isAdmin
                     ? (l ? "Could not load GitHub repositories." : "No se pudieron cargar los repositorios de GitHub.")
                     : (l ? "No projects assigned yet. Contact your account manager." : "Aún no tienes proyectos asignados. Contacta a tu gestor de cuenta.")}
@@ -588,22 +628,24 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                     <motion.div
                       key={(repo as any).id}
                       variants={contentItem}
-                      whileHover={{ borderColor: "rgba(16,223,253,0.35)" }}
-                      className="border border-[#10dffd]/10 rounded-xl p-5 flex flex-col gap-3 transition-colors"
+                      whileHover={{ borderColor: "rgba(16,223,253,0.60)" }}
+                      className="relative border border-[#10dffd]/22 rounded-xl p-5 flex flex-col gap-3 transition-colors overflow-hidden"
                     >
+                      <span className="absolute top-0 left-0 w-3 h-3 border-l border-t border-[#10dffd]/30 rounded-tl-xl pointer-events-none" />
+                      <span className="absolute bottom-0 right-0 w-3 h-3 border-r border-b border-[#10dffd]/30 rounded-br-xl pointer-events-none" />
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="text-white text-sm font-light leading-snug">
                           {repoName.replace(/-/g, " ")}
                         </h3>
                         {liveUrl && (
-                          <span className="text-[10px] text-[#10dffd]/60 border border-[#10dffd]/20 rounded-full px-2 py-0.5 shrink-0">
+                          <span className="text-[10px] text-[#10dffd]/60 border border-[#10dffd]/38 rounded-full px-2 py-0.5 shrink-0">
                             live
                           </span>
                         )}
                       </div>
 
                       {(repo as any).description && (
-                        <p className="text-gray-500 text-xs leading-relaxed flex-1">
+                        <p className="text-white/40 text-xs leading-relaxed flex-1">
                           {(repo as any).description}
                         </p>
                       )}
@@ -611,7 +653,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       {topics.length > 0 && (
                         <div className="flex flex-wrap gap-1.5">
                           {topics.slice(0, 4).map((t: string) => (
-                            <span key={t} className="text-[10px] text-[#10dffd]/60 border border-[#10dffd]/15 rounded-full px-2 py-0.5">
+                            <span key={t} className="text-[10px] text-[#10dffd]/60 border border-[#10dffd]/30 rounded-full px-2 py-0.5">
                               {t}
                             </span>
                           ))}
@@ -620,7 +662,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
                       <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5">
                         {language ? (
-                          <span className="flex items-center gap-1.5 text-xs text-gray-500">
+                          <span className="flex items-center gap-1.5 text-xs text-white/40">
                             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LANG_COLORS[language] ?? "#8b949e" }} />
                             {language}
                           </span>
@@ -669,8 +711,12 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
         if (!isAdmin) return null;
         return (
           <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-banner font-light text-white text-2xl">{l ? "Admin Dashboard" : "Panel de Administración"}</h2>
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="w-5 h-px bg-[#10dffd]" />
+                <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">{l ? "System" : "Sistema"}</span>
+              </div>
+              <h2 className="font-banner font-light text-white text-xl">{l ? "Admin Dashboard" : "Panel de Administración"}</h2>
             </div>
 
             {adminPanel.error && (
@@ -685,7 +731,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 <span className="text-[10px] text-[#10dffd] tracking-[0.25em] uppercase">
                   {l ? "GitHub Repositories" : "Repositorios GitHub"}
                   {adminPanel.repos.length > 0 && (
-                    <span className="ml-2 text-gray-600">({adminPanel.repos.length})</span>
+                    <span className="ml-2 text-white/25">({adminPanel.repos.length})</span>
                   )}
                 </span>
                 <motion.button
@@ -707,22 +753,22 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#10dffd]" />
                 </div>
               ) : adminPanel.repos.length === 0 ? (
-                <p className="text-gray-600 text-sm text-center py-8">
+                <p className="text-white/25 text-sm text-center py-8">
                   {l ? "No repos synced yet. Click 'Sync GitHub'." : "Sin repositorios. Haz clic en 'Sincronizar GitHub'."}
                 </p>
               ) : (
                 <div className="flex flex-col gap-2 max-h-56 overflow-y-auto scrollbar_exp pr-1">
                   {adminPanel.repos.map((repo) => (
-                    <div key={repo.id} className="flex items-center justify-between border border-[#10dffd]/10 rounded-xl px-4 py-2.5">
+                    <div key={repo.id} className="flex items-center justify-between border border-[#10dffd]/22 rounded-xl px-4 py-2.5">
                       <div className="flex items-center gap-3 min-w-0">
                         <CodeBracketIcon className="w-3.5 h-3.5 text-[#10dffd]/50 flex-shrink-0" />
                         <span className="text-white text-xs font-light truncate">{repo.name}</span>
                         {repo.language && (
-                          <span className="text-gray-600 text-[10px] hidden sm:block">{repo.language}</span>
+                          <span className="text-white/25 text-[10px] hidden sm:block">{repo.language}</span>
                         )}
                       </div>
                       {(repo.stars ?? 0) > 0 && (
-                        <span className="text-gray-600 text-[10px] ml-3 shrink-0">★ {repo.stars}</span>
+                        <span className="text-white/25 text-[10px] ml-3 shrink-0">★ {repo.stars}</span>
                       )}
                     </div>
                   ))}
@@ -738,8 +784,8 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
               <div className="grid md:grid-cols-2 gap-4">
                 {/* Users list */}
-                <div className="border border-[#10dffd]/15 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
-                  <p className="text-gray-600 text-[10px] uppercase tracking-widest mb-1">
+                <div className="border border-[#10dffd]/30 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
+                  <p className="text-white/25 text-[10px] uppercase tracking-widest mb-1">
                     {l ? "Select user" : "Selecciona usuario"}
                   </p>
                   {adminPanel.users.filter((u) => !u.is_admin).map((u) => (
@@ -748,60 +794,60 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       onClick={() => setSelectedUserId(selectedUserId === u.id ? null : u.id)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer border ${
                         selectedUserId === u.id
-                          ? "bg-[#10dffd]/10 border-[#10dffd]/30 text-[#10dffd]"
-                          : "border-transparent hover:bg-white/5 text-gray-300"
+                          ? "bg-[#10dffd]/10 border-[#10dffd]/50 text-[#10dffd]"
+                          : "border-transparent hover:bg-white/5 text-white/50"
                       }`}
                     >
                       <UserCircleIcon className="w-5 h-5 flex-shrink-0 opacity-50" />
                       <div className="min-w-0">
                         <div className="text-xs font-light truncate">{u.full_name || u.email}</div>
                         {u.full_name && (
-                          <div className="text-[10px] text-gray-600 truncate">{u.email}</div>
+                          <div className="text-[10px] text-white/25 truncate">{u.email}</div>
                         )}
                       </div>
-                      <span className="ml-auto text-[10px] text-gray-600 shrink-0">
+                      <span className="ml-auto text-[10px] text-white/25 shrink-0">
                         {adminPanel.reposForUser(u.id).size} repos
                       </span>
                     </button>
                   ))}
                   {adminPanel.users.filter((u) => !u.is_admin).length === 0 && !adminPanel.loading && (
-                    <p className="text-gray-600 text-xs text-center py-4">
+                    <p className="text-white/25 text-xs text-center py-4">
                       {l ? "No users registered yet." : "Sin usuarios registrados aún."}
                     </p>
                   )}
                 </div>
 
                 {/* Repos access toggles for selected user */}
-                <div className="border border-[#10dffd]/15 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
+                <div className="border border-[#10dffd]/30 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
                   {!selectedUserId ? (
                     <div className="flex items-center justify-center h-full py-10 text-center">
-                      <p className="text-gray-600 text-xs">
+                      <p className="text-white/25 text-xs">
                         {l ? "← Select a user to manage their access" : "← Selecciona un usuario para gestionar sus accesos"}
                       </p>
                     </div>
                   ) : (
                     <>
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-gray-600 text-[10px] uppercase tracking-widest">
+                        <p className="text-white/25 text-[10px] uppercase tracking-widest">
                           {l ? "Repo access" : "Acceso a repos"}
                         </p>
                         <button
                           onClick={() => setSelectedUserId(null)}
-                          className="text-gray-600 hover:text-gray-400 transition-colors cursor-pointer"
+                          className="text-white/25 hover:text-white/40 transition-colors cursor-pointer"
                         >
                           <XMarkIcon className="w-3.5 h-3.5" />
                         </button>
                       </div>
                       {adminPanel.repos.length === 0 && (
-                        <p className="text-gray-600 text-xs text-center py-4">
+                        <p className="text-white/25 text-xs text-center py-4">
                           {l ? "Sync repos first." : "Sincroniza repos primero."}
                         </p>
                       )}
                       {adminPanel.repos.map((repo) => {
                         const hasAccess = adminPanel.reposForUser(selectedUserId).has(repo.id);
                         return (
-                          <div key={repo.id} className="flex items-center justify-between border border-[#10dffd]/8 rounded-xl px-3 py-2">
-                            <span className="text-xs text-gray-300 font-light truncate mr-2">{repo.name}</span>
+                          <div key={repo.id} className="flex items-center justify-between border border-[#10dffd]/18 rounded-xl px-3 py-2">
+                            <span className="text-xs text-white/50 font-light truncate mr-2">{repo.name}</span>
                             <button
                               onClick={() =>
                                 hasAccess
@@ -828,7 +874,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               <span className="text-[10px] text-[#10dffd] tracking-[0.25em] uppercase block mb-4">
                 {l ? "Active Flows" : "Flujos Activos"}
               </span>
-              <p className="text-gray-600 text-xs mb-4">
+              <p className="text-white/25 text-xs mb-4">
                 {l
                   ? "Rename each flow. Only flows with an assigned phone number are shown here."
                   : "Renombra cada flujo. Solo se muestran los flujos que ya tienen número asignado en la BD."}
@@ -842,7 +888,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                   />
                 ))}
                 {adminPanel.workflows.length === 0 && !adminPanel.loading && (
-                  <p className="text-gray-600 text-xs text-center py-4">
+                  <p className="text-white/25 text-xs text-center py-4">
                     {l ? "No flows found." : "Sin flujos en la BD."}
                   </p>
                 )}
@@ -854,14 +900,14 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
               <span className="text-[10px] text-[#10dffd] tracking-[0.25em] uppercase block mb-4">
                 {l ? "AI Workflows" : "Flujos de IA"}
                 {adminPanel.workflows.length > 0 && (
-                  <span className="ml-2 text-gray-600">({adminPanel.workflows.length})</span>
+                  <span className="ml-2 text-white/25">({adminPanel.workflows.length})</span>
                 )}
               </span>
 
               <div className="grid md:grid-cols-2 gap-4">
                 {/* Users list (reuse same selection) */}
-                <div className="border border-[#10dffd]/15 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
-                  <p className="text-gray-600 text-[10px] uppercase tracking-widest mb-1">
+                <div className="border border-[#10dffd]/30 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
+                  <p className="text-white/25 text-[10px] uppercase tracking-widest mb-1">
                     {l ? "Select user" : "Selecciona usuario"}
                   </p>
                   {adminPanel.users.filter((u) => !u.is_admin).map((u) => (
@@ -870,63 +916,63 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       onClick={() => setSelectedUserId(selectedUserId === u.id ? null : u.id)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer border ${
                         selectedUserId === u.id
-                          ? "bg-[#10dffd]/10 border-[#10dffd]/30 text-[#10dffd]"
-                          : "border-transparent hover:bg-white/5 text-gray-300"
+                          ? "bg-[#10dffd]/10 border-[#10dffd]/50 text-[#10dffd]"
+                          : "border-transparent hover:bg-white/5 text-white/50"
                       }`}
                     >
                       <UserCircleIcon className="w-5 h-5 flex-shrink-0 opacity-50" />
                       <div className="min-w-0">
                         <div className="text-xs font-light truncate">{u.full_name || u.email}</div>
                         {u.full_name && (
-                          <div className="text-[10px] text-gray-600 truncate">{u.email}</div>
+                          <div className="text-[10px] text-white/25 truncate">{u.email}</div>
                         )}
                       </div>
-                      <span className="ml-auto text-[10px] text-gray-600 shrink-0">
+                      <span className="ml-auto text-[10px] text-white/25 shrink-0">
                         {adminPanel.workflowsForUser(u.id).size} flows
                       </span>
                     </button>
                   ))}
                   {adminPanel.users.filter((u) => !u.is_admin).length === 0 && !adminPanel.loading && (
-                    <p className="text-gray-600 text-xs text-center py-4">
+                    <p className="text-white/25 text-xs text-center py-4">
                       {l ? "No users registered yet." : "Sin usuarios registrados aún."}
                     </p>
                   )}
                 </div>
 
                 {/* Workflow access toggles for selected user */}
-                <div className="border border-[#10dffd]/15 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
+                <div className="border border-[#10dffd]/30 rounded-2xl p-4 flex flex-col gap-2 max-h-96 overflow-y-auto scrollbar_exp">
                   {!selectedUserId ? (
                     <div className="flex items-center justify-center h-full py-10 text-center">
-                      <p className="text-gray-600 text-xs">
+                      <p className="text-white/25 text-xs">
                         {l ? "← Select a user to manage their workflows" : "← Selecciona un usuario para gestionar sus flujos"}
                       </p>
                     </div>
                   ) : (
                     <>
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-gray-600 text-[10px] uppercase tracking-widest">
+                        <p className="text-white/25 text-[10px] uppercase tracking-widest">
                           {l ? "Workflow access" : "Acceso a flujos"}
                         </p>
                         <button
                           onClick={() => setSelectedUserId(null)}
-                          className="text-gray-600 hover:text-gray-400 transition-colors cursor-pointer"
+                          className="text-white/25 hover:text-white/40 transition-colors cursor-pointer"
                         >
                           <XMarkIcon className="w-3.5 h-3.5" />
                         </button>
                       </div>
                       {adminPanel.workflows.length === 0 && (
-                        <p className="text-gray-600 text-xs text-center py-4">
+                        <p className="text-white/25 text-xs text-center py-4">
                           {l ? "No workflows found. Run migration 004." : "Sin flujos. Ejecuta la migración 004."}
                         </p>
                       )}
                       {adminPanel.workflows.map((wf) => {
                         const hasAccess = adminPanel.workflowsForUser(selectedUserId).has(wf.id);
                         return (
-                          <div key={wf.id} className="flex items-center justify-between border border-[#10dffd]/8 rounded-xl px-3 py-2">
+                          <div key={wf.id} className="flex items-center justify-between border border-[#10dffd]/18 rounded-xl px-3 py-2">
                             <div className="min-w-0 mr-2">
-                              <span className="text-xs text-gray-300 font-light truncate block">{wf.name}</span>
+                              <span className="text-xs text-white/50 font-light truncate block">{wf.name}</span>
                               {wf.description && (
-                                <span className="text-[10px] text-gray-600 truncate block">{wf.description}</span>
+                                <span className="text-[10px] text-white/25 truncate block">{wf.description}</span>
                               )}
                             </div>
                             <button
@@ -988,101 +1034,160 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
     );
   }
 
-  return (
-    <div className="flex flex-col bg-white dark:bg-black" style={{ height: "100vh", overflow: "hidden" }}>
+  const initials = displayName.slice(0, 2).toUpperCase();
 
-      {/* Header */}
-      <motion.header
-        className="sticky top-0 border-b border-[#10dffd]/20 flex w-full z-50 justify-between items-center
-                   bg-white dark:bg-black transition-all duration-500 min-h-[5rem] px-4 md:px-10 flex-shrink-0"
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
+  const SidebarNavItem = ({ tab }: { tab: typeof allTabs[number] }) => {
+    const Icon = tab.icon;
+    const active = activeTab === tab.id;
+    return (
+      <button
+        onClick={() => setActiveTab(tab.id)}
+        className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-left transition-all duration-200 cursor-pointer border
+          ${active
+            ? "bg-[#10dffd]/10 border-[#10dffd]/38 text-[#10dffd]"
+            : "border-transparent text-white/35 hover:text-white/80 hover:bg-white/[0.04]"
+          }`}
+      >
+        <Icon className={`w-4 h-4 shrink-0 transition-colors ${active ? "text-[#10dffd]" : "text-white/25 group-hover:text-white/60"}`} />
+        <span className="font-display text-xs tracking-wide truncate">{l ? tab.label.en : tab.label.es}</span>
+        {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#10dffd] shrink-0" />}
+      </button>
+    );
+  };
+
+  return (
+    <div className="flex" style={{ height: "100vh", overflow: "hidden" }}>
+
+      {/* ── Sidebar (desktop) ──────────────────────────────────────────────── */}
+      <motion.aside
+        className="hidden md:flex flex-col w-56 border-r border-[#10dffd]/22 flex-shrink-0 bg-black/30 backdrop-blur-md"
+        initial={{ opacity: 0, x: -16 }}
+        animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] as const }}
       >
-        {/* Logo + label */}
-        <div className="flex items-center gap-4">
-          <img src={IsotipoWhite} alt="RIANODEVZ" className="w-10 object-contain hidden dark:block" />
-          <img src={IsotipoBlack} alt="RIANODEVZ" className="w-10 object-contain dark:hidden" />
-          <span className="font-display text-xs text-gray-400 dark:text-gray-500 hidden md:block tracking-widest uppercase">
-            {l ? "Client Portal" : "Portal de Clientes"}
-          </span>
+        {/* Brand */}
+        <div className="flex items-center gap-3 px-5 h-14 border-b border-[#10dffd]/18 flex-shrink-0">
+          <img src={IsotipoWhite} alt="RIANODEVZ" className="w-6 object-contain opacity-80" />
+          <div>
+            <span className="font-display text-[9px] text-[#10dffd]/50 tracking-[0.35em] uppercase block">Portal</span>
+          </div>
         </div>
 
-        {/* Nav — estilo underline igual que el header externo */}
-        <nav className="hidden md:flex items-center gap-6">
+        {/* User pill */}
+        <div className="px-3 py-3 border-b border-[#10dffd]/18 flex-shrink-0">
+          <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-[#10dffd]/[0.04] border border-[#10dffd]/22">
+            <div className="w-7 h-7 rounded-full bg-[#10dffd]/15 border border-[#10dffd]/45 flex items-center justify-center shrink-0">
+              <span className="text-[#10dffd] text-[9px] font-light">{initials}</span>
+            </div>
+            <div className="min-w-0">
+              <p className="text-white text-[11px] font-light truncate leading-tight">{displayName}</p>
+              <p className="text-white/25 text-[9px] truncate">{user.email}</p>
+            </div>
+            {isAdmin && (
+              <span className="ml-auto shrink-0 text-[8px] bg-[#10dffd]/10 text-[#10dffd]/70 border border-[#10dffd]/38 px-1.5 py-0.5 rounded-full font-display tracking-wider uppercase">
+                admin
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto scrollbar_exp px-3 py-4 flex flex-col gap-0.5">
+          <span className="text-[9px] text-white/15 tracking-[0.3em] uppercase px-3 mb-2 font-display">
+            {l ? "Dashboard" : "Panel"}
+          </span>
+          {mainTabs.map((tab) => <SidebarNavItem key={tab.id} tab={tab} />)}
+
+          <div className="border-t border-[#10dffd]/18 my-3 mx-1" />
+          <span className="text-[9px] text-white/15 tracking-[0.3em] uppercase px-3 mb-2 font-display">
+            {l ? "Account" : "Cuenta"}
+          </span>
+          {accountTabs.map((tab) => <SidebarNavItem key={tab.id} tab={tab} />)}
+        </nav>
+
+        {/* Sign out */}
+        <div className="px-3 py-3 border-t border-[#10dffd]/18 flex-shrink-0">
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-2.5 w-full px-3 py-2.5 text-white/25 hover:text-red-400/60
+              transition-colors cursor-pointer rounded-xl hover:bg-red-500/[0.04] border border-transparent"
+          >
+            <ArrowLeftStartOnRectangleIcon className="w-4 h-4" />
+            <span className="font-display text-xs">{l ? "Log out" : "Cerrar sesión"}</span>
+          </button>
+        </div>
+      </motion.aside>
+
+      {/* ── Main content area ─────────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        {/* Mobile header */}
+        <div className="md:hidden flex items-center justify-between px-4 h-13 border-b border-[#10dffd]/22 bg-black/30 backdrop-blur-md flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <img src={IsotipoWhite} alt="RIANODEVZ" className="w-6 object-contain opacity-70" />
+            <span className="font-display text-[9px] text-white/25 tracking-[0.3em] uppercase">Portal</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-full bg-[#10dffd]/15 border border-[#10dffd]/38 flex items-center justify-center">
+              <span className="text-[#10dffd] text-[9px]">{initials}</span>
+            </div>
+            <button onClick={() => signOut()} className="text-white/30 hover:text-white/70 transition-colors cursor-pointer p-1">
+              <ArrowLeftStartOnRectangleIcon className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile tab strip */}
+        <div className="md:hidden flex border-b border-[#10dffd]/22 overflow-x-auto scrollbar_exp flex-shrink-0 bg-black/20 backdrop-blur-md">
           {allTabs.map((tab) => {
+            const Icon = tab.icon;
             const active = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className="relative group font-display text-sm text-white transition-colors cursor-pointer bg-transparent border-none"
+                className={`flex-shrink-0 flex flex-col items-center gap-1 px-3.5 py-2.5 border-b-2 transition-colors cursor-pointer ${
+                  active ? "border-[#10dffd] text-[#10dffd]" : "border-transparent text-white/25"
+                }`}
               >
-                <span className={active ? "text-[#10dffd]" : "text-white hover:text-gray-300 transition-colors"}>
+                <Icon className="w-3.5 h-3.5" />
+                <span className="font-display text-[8px] uppercase tracking-widest whitespace-nowrap">
                   {l ? tab.label.en : tab.label.es}
                 </span>
-                <span className={`absolute -bottom-0 left-0 h-0.5 bg-[#10dffd] transition-all duration-300 ${
-                  active ? "w-full" : "w-0 group-hover:w-full"
-                }`} />
               </button>
             );
           })}
-        </nav>
+        </div>
 
-        {/* Sign out — estilo CTA outlined */}
-        <motion.button
-          onClick={() => signOut()}
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
-          className="font-display text-xs tracking-widest uppercase border border-white/40 hover:border-white/80 hover:bg-white/5 text-white transition-all duration-300 px-5 py-2 rounded-full cursor-pointer hidden sm:flex items-center gap-2"
-        >
-          <ArrowLeftStartOnRectangleIcon className="w-3.5 h-3.5" />
-          {l ? "Log out" : "Salir"}
-        </motion.button>
+        {/* Desktop content topbar */}
+        <div className="hidden md:flex items-center justify-between px-7 h-12 border-b border-[#10dffd]/18 flex-shrink-0 bg-black/10 backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <span className="w-4 h-px bg-[#10dffd]/40" />
+            <span className="font-display text-[10px] text-white/25 tracking-[0.3em] uppercase">
+              {l
+                ? allTabs.find((t) => t.id === activeTab)?.label.en
+                : allTabs.find((t) => t.id === activeTab)?.label.es}
+            </span>
+          </div>
+        </div>
 
-        {/* Mobile: solo icono salir */}
-        <button onClick={() => signOut()} className="sm:hidden text-white/60 hover:text-white transition-colors cursor-pointer">
-          <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
-        </button>
-      </motion.header>
-
-      {/* Mobile tab bar */}
-      <div className="md:hidden flex border-b border-[#10dffd]/20 overflow-x-auto scrollbar_exp flex-shrink-0 bg-white dark:bg-black">
-        {allTabs.map((tab) => {
-          const Icon = tab.icon;
-          const active = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-3 font-display text-[10px] uppercase tracking-widest border-b-2 transition-colors cursor-pointer ${
-                active ? "border-[#10dffd] text-[#10dffd]" : "border-transparent text-gray-500"
-              }`}
+        {/* Scrollable content */}
+        <main ref={scrollRef} className="flex-1 overflow-y-auto scrollbar_exp bg-transparent">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              variants={tabFade}
+              initial="hidden"
+              animate="show"
+              exit="exit"
+              className="w-full max-w-4xl mx-auto px-5 py-8 md:px-8 md:py-10"
             >
-              <Icon className="w-3.5 h-3.5" />
-              {l ? tab.label.en : tab.label.es}
-            </button>
-          );
-        })}
+              {renderContent()}
+            </motion.div>
+          </AnimatePresence>
+        </main>
       </div>
-
-      {/* Content */}
-      <main ref={scrollRef} className="flex-1 overflow-y-auto scrollbar_exp bg-white dark:bg-black">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            variants={tabFade}
-            initial="hidden"
-            animate="show"
-            exit="exit"
-            className="w-full max-w-5xl mx-auto px-4 py-8 md:px-10 md:py-12"
-          >
-            {renderContent()}
-          </motion.div>
-        </AnimatePresence>
-      </main>
     </div>
-
   );
 };
 

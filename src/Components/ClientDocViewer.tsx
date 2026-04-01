@@ -311,7 +311,7 @@ export default function ClientDocViewer({ userId, l }: Props) {
 
   if (totalDocs === 0) {
     return (
-      <div className="border border-[#10dffd]/10 rounded-2xl p-12 text-center">
+      <div className="border border-[#10dffd]/22 rounded-2xl p-12 text-center">
         <DocumentTextIcon className="w-8 h-8 text-[#10dffd]/20 mx-auto mb-3" />
         <p className="text-gray-500 text-sm font-light mb-1">
           {l ? "No documents yet." : "Sin documentos aún."}
@@ -332,9 +332,9 @@ export default function ClientDocViewer({ userId, l }: Props) {
         if (typeDocs.length === 0) return null;
 
         return (
-          <motion.div key={id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="border border-[#10dffd]/10 rounded-xl overflow-hidden">
+          <motion.div key={id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="border border-[#10dffd]/22 rounded-xl overflow-hidden">
             {/* Section header */}
-            <div className="flex items-center gap-2.5 px-5 py-3 border-b border-[#10dffd]/8 bg-white/[0.02]">
+            <div className="flex items-center gap-2.5 px-5 py-3 border-b border-[#10dffd]/18 bg-white/[0.02]">
               <Icon className="w-4 h-4 text-[#10dffd]/60" />
               <span className="text-white text-sm font-light">{l ? label.en : label.es}</span>
               <span className="text-[10px] text-[#10dffd]/50 bg-[#10dffd]/8 rounded-full px-2 py-0.5">{typeDocs.length}</span>

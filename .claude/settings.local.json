@@ -63,7 +63,14 @@
       "Read(//c/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/projects/$BASE/Oveja-Music-World/**)",
       "Bash(/dev/null echo:*)",
       "Bash(python -m json.tool)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "mcp__21st-magic__21st_magic_component_inspiration",
+      "Bash(mv:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click"
     ]
   }
 }

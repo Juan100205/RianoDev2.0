@@ -93,32 +93,52 @@ html:not(.dark) body {
     radial-gradient(ellipse at 50% 55%, rgba(16, 223, 253, 0.05) 0%, transparent 50%),
     radial-gradient(ellipse at 15% 90%, rgba(16, 223, 253, 0.06) 0%, transparent 40%),
     #f8feff;
-  color: #111111;
+  color: #000000;
 }
 
-html:not(.dark) .text-white {
-  color: #111111 !important;
+/* ── text-white → black (preserva jerarquía visual) ── */
+html:not(.dark) .text-white        { color: #000000 !important; }
+html:not(.dark) .text-white\/80    { color: #000000 !important; }
+html:not(.dark) .text-white\/70    { color: #000000 !important; }
+html:not(.dark) .text-white\/60    { color: #000000 !important; }
+html:not(.dark) .text-white\/50    { color: #000000 !important; }
+html:not(.dark) .text-white\/45    { color: #000000 !important; }
+html:not(.dark) .text-white\/40    { color: #000000 !important; }
+html:not(.dark) .text-white\/35    { color: #000000 !important; }
+html:not(.dark) .text-white\/30    { color: #000000 !important; }
+html:not(.dark) .text-white\/25    { color: #000000 !important; }
+html:not(.dark) .text-white\/20    { color: #000000 !important; }
+html:not(.dark) .text-white\/15    { color: #000000 !important; }
+html:not(.dark) .text-white\/10    { color: #000000 !important; }
+
+/* ── gray text ── */
+html:not(.dark) .text-gray-200 { color: #000000 !important; }
+html:not(.dark) .text-gray-300 { color: #000000 !important; }
+html:not(.dark) .text-gray-400 { color: #000000 !important; }
+html:not(.dark) .text-gray-500 { color: #000000 !important; }
+html:not(.dark) .text-gray-600 { color: #000000 !important; }
+
+/* ── Inputs ── */
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: rgba(0, 0, 0, 0.30) !important;
+}
+html:not(.dark) input,
+html:not(.dark) textarea,
+html:not(.dark) select {
+  color: #000000 !important;
+  background-color: rgba(16, 223, 253, 0.04) !important;
+  border-color: rgba(16, 223, 253, 0.35) !important;
 }
 
-html:not(.dark) .text-gray-400 {
-  color: #444444 !important;
-}
+/* ── white bg/border → dark equivalents ── */
+html:not(.dark) [class*="bg-white\/"]     { background-color: rgba(0, 0, 0, 0.04) !important; }
+html:not(.dark) [class*="border-white\/"] { border-color: rgba(0, 0, 0, 0.10) !important; }
 
-html:not(.dark) .text-gray-500 {
-  color: #555555 !important;
-}
-
-html:not(.dark) .text-gray-600 {
-  color: #666666 !important;
-}
-
-html:not(.dark) .text-gray-300 {
-  color: #333333 !important;
-}
-
-html:not(.dark) .text-gray-200 {
-  color: #222222 !important;
-}
+/* ── dark mode: sube el piso de textos muy tenues ── */
+html.dark .text-white\/15 { color: rgba(255, 255, 255, 0.30) !important; }
+html.dark .text-white\/20 { color: rgba(255, 255, 255, 0.35) !important; }
+html.dark .text-white\/25 { color: rgba(255, 255, 255, 0.42) !important; }
 
 html:not(.dark) .bg-black {
   background-color: transparent !important;
@@ -137,9 +157,42 @@ html:not(.dark) header {
 html:not(.dark) footer,
 html:not(.dark) [class*="bg-\[#111"] {
   background: linear-gradient(to bottom, rgba(16, 223, 253, 0.04), rgba(16, 223, 253, 0.08)) !important;
-  color: #111111 !important;
+  color: #000000 !important;
   border-top-color: rgba(16, 223, 253, 0.3) !important;
 }
+
+/* ── Logo header explicit control ── */
+html:not(.dark) .logo-light { display: block !important; }
+html:not(.dark) .logo-dark { display: none !important; }
+html.dark .logo-light { display: none !important; }
+html.dark .logo-dark { display: block !important; }
+
+/* ── Badge numbers / indices in light mode ── */
+html:not(.dark) [class*="text-\[#10dffd\]\/2"] {
+  color: #000000 !important;
+}
+
+/* ── Exclusiones (Mantener en blanco en sobrecapas de imagen) ── */
+html:not(.dark) .keep-white .text-white { color: #ffffff !important; }
+html:not(.dark) .keep-white .text-white\/80 { color: rgba(255, 255, 255, 0.8) !important; }
+html:not(.dark) .keep-white .text-white\/70 { color: rgba(255, 255, 255, 0.7) !important; }
+html:not(.dark) .keep-white .text-white\/60 { color: rgba(255, 255, 255, 0.6) !important; }
+html:not(.dark) .keep-white .text-white\/50 { color: rgba(255, 255, 255, 0.5) !important; }
+html:not(.dark) .keep-white .text-white\/45 { color: rgba(255, 255, 255, 0.45) !important; }
+html:not(.dark) .keep-white .text-white\/40 { color: rgba(255, 255, 255, 0.4) !important; }
+html:not(.dark) .keep-white .text-white\/35 { color: rgba(255, 255, 255, 0.35) !important; }
+html:not(.dark) .keep-white .text-white\/30 { color: rgba(255, 255, 255, 0.3) !important; }
+html:not(.dark) .keep-white .text-white\/25 { color: rgba(255, 255, 255, 0.25) !important; }
+html:not(.dark) .keep-white .text-white\/20 { color: rgba(255, 255, 255, 0.2) !important; }
+html:not(.dark) .keep-white .text-white\/15 { color: rgba(255, 255, 255, 0.15) !important; }
+html:not(.dark) .keep-white .text-white\/10 { color: rgba(255, 255, 255, 0.1) !important; }
+
+html:not(.dark) .keep-white .bg-white\/5 { background-color: rgba(255, 255, 255, 0.05) !important; }
+html:not(.dark) .keep-white .hover\:bg-white\/5:hover { background-color: rgba(255, 255, 255, 0.05) !important; }
+
+html:not(.dark) .keep-white .border-white\/15 { border-color: rgba(255, 255, 255, 0.15) !important; }
+html:not(.dark) .keep-white .border-white\/40 { border-color: rgba(255, 255, 255, 0.4) !important; }
+html:not(.dark) .keep-white .hover\:border-white\/80:hover { border-color: rgba(255, 255, 255, 0.8) !important; }
 
 /* Boost cyan border visibility in light mode */
 html:not(.dark) [class*="border-\[#10dffd\]"] {
@@ -186,7 +239,7 @@ html:has(.ml-root) {
   scroll-snap-type: y mandatory;
   background: radial-gradient(ellipse at center, #FFFFFF 0%, #FBF4EB 60%, #F5EDE0 100%);
   background-attachment: fixed;
-  color: #1a1a1a;
+  color: #000000;
   font-family: var(--font-playfair);
   -webkit-font-smoothing: antialiased;
 }

@@ -37,7 +37,7 @@ export default function BlogPost({ languageState, setLanguageState, scrollRef }:
           </h1>
           <button
             onClick={() => navigate("/blog")}
-            className="text-[#10dffd] border border-[#10dffd]/30 px-6 py-2 rounded-xl hover:bg-[#10dffd]/10 transition-colors"
+            className="text-[#10dffd] border border-[#10dffd]/50 px-6 py-2 rounded-xl hover:bg-[#10dffd]/10 transition-colors"
           >
             {l ? "Back to blog" : "Volver al blog"}
           </button>
@@ -70,7 +70,7 @@ export default function BlogPost({ languageState, setLanguageState, scrollRef }:
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center gap-4 mb-6">
-              <span className="text-xs text-[#10dffd] uppercase tracking-wider bg-[#10dffd]/10 border border-[#10dffd]/20 px-3 py-1 rounded-md">
+              <span className="text-xs text-[#10dffd] uppercase tracking-wider bg-[#10dffd]/10 border border-[#10dffd]/38 px-3 py-1 rounded-md">
                 {post.category}
               </span>
               <span className="text-gray-500 text-sm">{post.date}</span>

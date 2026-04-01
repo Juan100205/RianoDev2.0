@@ -134,67 +134,73 @@ const cases = [
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 const cardVariant: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.75, ease } },
+  hidden: { opacity: 0, y: 40, filter: "blur(6px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.75, ease } },
 };
-
 
 const Projects = ({ languageState }: Props) => {
   const l = languageState;
 
   return (
-    <div className="w-[90%] md:w-[70%] mx-auto py-10">
+    <div className="w-[90%] md:w-[80%] mx-auto py-16">
 
+      {/* Section header */}
       <motion.div
-        className="flex items-center gap-3 mb-12"
+        className="flex flex-col gap-4 mb-14"
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
       >
-        <span className="block w-8 h-[2px] bg-[#10dffd]" />
-        <span className="text-[#10dffd] text-xs tracking-[0.3em] uppercase">
-          {l ? "Case Studies" : "Casos de Estudio"}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="block w-8 h-px bg-[#10dffd]" />
+          <span className="text-[#10dffd]/70 text-[10px] tracking-[0.35em] uppercase font-display">
+            {l ? "Case Studies" : "Casos de Estudio"}
+          </span>
+        </div>
+        <h2 className="text-white font-light text-2xl md:text-3xl max-w-md">
+          {l ? "Systems built. Results delivered." : "Sistemas construidos. Resultados entregados."}
+        </h2>
       </motion.div>
 
-      <div className="flex flex-col gap-16">
-        {cases.map((c, idx) => (
+      <div className="flex flex-col gap-6">
+        {cases.map((c) => (
           <motion.div
             key={c.index}
             variants={cardVariant}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-80px" }}
-            whileHover={{ borderColor: "rgba(16,223,253,0.4)" }}
-            transition={{ duration: 0.2 }}
-            className="border border-[#10dffd]/15 transition-colors rounded-2xl p-8 md:p-10 relative"
+            className="group relative border border-[#10dffd]/25 hover:border-[#10dffd]/55
+              transition-colors duration-300 rounded-2xl p-7 md:p-10"
           >
-            <motion.span
-              className="absolute top-8 right-8 text-[#10dffd]/20 text-xs tracking-widest font-light"
-              whileInView={{ opacity: [0.1, 0.5, 0.2] }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.15 + 0.4, duration: 0.6 }}
-            >
-              {c.index}
-            </motion.span>
+            {/* Corner decorators */}
+            <span className="absolute top-0 left-0 w-4 h-4 border-l border-t border-[#10dffd]/38 rounded-tl-2xl group-hover:border-[#10dffd]/70 transition-colors duration-300" />
+            <span className="absolute bottom-0 right-0 w-4 h-4 border-r border-b border-[#10dffd]/38 rounded-br-2xl group-hover:border-[#10dffd]/70 transition-colors duration-300" />
 
-            <h2 className="text-white text-xl md:text-2xl font-light mb-6 max-w-xl">
+            {/* Index badge */}
+            <div className="flex items-start justify-between mb-5">
+              <span className="text-[#10dffd]/25 text-[10px] tracking-[0.3em] uppercase font-display border border-[#10dffd]/22 px-2.5 py-1 rounded-full">
+                {c.index}
+              </span>
+            </div>
+
+            <h3 className="text-white text-lg md:text-xl font-light mb-4 max-w-xl">
               {l ? c.title.en : c.title.es}
-            </h2>
+            </h3>
 
-            <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-2xl">
+            <p className="text-white/40 text-sm leading-relaxed mb-8 max-w-2xl">
               {l ? c.context.en : c.context.es}
             </p>
 
             <div className="md:grid md:grid-cols-2 gap-10">
               <div>
-                <span className="text-[#10dffd] text-xs tracking-widest uppercase block mb-4">
+                <span className="text-[#10dffd]/60 text-[10px] tracking-[0.3em] uppercase block mb-4 font-display">
                   {l ? "Implementation" : "Implementación"}
                 </span>
-                <ul className="flex flex-col gap-2">
+                <ul className="flex flex-col gap-2.5">
                   {(l ? c.implementation.en : c.implementation.es).map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-gray-400">
+                    <li key={i} className="flex items-start gap-3 text-xs text-white/45">
                       <span className="mt-1.5 w-1 h-1 rounded-full bg-[#10dffd] shrink-0" />
                       {item}
                     </li>
@@ -202,13 +208,13 @@ const Projects = ({ languageState }: Props) => {
                 </ul>
               </div>
               <div className="mt-8 md:mt-0">
-                <span className="text-[#10dffd] text-xs tracking-widest uppercase block mb-4">
+                <span className="text-[#10dffd]/60 text-[10px] tracking-[0.3em] uppercase block mb-4 font-display">
                   {l ? "Applied cases" : "Casos aplicados"}
                 </span>
-                <ul className="flex flex-col gap-2">
+                <ul className="flex flex-col gap-2.5">
                   {(l ? c.appliedCases.en : c.appliedCases.es).map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-gray-400">
-                      <span className="mt-1.5 w-1 h-1 rounded-full bg-[#10dffd]/50 shrink-0" />
+                    <li key={i} className="flex items-start gap-3 text-xs text-white/40">
+                      <span className="mt-1.5 w-1 h-1 rounded-full bg-[#10dffd]/40 shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -216,25 +222,31 @@ const Projects = ({ languageState }: Props) => {
               </div>
             </div>
 
-            <div className="mt-8 border-l-2 border-[#10dffd]/40 pl-5">
-              <p className="text-gray-400 text-sm leading-relaxed italic">
+            {/* Result */}
+            <div className="mt-8 flex gap-4 items-start border-l-2 border-[#10dffd]/50 pl-4">
+              <p className="text-white/40 text-xs leading-relaxed italic">
                 {l ? c.result.en : c.result.es}
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+            {/* CTAs */}
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                 <Link
                   to="/servicios"
-                  className="text-xs tracking-widest uppercase font-light text-black bg-[#10dffd] px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity block text-center"
+                  className="text-[10px] tracking-[0.25em] uppercase font-display text-black bg-[#10dffd]
+                    px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity block text-center
+                    shadow-[0_0_16px_rgba(16,223,253,0.2)] hover:shadow-[0_0_24px_rgba(16,223,253,0.60)]"
                 >
                   {l ? "View implementation" : "Ver implementación"}
                 </Link>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.04, x: 2 }} whileTap={{ scale: 0.97 }}>
+              <motion.div whileHover={{ scale: 1.03, x: 2 }} whileTap={{ scale: 0.97 }}>
                 <Link
                   to="/schedule"
-                  className="text-xs tracking-widest uppercase font-light text-white/50 hover:text-white border border-white/10 hover:border-white/30 px-6 py-2.5 rounded-full transition-all block text-center"
+                  className="text-[10px] tracking-[0.25em] uppercase font-display text-white/40
+                    hover:text-white border border-white/10 hover:border-white/25
+                    px-6 py-2.5 rounded-full transition-all block text-center"
                 >
                   {l ? "Start a conversation" : "Iniciar conversación"}
                 </Link>
@@ -245,7 +257,7 @@ const Projects = ({ languageState }: Props) => {
       </div>
 
       <motion.p
-        className="text-gray-600 text-sm text-center mt-16 max-w-2xl mx-auto leading-relaxed"
+        className="text-white/25 text-xs text-center mt-14 max-w-xl mx-auto leading-relaxed"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -255,8 +267,6 @@ const Projects = ({ languageState }: Props) => {
           ? "The systems implemented vary by context, but share a common objective: structure, automate and connect digital operations in a functional way."
           : "Los sistemas implementados varían según el contexto, pero comparten un objetivo común: estructurar, automatizar y conectar operaciones digitales de forma funcional."}
       </motion.p>
-
-
     </div>
   );
 };

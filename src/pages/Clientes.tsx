@@ -213,15 +213,15 @@ const Clientes = ({ languageState, setLanguageState, scrollRef }: Props) => {
             {clients.map((c) => (
               <div
                 key={c.index}
-                className="border border-[#10dffd]/15 hover:border-[#10dffd]/40 transition-all duration-300 rounded-2xl overflow-hidden bg-black"
+                className="border border-[#10dffd]/30 hover:border-[#10dffd]/60 transition-all duration-300 rounded-2xl overflow-hidden bg-black"
               >
                 {/* Card header */}
-                <div className="px-8 pt-7 pb-6 border-b border-[#10dffd]/10 flex items-start justify-between gap-4 flex-wrap">
+                <div className="px-8 pt-7 pb-6 border-b border-[#10dffd]/22 flex items-start justify-between gap-4 flex-wrap">
                   <div>
                     <span className="text-[#10dffd]/30 text-xs tracking-widest block mb-1">{c.index}</span>
                     <h2 className="text-white font-light text-2xl">{c.name}</h2>
                   </div>
-                  <span className="text-xs bg-[#10dffd]/10 text-[#10dffd] rounded-full px-3 py-1 whitespace-nowrap border border-[#10dffd]/20">
+                  <span className="text-xs bg-[#10dffd]/10 text-[#10dffd] rounded-full px-3 py-1 whitespace-nowrap border border-[#10dffd]/38">
                     {l ? c.category.en : c.category.es}
                   </span>
                 </div>
@@ -270,7 +270,7 @@ const Clientes = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       </div>
                     ))}
 
-                    <div className="border-l-2 border-[#10dffd]/30 pl-4 mt-auto">
+                    <div className="border-l-2 border-[#10dffd]/50 pl-4 mt-auto">
                       <span className="text-[#10dffd] text-[10px] tracking-[0.25em] uppercase block mb-2">
                         {l ? "Result" : "Resultado"}
                       </span>
@@ -282,9 +282,9 @@ const Clientes = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 </div>
 
                 {/* Stack */}
-                <div className="px-8 py-4 border-t border-[#10dffd]/10 flex flex-wrap gap-1.5">
+                <div className="px-8 py-4 border-t border-[#10dffd]/22 flex flex-wrap gap-1.5">
                   {c.stack.map((tag) => (
-                    <span key={tag} className="text-[10px] bg-[#10dffd]/8 text-[#10dffd] rounded-full px-2.5 py-0.5 border border-[#10dffd]/20">
+                    <span key={tag} className="text-[10px] bg-[#10dffd]/8 text-[#10dffd] rounded-full px-2.5 py-0.5 border border-[#10dffd]/38">
                       {tag}
                     </span>
                   ))}

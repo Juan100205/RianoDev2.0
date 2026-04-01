@@ -104,8 +104,8 @@ const experiences = [
 ];
 
   return (
-    <div className="w-[98%] flex md:flex-row flex-col mx-auto border-b-2 border-[#10dffd]/20 px-4 md:px-20">
-      <div className="md:w-3/7 w-full pt-10 md:border-r-2 border-[#10dffd]/20 md:h-170 md:pr-0 pr-2">
+    <div className="w-[98%] flex md:flex-row flex-col mx-auto border-b-2 border-[#10dffd]/38 px-4 md:px-20">
+      <div className="md:w-3/7 w-full pt-10 md:border-r-2 border-[#10dffd]/38 md:h-170 md:pr-0 pr-2">
         <h1 className="text-xl md:text-3xl md:text-start text-center font-light text-white">
           {languageState ? "Professional Journey" : "Trayectoria Profesional"}
         </h1>
@@ -131,7 +131,7 @@ const experiences = [
         </div>
       </div>
       <div className="md:w-4/7 md:pt-10 pt-5 md:pl-10 w-15/16">
-        <div className="border-t-2 md:border-t-0 border-b-2 border-[#10dffd]/20 md:pt-0 pt-5 md:px-10 px-1">
+        <div className="border-t-2 md:border-t-0 border-b-2 border-[#10dffd]/38 md:pt-0 pt-5 md:px-10 px-1">
           <h1 className="md:text-3xl text-xl font-light md:text-start text-center text-white">
             {languageState ? resume[0].en:resume[0].es}
           </h1>
@@ -139,7 +139,7 @@ const experiences = [
             {languageState ? resume[1].en:resume[1].es}
           </p>
         </div>
-        <div className="md:border-b-2 border-[#10dffd]/20 md:px-10 mt-5 md:pb-0 pb-30">
+        <div className="md:border-b-2 border-[#10dffd]/38 md:px-10 mt-5 md:pb-0 pb-30">
           <h1 className="text-xl text-center md:text-start md:text-3xl font-light text-white">
             {languageState ? resume[2].en:resume[2].es}
           </h1>
