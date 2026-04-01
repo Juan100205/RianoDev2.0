@@ -239,7 +239,9 @@ function ThemePicker({ current, onChange }: { current: DocTheme; onChange: (t: D
 // ── Main viewer ───────────────────────────────────────────────────────────────
 
 export default function ClientDocViewer({ userId, l }: Props) {
-  const { docs, loading, error, docsForType } = useClientDocuments(userId);
+  const { docs, loading, error } = useClientDocuments(userId);
+  const visibleDocs = docs.filter(d => d.is_visible);
+  const docsForType = (type: DocType) => visibleDocs.filter(d => d.type === type);
   const [activeDoc, setActiveDoc] = useState<ClientDocument | null>(null);
   const [theme, setTheme] = useState<DocTheme>(DOC_THEMES[0]);
   const proseRef = useRef<HTMLDivElement>(null);
@@ -305,7 +307,7 @@ export default function ClientDocViewer({ userId, l }: Props) {
 
   // ── Document list grouped by type ───────────────────────────────────────────
 
-  const totalDocs = docs.length;
+  const totalDocs = visibleDocs.length;
 
   if (totalDocs === 0) {
     return (

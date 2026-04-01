@@ -9,6 +9,7 @@ export interface ClientDocument {
   type: DocType;
   title: string;
   content: string;
+  is_visible: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -41,14 +42,14 @@ export function useClientDocuments(clientId: string | null) {
   useEffect(() => { load(); }, [load]);
 
   const create = useCallback(
-    async (type: DocType, title: string, content: string): Promise<ClientDocument | null> => {
+    async (type: DocType, title: string, content: string, is_visible = false): Promise<ClientDocument | null> => {
       if (!clientId) return null;
       setSaving(true);
       setError(null);
       try {
         const { data, error: err } = await supabase
           .from("client_documents")
-          .insert({ user_id: clientId, type, title, content })
+          .insert({ user_id: clientId, type, title, content, is_visible })
           .select()
           .single();
         if (err) throw err;
@@ -66,18 +67,20 @@ export function useClientDocuments(clientId: string | null) {
   );
 
   const update = useCallback(
-    async (id: string, title: string, content: string): Promise<boolean> => {
+    async (id: string, title: string, content: string, is_visible?: boolean): Promise<boolean> => {
       setSaving(true);
       setError(null);
       try {
+        const patch: Record<string, unknown> = { title, content, updated_at: new Date().toISOString() };
+        if (is_visible !== undefined) patch.is_visible = is_visible;
         const { error: err } = await supabase
           .from("client_documents")
-          .update({ title, content, updated_at: new Date().toISOString() })
+          .update(patch)
           .eq("id", id);
         if (err) throw err;
         setDocs((prev) =>
           prev.map((d) =>
-            d.id === id ? { ...d, title, content, updated_at: new Date().toISOString() } : d
+            d.id === id ? { ...d, title, content, ...(is_visible !== undefined ? { is_visible } : {}), updated_at: new Date().toISOString() } : d
           )
         );
         return true;
@@ -90,6 +93,22 @@ export function useClientDocuments(clientId: string | null) {
     },
     []
   );
+
+  const setVisible = useCallback(async (id: string, visible: boolean): Promise<boolean> => {
+    setError(null);
+    try {
+      const { error: err } = await supabase
+        .from("client_documents")
+        .update({ is_visible: visible })
+        .eq("id", id);
+      if (err) throw err;
+      setDocs((prev) => prev.map((d) => d.id === id ? { ...d, is_visible: visible } : d));
+      return true;
+    } catch (e: any) {
+      setError(e.message ?? "Update failed");
+      return false;
+    }
+  }, []);
 
   const remove = useCallback(async (id: string) => {
     setError(null);
@@ -110,5 +129,5 @@ export function useClientDocuments(clientId: string | null) {
     [docs]
   );
 
-  return { docs, loading, saving, error, create, update, remove, docsForType, reload: load };
+  return { docs, loading, saving, error, create, update, setVisible, remove, docsForType, reload: load };
 }
