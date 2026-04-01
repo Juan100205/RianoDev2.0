@@ -39,6 +39,7 @@ import { useGitHubRepos, LIVE_URL_OVERRIDES } from "../hooks/useGitHubRepos";
 import { useUserWorkflows } from "../hooks/useUserWorkflows";
 import { useWorkflows, type AiWorkflow } from "../hooks/useWorkflows";
 import WorkflowDashboard from "../Components/WorkflowDashboard";
+import ClientDocPanel from "../Components/ClientDocPanel";
 
 // ── WorkflowNameRow ───────────────────────────────────────────────────────────
 
@@ -481,16 +482,8 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                     </div>
                   </div>
 
-                  {/* Docs area — empty state for now */}
-                  <div className="border border-[#10dffd]/10 rounded-2xl p-12 text-center">
-                    <DocumentTextIcon className="w-8 h-8 text-[#10dffd]/20 mx-auto mb-3" />
-                    <p className="text-gray-500 text-sm font-light mb-1">
-                      {l ? "No documents yet." : "Sin documentos aún."}
-                    </p>
-                    <p className="text-gray-700 text-xs">
-                      {l ? "Upload functionality coming soon." : "La función de subida llegará pronto."}
-                    </p>
-                  </div>
+                  {/* Docs area */}
+                  <ClientDocPanel client={selectedClient} l={l} />
                 </motion.div>
               )}
             </div>
