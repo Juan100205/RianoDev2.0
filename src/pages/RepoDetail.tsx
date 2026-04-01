@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import type { DbRepo } from "../hooks/useAdminPanel";
@@ -12,7 +11,6 @@ import {
   StarIcon,
   ArrowTopRightOnSquareIcon,
   GlobeAltIcon,
-  DocumentTextIcon,
   ComputerDesktopIcon,
 } from "@heroicons/react/24/solid";
 
@@ -30,8 +28,6 @@ const INTERNAL_ROUTES: Record<string, string> = {
 // Repos that are desktop/Electron apps — can't run in browser
 const DESKTOP_APPS = new Set<string>([]);
 
-type ViewTab = "live" | "readme";
-
 interface Props {
   languageState: boolean;
 }
@@ -43,11 +39,9 @@ const RepoDetail = ({ languageState }: Props) => {
   const l = languageState;
 
   const [repo, setRepo] = useState<DbRepo | null>(null);
-  const [readme, setReadme] = useState<string | null>(null);
   const [hasAccess, setHasAccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<ViewTab>("live");
 
   useEffect(() => {
     if (authLoading) return;
@@ -86,14 +80,6 @@ const RepoDetail = ({ languageState }: Props) => {
           }
           setHasAccess(true);
         }
-
-        try {
-          const res = await fetch(
-            `https://api.github.com/repos/Juan100205/${repoName}/readme`,
-            { headers: { Accept: "application/vnd.github.raw+json" } }
-          );
-          if (res.ok) setReadme(await res.text());
-        } catch { /* non-fatal */ }
       } catch (e: any) {
         setError(e.message ?? "Error");
       } finally {
@@ -161,36 +147,6 @@ const RepoDetail = ({ languageState }: Props) => {
             <span className="hidden sm:inline">{l ? "Back" : "Volver"}</span>
           </button>
 
-          {/* Tabs */}
-          {!isDesktopApp && (
-            <div className="flex items-center gap-1 bg-white/5 rounded-full p-1">
-              {hasLive && (
-                <button
-                  onClick={() => setActiveTab("live")}
-                  className={`flex items-center gap-1.5 text-xs px-4 py-1.5 rounded-full transition-all ${
-                    activeTab === "live"
-                      ? "bg-[#10dffd] text-black font-medium"
-                      : "text-white/50 hover:text-white"
-                  }`}
-                >
-                  <GlobeAltIcon className="w-3 h-3" />
-                  {l ? "Live" : "En vivo"}
-                </button>
-              )}
-              <button
-                onClick={() => setActiveTab("readme")}
-                className={`flex items-center gap-1.5 text-xs px-4 py-1.5 rounded-full transition-all ${
-                  activeTab === "readme"
-                    ? "bg-[#10dffd] text-black font-medium"
-                    : "text-white/50 hover:text-white"
-                }`}
-              >
-                <DocumentTextIcon className="w-3 h-3" />
-                README
-              </button>
-            </div>
-          )}
-
           <div className="flex items-center gap-2 shrink-0">
             {repo.html_url && (
               <a
@@ -253,17 +209,12 @@ const RepoDetail = ({ languageState }: Props) => {
                 <CodeBracketIcon className="w-3.5 h-3.5" />
                 {l ? "View on GitHub" : "Ver en GitHub"}
               </a>
-              {readme && (
-                <div className="mt-12 prose prose-invert prose-sm max-w-none prose-headings:font-light prose-p:text-gray-400 prose-code:text-[#10dffd]/80 prose-code:bg-[#10dffd]/8 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-a:text-[#10dffd] prose-li:text-gray-400 prose-pre:bg-white/5 prose-pre:border prose-pre:border-white/10">
-                  <ReactMarkdown>{readme}</ReactMarkdown>
-                </div>
-              )}
             </motion.div>
           </div>
         )}
 
-        {/* ── LIVE TAB ── */}
-        {!isDesktopApp && activeTab === "live" && hasLive && (
+        {/* ── LIVE VIEW ── */}
+        {!isDesktopApp && hasLive && (
           <motion.div
             key="live"
             initial={{ opacity: 0 }}
@@ -307,11 +258,34 @@ const RepoDetail = ({ languageState }: Props) => {
           </motion.div>
         )}
 
-        {/* ── LIVE TAB — no live URL yet ── */}
-        {!isDesktopApp && activeTab === "live" && !hasLive && (
-          <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6">
-            <GlobeAltIcon className="w-8 h-8 text-white/10" />
-            <p className="text-gray-500 text-sm text-center max-w-sm">
+        {/* ── NO LIVE URL ── */}
+        {!isDesktopApp && !hasLive && (
+          <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6">
+            <div className="text-center">
+              <GlobeAltIcon className="w-8 h-8 text-white/10 mx-auto mb-4" />
+              <h2 className="text-2xl font-light text-white mb-2">{repo.name.replace(/-/g, " ")}</h2>
+              {repo.description && <p className="text-gray-500 text-sm max-w-md mx-auto">{repo.description}</p>}
+            </div>
+            {langColor && repo.language && (
+              <span className="flex items-center gap-2 text-sm text-gray-500">
+                <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: langColor }} />
+                {repo.language}
+              </span>
+            )}
+            {stars > 0 && (
+              <span className="flex items-center gap-1.5 text-sm text-gray-500">
+                <StarIcon className="w-3.5 h-3.5 text-[#10dffd]/50" />
+                {stars}
+              </span>
+            )}
+            {topics.length > 0 && (
+              <div className="flex flex-wrap gap-2 justify-center">
+                {topics.map((t) => (
+                  <span key={t} className="text-xs text-[#10dffd]/70 border border-[#10dffd]/20 bg-[#10dffd]/5 rounded-full px-3 py-1">{t}</span>
+                ))}
+              </div>
+            )}
+            <p className="text-gray-600 text-sm text-center max-w-sm">
               {l
                 ? "No live URL configured for this project yet."
                 : "Aún no hay URL de live configurada para este proyecto."}
@@ -324,71 +298,6 @@ const RepoDetail = ({ languageState }: Props) => {
               </p>
             )}
           </div>
-        )}
-
-        {/* ── README TAB ── */}
-        {!isDesktopApp && activeTab === "readme" && (
-          <motion.div
-            key="readme"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="max-w-4xl mx-auto px-6 py-10 w-full"
-          >
-            {/* Repo meta */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-light mb-2">{repo.name.replace(/-/g, " ")}</h1>
-              {repo.description && <p className="text-gray-400 text-base leading-relaxed max-w-2xl">{repo.description}</p>}
-              <div className="flex flex-wrap items-center gap-4 mt-4">
-                {langColor && repo.language && (
-                  <span className="flex items-center gap-2 text-sm text-gray-400">
-                    <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: langColor }} />
-                    {repo.language}
-                  </span>
-                )}
-                {stars > 0 && (
-                  <span className="flex items-center gap-1.5 text-sm text-gray-400">
-                    <StarIcon className="w-3.5 h-3.5 text-[#10dffd]/50" />
-                    {stars}
-                  </span>
-                )}
-              </div>
-              {topics.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {topics.map((t) => (
-                    <span key={t} className="text-xs text-[#10dffd]/70 border border-[#10dffd]/20 bg-[#10dffd]/5 rounded-full px-3 py-1">{t}</span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {readme ? (
-              <div className="border border-white/5 rounded-2xl p-8 prose prose-invert prose-sm max-w-none
-                prose-headings:font-light prose-headings:tracking-tight prose-headings:text-white
-                prose-h2:border-b prose-h2:border-white/10 prose-h2:pb-3
-                prose-p:text-gray-400 prose-p:leading-relaxed prose-p:text-sm
-                prose-a:text-[#10dffd] prose-a:no-underline hover:prose-a:underline prose-a:font-normal
-                prose-strong:text-white prose-strong:font-medium
-                prose-code:text-[#10dffd]/90 prose-code:bg-[#10dffd]/8 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
-                prose-pre:bg-[#0a0a0a] prose-pre:border prose-pre:border-white/8 prose-pre:rounded-xl prose-pre:text-xs prose-pre:overflow-x-auto
-                prose-li:text-gray-400 prose-li:text-sm prose-li:marker:text-[#10dffd]/40
-                prose-ul:space-y-1 prose-ol:space-y-1
-                prose-hr:border-white/8
-                prose-blockquote:border-l-[#10dffd]/30 prose-blockquote:text-gray-500 prose-blockquote:not-italic
-                prose-img:rounded-xl prose-img:border prose-img:border-white/10
-                prose-th:text-[#10dffd]/70 prose-th:font-normal prose-th:text-xs prose-th:tracking-widest prose-th:uppercase
-                prose-td:text-gray-400 prose-td:border-white/8">
-                <ReactMarkdown>{readme}</ReactMarkdown>
-              </div>
-            ) : (
-              <div className="border border-white/5 rounded-2xl p-16 text-center">
-                <DocumentTextIcon className="w-8 h-8 text-white/10 mx-auto mb-4" />
-                <p className="text-gray-600 text-sm">
-                  {l ? "No README available." : "Sin README disponible."}
-                </p>
-              </div>
-            )}
-          </motion.div>
         )}
       </div>
     </div>
