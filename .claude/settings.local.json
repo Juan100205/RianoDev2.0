@@ -45,7 +45,25 @@
       "Bash(SVCKEY=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53Z2R2ZnV3eXhjc2JwYmJ1aHVuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDUzMzIxOSwiZXhwIjoyMDkwMTA5MjE5fQ.I-LN1WHWLoiV3gYcnl3YNUocgGjw0RAWzF4evbUb8y0\" __NEW_LINE_fb28638eaf1c4e06__ curl -s \"https://nwgdvfuwyxcsbpbbuhun.supabase.co/rest/v1/?select=workflow_clients,workflow_messages,workflow_appointments,workflow_analytics\" -H \"apikey: $SVCKEY\" -H \"Authorization: Bearer $SVCKEY\" -H \"Accept: application/openapi+json\")",
       "Bash(supabase:*)",
       "Bash(npm list:*)",
-      "Bash(npx supabase:*)"
+      "Bash(npx supabase:*)",
+      "Bash(for dir:*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''scripts:'''', list\\(d.get\\(''''scripts'''',{}\\).keys\\(\\)\\)\\); print\\(''''deps:'''', list\\(d.get\\(''''dependencies'''',{}\\).keys\\(\\)\\)[:10]\\); print\\(''''devDeps:'''', list\\(d.get\\(''''devDependencies'''',{}\\).keys\\(\\)\\)[:8]\\)\" echo \"\" done)",
+      "Bash(BASE=\"C:\\\\Users\\\\USER\\\\OneDrive - Universidad de la Sabana\\\\Documents\\\\Documentos\\\\Juan Jose Riaño Zabaleta\\\\Trabajo\\\\RianoDev\\\\RianoDev\\\\RianoDev2.0\\\\src\\\\projects\" for dir in \"Metodo-Levantate\" \"Cataly_ai\" \"Oveja-Music-World\" \"Sistema-de-Gestion-Residencial\")",
+      "Bash(node -e \"const d=JSON.parse\\(require\\(''''fs''''\\).readFileSync\\(''''/dev/stdin'''',''''utf8''''\\)\\); console.log\\(''''scripts:'''',Object.keys\\(d.scripts||{}\\)\\); console.log\\(''''deps:'''',Object.keys\\(d.dependencies||{}\\).slice\\(0,12\\)\\); console.log\\(''''devDeps:'''',Object.keys\\(d.devDependencies||{}\\).slice\\(0,8\\)\\)\" echo \"\" done)",
+      "Bash(BASE=\"/c/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/projects\" for dir in \"Metodo-Levantate\" \"Cataly_ai\" \"Oveja-Music-World\" \"Sistema-de-Gestion-Residencial\")",
+      "Bash(BASE=\"/c/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/projects\")",
+      "Bash(__NEW_LINE_b9f4be04d0949af4__ echo:*)",
+      "Bash(node -e \"const d=require\\(''$BASE/Metodo-Levantate/package.json''\\); console.log\\(''scripts:'',Object.keys\\(d.scripts||{}\\)\\); console.log\\(''deps:'',Object.keys\\(d.dependencies||{}\\)\\); console.log\\(''devDeps:'',Object.keys\\(d.devDependencies||{}\\)\\)\")",
+      "Bash(node -e \"const d=require\\(''$BASE/Cataly_ai/package.json''\\); console.log\\(''scripts:'',Object.keys\\(d.scripts||{}\\)\\); console.log\\(''deps:'',Object.keys\\(d.dependencies||{}\\)\\); console.log\\(''devDeps:'',Object.keys\\(d.devDependencies||{}\\)\\)\")",
+      "Bash(node -e \"const d=require\\(''$BASE/Oveja-Music-World/package.json''\\); console.log\\(''scripts:'',Object.keys\\(d.scripts||{}\\)\\); console.log\\(''deps:'',Object.keys\\(d.dependencies||{}\\)\\); console.log\\(''devDeps:'',Object.keys\\(d.devDependencies||{}\\)\\)\")",
+      "Bash('BASE=/c/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/projects' echo '=== Metodo-Levantate src/ ===' ls $BASE/Metodo-Levantate/src/ echo echo '=== Cataly_ai app/ ===' ls $BASE/Cataly_ai/app/)",
+      "Read(//c/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/projects/$BASE/Cataly_ai/**)",
+      "Read(//c/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/projects/$BASE/**)",
+      "Read(//c/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/projects/=== Oveja src/**)",
+      "Read(//c/Users/USER/OneDrive - Universidad de la Sabana/Documents/Documentos/Juan Jose Riaño Zabaleta/Trabajo/RianoDev/RianoDev/RianoDev2.0/src/projects/$BASE/Oveja-Music-World/**)",
+      "Bash(/dev/null echo:*)",
+      "Bash(python -m json.tool)",
+      "Bash(node:*)"
     ]
   }
 }
