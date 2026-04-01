@@ -110,6 +110,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
   // ── Admin panel state (only fetches when isAdmin) ─────────────────────────
   const adminPanel = useAdminPanel(isAdmin);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedDocClientId, setSelectedDocClientId] = useState<string | null>(null);
 
   // ── User repos: admin sees all from GitHub API, clients see Supabase-assigned ──
   const githubRepos = useGitHubRepos("Juan100205");
@@ -389,7 +390,114 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
       }
 
       // ── Documentos ─────────────────────────────────────────────────────────
-      case "documentos":
+      case "documentos": {
+        // ── Admin view ──
+        if (isAdmin) {
+          const clients = adminPanel.users.filter((u) => !u.is_admin);
+          const selectedClient = clients.find((u) => u.id === selectedDocClientId) ?? null;
+
+          return (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-banner font-light text-white text-2xl">
+                  {l ? "Documents" : "Documentos"}
+                </h2>
+                {selectedClient && (
+                  <button
+                    onClick={() => setSelectedDocClientId(null)}
+                    className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors cursor-pointer"
+                  >
+                    <XMarkIcon className="w-3.5 h-3.5" />
+                    {l ? "All clients" : "Todos los clientes"}
+                  </button>
+                )}
+              </div>
+
+              {adminPanel.loading ? (
+                <div className="flex items-center justify-center py-20">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#10dffd]" />
+                </div>
+              ) : !selectedClient ? (
+                /* ── Client grid ── */
+                clients.length === 0 ? (
+                  <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
+                    <UserCircleIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
+                    <p className="text-gray-500 text-sm font-light">
+                      {l ? "No clients registered yet." : "Sin clientes registrados aún."}
+                    </p>
+                  </div>
+                ) : (
+                  <motion.div
+                    className="grid sm:grid-cols-2 md:grid-cols-3 gap-3"
+                    variants={contentStagger}
+                    initial="hidden"
+                    animate="show"
+                  >
+                    {clients.map((client) => (
+                      <motion.button
+                        key={client.id}
+                        variants={contentItem}
+                        onClick={() => setSelectedDocClientId(client.id)}
+                        whileHover={{ borderColor: "rgba(16,223,253,0.35)" }}
+                        className="border border-[#10dffd]/10 rounded-xl p-5 flex flex-col items-start gap-3 text-left transition-colors cursor-pointer w-full"
+                      >
+                        <div className="w-9 h-9 rounded-full bg-[#10dffd]/10 flex items-center justify-center shrink-0">
+                          <UserCircleIcon className="w-5 h-5 text-[#10dffd]/60" />
+                        </div>
+                        <div className="min-w-0 w-full">
+                          <p className="text-white text-sm font-light truncate">
+                            {client.full_name || client.email}
+                          </p>
+                          {client.full_name && (
+                            <p className="text-gray-600 text-[10px] truncate mt-0.5">{client.email}</p>
+                          )}
+                        </div>
+                        <span className="text-[10px] tracking-widest uppercase text-[#10dffd]/50 flex items-center gap-1">
+                          <DocumentTextIcon className="w-3 h-3" />
+                          {l ? "View docs" : "Ver docs"}
+                        </span>
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                )
+              ) : (
+                /* ── Client docs panel ── */
+                <motion.div
+                  key={selectedClient.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* Client header */}
+                  <div className="flex items-center gap-3 mb-6 border border-[#10dffd]/10 rounded-xl px-4 py-3">
+                    <div className="w-8 h-8 rounded-full bg-[#10dffd]/10 flex items-center justify-center shrink-0">
+                      <UserCircleIcon className="w-4 h-4 text-[#10dffd]/60" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-white text-sm font-light">{selectedClient.full_name || selectedClient.email}</p>
+                      {selectedClient.full_name && (
+                        <p className="text-gray-600 text-[10px]">{selectedClient.email}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Docs area — empty state for now */}
+                  <div className="border border-[#10dffd]/10 rounded-2xl p-12 text-center">
+                    <DocumentTextIcon className="w-8 h-8 text-[#10dffd]/20 mx-auto mb-3" />
+                    <p className="text-gray-500 text-sm font-light mb-1">
+                      {l ? "No documents yet." : "Sin documentos aún."}
+                    </p>
+                    <p className="text-gray-700 text-xs">
+                      {l ? "Upload functionality coming soon." : "La función de subida llegará pronto."}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          );
+        }
+
+        // ── Client view ──
         return (
           <div>
             <div className="flex items-center justify-between mb-6">
@@ -400,11 +508,12 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
             <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
               <DocumentTextIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
               <p className="text-gray-500 text-sm font-light">
-                {l ? "Coming soon." : "Próximamente."}
+                {l ? "No documents yet." : "Sin documentos aún."}
               </p>
             </div>
           </div>
         );
+      }
 
       // ── Proyectos ──────────────────────────────────────────────────────────
       case "proyectos": {
