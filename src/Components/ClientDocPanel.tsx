@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import {
   PlusIcon, PencilSquareIcon, TrashIcon, EyeIcon,
   XMarkIcon, CheckIcon, DocumentTextIcon, ArrowLeftIcon,
-  PrinterIcon, SwatchIcon,
+  PrinterIcon, SwatchIcon, ArrowUpTrayIcon,
 } from "@heroicons/react/24/solid";
 import {
   DocumentCheckIcon, ReceiptPercentIcon,
@@ -417,7 +417,7 @@ function ThemePicker({ current, onChange }: { current: DocTheme; onChange: (t: D
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export default function ClientDocPanel({ client, l }: Props) {
-  const { loading, saving, error, create, update, remove, docsForType } = useClientDocuments(client.id);
+  const { loading, saving, error, create, update, setVisible, remove, docsForType } = useClientDocuments(client.id);
   const [editor, setEditor] = useState<EditorState | null>(null);
   const [theme, setTheme] = useState<DocTheme>(DOC_THEMES[0]);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -427,10 +427,10 @@ export default function ClientDocPanel({ client, l }: Props) {
   const openEdit = (doc: ClientDocument) => setEditor({ mode: "edit", doc, type: doc.type, title: doc.title, content: doc.content });
   const openPreview = (doc: ClientDocument) => setEditor({ mode: "preview", doc, type: doc.type, title: doc.title, content: doc.content });
 
-  const handleSave = async () => {
+  const handleSave = async (isVisible: boolean) => {
     if (!editor) return;
-    if (editor.doc) await update(editor.doc.id, editor.title, editor.content);
-    else await create(editor.type, editor.title, editor.content);
+    if (editor.doc) await update(editor.doc.id, editor.title, editor.content, isVisible);
+    else await create(editor.type, editor.title, editor.content, isVisible);
     setEditor(null);
   };
 
@@ -472,10 +472,16 @@ export default function ClientDocPanel({ client, l }: Props) {
               </button>
             </div>
             {editor.mode === "edit" && (
-              <button onClick={handleSave} disabled={saving || !editor.title.trim()} className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-4 py-1.5 rounded-full hover:opacity-90 disabled:opacity-50 cursor-pointer">
-                {saving ? <div className="w-3 h-3 border border-black/30 border-t-black rounded-full animate-spin" /> : <CheckIcon className="w-3 h-3" />}
-                {saving ? (l ? "Saving…" : "Guardando…") : (l ? "Save" : "Guardar")}
-              </button>
+              <>
+                <button onClick={() => handleSave(false)} disabled={saving || !editor.title.trim()} className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-gray-400 bg-white/[0.07] border border-white/10 px-4 py-1.5 rounded-full hover:bg-white/10 disabled:opacity-50 cursor-pointer">
+                  {saving ? <div className="w-3 h-3 border border-white/20 border-t-white/60 rounded-full animate-spin" /> : <CheckIcon className="w-3 h-3" />}
+                  {saving ? (l ? "Saving…" : "Guardando…") : (l ? "Save draft" : "Borrador")}
+                </button>
+                <button onClick={() => handleSave(true)} disabled={saving || !editor.title.trim()} className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-4 py-1.5 rounded-full hover:opacity-90 disabled:opacity-50 cursor-pointer">
+                  {saving ? <div className="w-3 h-3 border border-black/30 border-t-black rounded-full animate-spin" /> : <ArrowUpTrayIcon className="w-3 h-3" />}
+                  {saving ? (l ? "Saving…" : "Guardando…") : (l ? "Deploy →" : "Desplegar →")}
+                </button>
+              </>
             )}
             {editor.mode === "preview" && (
               <button onClick={handlePrint} className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-black bg-[#10dffd] px-4 py-1.5 rounded-full hover:opacity-90 cursor-pointer">
@@ -550,11 +556,24 @@ export default function ClientDocPanel({ client, l }: Props) {
                     <button onClick={() => openPreview(doc)} className="flex items-center gap-2.5 min-w-0 text-left group">
                       <DocumentTextIcon className="w-3.5 h-3.5 text-[#10dffd]/40 shrink-0 group-hover:text-[#10dffd]/70 transition-colors" />
                       <div className="min-w-0">
-                        <span className="text-xs text-gray-300 font-light group-hover:text-white transition-colors truncate block">{doc.title}</span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs text-gray-300 font-light group-hover:text-white transition-colors truncate">{doc.title}</span>
+                          {doc.is_visible
+                            ? <span className="shrink-0 text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 leading-none">Activo</span>
+                            : <span className="shrink-0 text-[9px] px-1.5 py-0.5 rounded-full bg-white/5 text-gray-600 leading-none">Borrador</span>
+                          }
+                        </div>
                         <span className="text-[10px] text-gray-700">{new Date(doc.updated_at).toLocaleDateString(l ? "en-US" : "es-CO", { day: "2-digit", month: "short", year: "numeric" })}</span>
                       </div>
                     </button>
                     <div className="flex items-center gap-1 shrink-0">
+                      <button
+                        onClick={() => setVisible(doc.id, !doc.is_visible)}
+                        title={doc.is_visible ? (l ? "Unpublish" : "Retirar del cliente") : (l ? "Deploy to client" : "Desplegar al cliente")}
+                        className={`p-1.5 rounded-lg transition-colors cursor-pointer ${doc.is_visible ? "text-emerald-400 hover:text-gray-500" : "text-gray-600 hover:text-emerald-400"}`}
+                      >
+                        <ArrowUpTrayIcon className="w-3.5 h-3.5" />
+                      </button>
                       <button onClick={() => openPreview(doc)} className="p-1.5 rounded-lg text-gray-600 hover:text-[#10dffd] transition-colors cursor-pointer"><EyeIcon className="w-3.5 h-3.5" /></button>
                       <button onClick={() => openEdit(doc)} className="p-1.5 rounded-lg text-gray-600 hover:text-white transition-colors cursor-pointer"><PencilSquareIcon className="w-3.5 h-3.5" /></button>
                       <AnimatePresence mode="wait">
