@@ -40,6 +40,7 @@ import { useUserWorkflows } from "../hooks/useUserWorkflows";
 import { useWorkflows, type AiWorkflow } from "../hooks/useWorkflows";
 import WorkflowDashboard from "../Components/WorkflowDashboard";
 import ClientDocPanel from "../Components/ClientDocPanel";
+import ClientDocViewer from "../Components/ClientDocViewer";
 
 // ── WorkflowNameRow ───────────────────────────────────────────────────────────
 
@@ -498,12 +499,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                 {l ? "Documents" : "Documentos"}
               </h2>
             </div>
-            <div className="border border-[#10dffd]/10 rounded-2xl p-10 text-center">
-              <DocumentTextIcon className="w-8 h-8 text-[#10dffd]/30 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm font-light">
-                {l ? "No documents yet." : "Sin documentos aún."}
-              </p>
-            </div>
+            <ClientDocViewer userId={user!.id} l={l} />
           </div>
         );
       }
