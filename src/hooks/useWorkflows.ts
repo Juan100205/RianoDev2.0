@@ -15,6 +15,7 @@ export interface AiWorkflow {
   status: 'active' | 'paused' | 'error';
   n8n_webhook_url: string | null;
   phone_number: string | null;
+  sender_phone: string | null;
   created_at: string;
   updated_at: string;
 }

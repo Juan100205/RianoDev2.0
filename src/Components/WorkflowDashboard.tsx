@@ -10,11 +10,16 @@ import {
 } from '@heroicons/react/24/solid';
 import type { AiWorkflow, WorkflowCredential } from '../hooks/useWorkflows';
 import { useWorkflowDashboard } from '../hooks/useWorkflowDashboard';
+import { useWorkflowTeamAgents } from '../hooks/useWorkflowTeamAgents';
+import type { TeamAgent } from '../hooks/useWorkflowTeamAgents';
+import { useWorkflowInventory } from '../hooks/useWorkflowInventory';
+import type { InventoryInput } from '../hooks/useWorkflowInventory';
+import { useWorkflowRedirects, REASON_LABEL, REASON_COLOR } from '../hooks/useWorkflowRedirects';
 import { timeAgo, formatDate } from '../lib/utils';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-export type DashTab = 'conversations' | 'clients' | 'appointments' | 'analytics' | 'credentials' | 'prompt' | 'team';
+export type DashTab = 'conversations' | 'clients' | 'appointments' | 'analytics' | 'credentials' | 'prompt' | 'team' | 'inventory';
 
 interface Props {
   workflow: AiWorkflow;
@@ -100,6 +105,60 @@ function AudioBubble({ transcription }: { transcription: string | null }) {
   );
 }
 
+function RedirectCard({ r }: { r: import('../hooks/useWorkflowRedirects').WorkflowRedirect }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-[#10dffd]/10 rounded-xl bg-white/[0.015] overflow-hidden">
+      <div className="px-4 py-3 flex flex-col md:flex-row md:items-center gap-3">
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span className={`text-[9px] px-2 py-0.5 rounded-full border font-medium ${REASON_COLOR[r.reason] ?? 'text-gray-400 bg-white/5 border-white/10'}`}>
+            {REASON_LABEL[r.reason] ?? r.reason}
+          </span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-white text-xs font-light">{r.client_name ?? 'Sin nombre'}</span>
+            <span className="text-gray-600 text-[10px] font-mono">+{r.client_phone}</span>
+            {r.qualification_status && (
+              <span className="text-[9px] text-gray-500 border border-white/10 px-1.5 py-0.5 rounded-full">{r.qualification_status}</span>
+            )}
+          </div>
+          {r.pain_identified && (
+            <p className="text-gray-600 text-[10px] mt-0.5 truncate">Dolor: {r.pain_identified}</p>
+          )}
+          {r.budget_signals && (
+            <p className="text-gray-600 text-[10px] truncate">Presupuesto: {r.budget_signals}</p>
+          )}
+        </div>
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="text-right">
+            {r.workflow_team_agents && (
+              <div className="text-[10px] text-[#10dffd]/60">{r.workflow_team_agents.name}</div>
+            )}
+            <div className="text-[10px] text-gray-600 mt-0.5">
+              {new Date(r.redirected_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
+          {r.conversation_summary && (
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="text-[10px] text-[#10dffd]/50 hover:text-[#10dffd] transition-colors border border-[#10dffd]/20 hover:border-[#10dffd]/50 rounded-lg px-2 py-1 flex-shrink-0 cursor-pointer"
+            >
+              {open ? 'Ocultar' : 'Resumen'}
+            </button>
+          )}
+        </div>
+      </div>
+      {open && r.conversation_summary && (
+        <div className="border-t border-[#10dffd]/10 px-4 py-3 bg-black/20">
+          <p className="text-[10px] text-[#10dffd]/40 uppercase tracking-widest mb-1.5">Resumen de conversación</p>
+          <p className="text-xs text-gray-300 leading-relaxed">{r.conversation_summary}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main component ─────────────────────────────────────────────────────────────
 
 export default function WorkflowDashboard({
@@ -130,6 +189,80 @@ export default function WorkflowDashboard({
   const [promptText, setPromptText] = useState('');
   const [promptSending, setPromptSending] = useState(false);
   const [promptStatus, setPromptStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Inventory state
+  const { items: inventoryItems, addItem, updateItem, deleteItem: deleteInventoryItem } = useWorkflowInventory(workflow.id);
+  const [showInventoryForm, setShowInventoryForm] = useState(false);
+  const [editingInventoryId, setEditingInventoryId] = useState<string | null>(null);
+  const [inventoryForm, setInventoryForm] = useState<InventoryInput>({ name: '', category: '', quantity: 0, price: 0, description: '', image_url: '' });
+  const [inventorySearch, setInventorySearch] = useState('');
+  const [inventoryDetailItem, setInventoryDetailItem] = useState<{ name: string; category: string; description: string; price: number; quantity: number; image_url: string } | null>(null);
+
+  const handleSaveInventory = async () => {
+    if (!inventoryForm.name.trim()) return;
+    if (editingInventoryId) {
+      await updateItem(editingInventoryId, inventoryForm);
+    } else {
+      await addItem(inventoryForm);
+    }
+    setShowInventoryForm(false);
+    setEditingInventoryId(null);
+    setInventoryForm({ name: '', category: '', quantity: 0, price: 0, description: '', image_url: '' });
+  };
+
+  const handleEditInventory = (item: { id: string; name: string; category: string; quantity: number; price: number; description: string; image_url: string }) => {
+    setInventoryForm({ name: item.name, category: item.category, quantity: item.quantity, price: item.price, description: item.description, image_url: item.image_url });
+    setEditingInventoryId(item.id);
+    setShowInventoryForm(true);
+  };
+
+  const handleInventoryImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target?.result as string;
+      setInventoryForm((prev) => ({ ...prev, image_url: dataUrl }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDeleteInventory = (id: string) => {
+    void deleteInventoryItem(id);
+  };
+
+  // Team state
+  interface TeamForm { name: string; phone: string; role: string; is_active: boolean; }
+  const [showTeamForm, setShowTeamForm] = useState(false);
+  const [editingAgentId, setEditingAgentId] = useState<string | null>(null);
+  const [teamForm, setTeamForm] = useState<TeamForm>({ name: '', phone: '', role: 'Agente', is_active: true });
+  const [teamSearch, setTeamSearch] = useState('');
+  const { agents, loading: agentsLoading, addAgent, updateAgent, deleteAgent, resetCounters, nextAgent } = useWorkflowTeamAgents(workflow.id);
+  const { redirects, loading: redirectsLoading, totalByReason } = useWorkflowRedirects(workflow.id);
+
+  const handleSaveAgent = async () => {
+    if (!teamForm.name.trim() || !teamForm.phone.trim()) return;
+    if (editingAgentId) {
+      await updateAgent(editingAgentId, teamForm);
+    } else {
+      await addAgent(teamForm);
+    }
+    setShowTeamForm(false);
+    setEditingAgentId(null);
+    setTeamForm({ name: '', phone: '', role: 'Agente', is_active: true });
+  };
+
+  const handleEditAgent = (agent: TeamAgent) => {
+    setTeamForm({ name: agent.name, phone: agent.phone, role: agent.role, is_active: agent.is_active });
+    setEditingAgentId(agent.id);
+    setShowTeamForm(true);
+  };
+
+  const filteredAgents = agents.filter(
+    (a) =>
+      a.name.toLowerCase().includes(teamSearch.toLowerCase()) ||
+      a.phone.includes(teamSearch),
+  );
 
 
   const { clients, messages, appointments, analytics, loading, fetchMessages } =
@@ -286,6 +419,7 @@ export default function WorkflowDashboard({
     { id: 'clients', label: 'Clientes' },
     { id: 'appointments', label: 'Citas' },
     { id: 'analytics', label: 'Analytics' },
+    { id: 'inventory', label: 'Inventario' },
     { id: 'team', label: 'Equipo' },
     ...(isAdmin ? [{ id: 'credentials' as DashTab, label: 'Credenciales' }] : []),
     { id: 'prompt', label: 'Prompt' },
@@ -635,39 +769,187 @@ export default function WorkflowDashboard({
 
 
 
-        {!loading && activeTab === 'team' && (
+        {!loading && activeTab === 'inventory' && (
           <div className="p-4 md:p-6 overflow-y-auto h-full">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+
+            {/* Detail modal */}
+            {inventoryDetailItem && (
+              <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setInventoryDetailItem(null)}>
+                <div className="bg-[#0a0a0a] border border-[#10dffd]/30 rounded-xl p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-start justify-between mb-4 gap-3">
+                    <div>
+                      <div className="text-white text-sm font-light">{inventoryDetailItem.name}</div>
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#10dffd]/10 text-[#10dffd] border border-[#10dffd]/20 mt-1 inline-block">{inventoryDetailItem.category}</span>
+                    </div>
+                    <button onClick={() => setInventoryDetailItem(null)} className="text-gray-500 hover:text-white transition-colors cursor-pointer flex-shrink-0">
+                      <XMarkIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                  {inventoryDetailItem.image_url && (
+                    <img src={inventoryDetailItem.image_url} alt={inventoryDetailItem.name} className="w-full h-40 object-cover rounded-lg border border-[#10dffd]/20 mb-4" />
+                  )}
+                  <div className="flex gap-4 mb-4">
+                    <div className="border border-[#10dffd]/15 rounded-lg px-3 py-2 flex-1 text-center">
+                      <div className="text-[9px] text-gray-600 uppercase tracking-widest mb-0.5">Stock</div>
+                      <div className={`text-sm font-light ${inventoryDetailItem.quantity <= 0 ? 'text-red-400' : 'text-white'}`}>{inventoryDetailItem.quantity}</div>
+                    </div>
+                    <div className="border border-[#10dffd]/15 rounded-lg px-3 py-2 flex-1 text-center">
+                      <div className="text-[9px] text-gray-600 uppercase tracking-widest mb-0.5">Precio</div>
+                      <div className="text-sm font-light text-white">{inventoryDetailItem.price > 0 ? `$${inventoryDetailItem.price.toLocaleString()}` : '—'}</div>
+                    </div>
+                  </div>
+                  <div className="text-[9px] text-[#10dffd]/50 tracking-widest uppercase mb-2">Especificaciones</div>
+                  <div className="bg-black/30 rounded-lg p-3">
+                    {inventoryDetailItem.description.split('\n').map((line, i) => (
+                      <p key={i} className="text-gray-400 text-[11px] leading-relaxed">{line}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="w-5 h-px bg-[#10dffd]" />
-                  <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">Redirección</span>
+                  <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">Memoria del chatbot</span>
                 </div>
-                <h2 className="font-banner font-light text-white text-xl">Gestión de Equipo</h2>
-                <p className="text-gray-500 text-xs mt-1">Administra los agentes disponibles para la atención personalizada.</p>
+                <h2 className="font-banner font-light text-white text-xl">Inventario</h2>
+                <p className="text-gray-500 text-xs mt-1">
+                  Gestiona los productos disponibles para el chatbot.
+                  <span className="ml-2 text-[#10dffd]/60">{inventoryItems.length} producto{inventoryItems.length !== 1 ? 's' : ''}</span>
+                </p>
               </div>
-              
-              <button className="flex items-center gap-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity cursor-pointer w-fit">
+              <button
+                onClick={() => { setShowInventoryForm(true); setEditingInventoryId(null); setInventoryForm({ name: '', category: '', quantity: 0, price: 0, description: '', image_url: '' }); }}
+                className="flex items-center gap-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity cursor-pointer w-fit flex-shrink-0"
+              >
                 <PlusIcon className="w-3.5 h-3.5" />
-                Agregar Agente
+                Agregar Producto
               </button>
             </div>
 
-            <div className="mb-6">
+            {/* Search */}
+            <div className="mb-4">
               <div className="relative max-w-xs">
                 <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  placeholder="Buscar agente..."
+                  value={inventorySearch}
+                  onChange={(e) => setInventorySearch(e.target.value)}
+                  placeholder="Buscar producto..."
                   className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
                 />
               </div>
             </div>
 
+            {/* Inventory form modal */}
+            {showInventoryForm && (
+              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+                <div className="bg-[#0a0a0a] border border-[#10dffd]/30 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="text-white text-sm font-light">
+                      {editingInventoryId ? 'Editar Producto' : 'Nuevo Producto'}
+                    </span>
+                    <button onClick={() => setShowInventoryForm(false)} className="text-gray-500 hover:text-white transition-colors cursor-pointer">
+                      <XMarkIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <input
+                      value={inventoryForm.name}
+                      onChange={(e) => setInventoryForm({ ...inventoryForm, name: e.target.value })}
+                      placeholder="Nombre del producto"
+                      className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                    />
+                    <input
+                      value={inventoryForm.category}
+                      onChange={(e) => setInventoryForm({ ...inventoryForm, category: e.target.value })}
+                      placeholder="Categoría (ej. Software, Consultoría, Hardware)"
+                      className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                    />
+                    {/* Image upload */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[10px] text-gray-500 tracking-widest uppercase">Imagen</label>
+                      {inventoryForm.image_url ? (
+                        <div className="relative w-fit">
+                          <img src={inventoryForm.image_url} alt="Preview" className="h-20 w-20 object-cover rounded-lg border border-[#10dffd]/30" />
+                          <button
+                            onClick={() => setInventoryForm({ ...inventoryForm, image_url: '' })}
+                            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500/80 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-500 transition-colors"
+                          >
+                            <XMarkIcon className="w-3 h-3 text-white" />
+                          </button>
+                        </div>
+                      ) : (
+                        <label className="flex items-center gap-2 border border-dashed border-[#10dffd]/30 rounded-lg px-4 py-3 cursor-pointer hover:border-[#10dffd]/60 transition-colors">
+                          <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span className="text-xs text-gray-500">Subir imagen</span>
+                          <input type="file" accept="image/*" onChange={handleInventoryImageUpload} className="hidden" />
+                        </label>
+                      )}
+                      <input
+                        value={inventoryForm.image_url?.startsWith('data:') ? '' : inventoryForm.image_url}
+                        onChange={(e) => setInventoryForm({ ...inventoryForm, image_url: e.target.value })}
+                        placeholder="O pega una URL de imagen..."
+                        className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <input
+                        value={inventoryForm.quantity}
+                        onChange={(e) => setInventoryForm({ ...inventoryForm, quantity: Number(e.target.value) || 0 })}
+                        placeholder="Cantidad"
+                        type="number"
+                        min={0}
+                        className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                      />
+                      <input
+                        value={inventoryForm.price}
+                        onChange={(e) => setInventoryForm({ ...inventoryForm, price: Number(e.target.value) || 0 })}
+                        placeholder="Precio"
+                        type="number"
+                        min={0}
+                        step={0.01}
+                        className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                      />
+                    </div>
+                    <textarea
+                      value={inventoryForm.description}
+                      onChange={(e) => setInventoryForm({ ...inventoryForm, description: e.target.value })}
+                      placeholder="Descripción del producto o servicio"
+                      rows={3}
+                      className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600 resize-y"
+                    />
+                    <div className="flex gap-3 mt-2">
+                      <button
+                        onClick={() => void handleSaveInventory()}
+                        disabled={!inventoryForm.name.trim()}
+                        className="flex items-center gap-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-40 cursor-pointer"
+                      >
+                        <PlusIcon className="w-3.5 h-3.5" />
+                        {editingInventoryId ? 'Actualizar' : 'Guardar'}
+                      </button>
+                      <button
+                        onClick={() => setShowInventoryForm(false)}
+                        className="text-gray-500 hover:text-white text-xs transition-colors cursor-pointer px-3"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Inventory list */}
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-[#10dffd]/22 text-left">
-                    {['Agente', 'Rol', 'Estado', 'Conversaciones', 'Acciones'].map((col) => (
+                    {['', 'Producto', 'Categoría', 'Stock', 'Precio', 'Acciones'].map((col) => (
                       <th key={col} className="pb-3 pr-6 text-[10px] text-[#10dffd] tracking-widest uppercase font-normal">
                         {col}
                       </th>
@@ -675,39 +957,358 @@ export default function WorkflowDashboard({
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    { name: 'Admin RianoDev', role: 'Administrador', status: 'En línea', chats: 12 },
-                    { name: 'Juan José', role: 'Agente Senior', status: 'Ocupado', chats: 5 },
-                  ].map((agent, i) => (
-                    <tr key={i} className="border-b border-[#10dffd]/5 hover:bg-[#10dffd]/[0.02] transition-colors">
-                      <td className="py-4 pr-6">
-                        <div className="flex items-center gap-3">
-                          <Avatar name={agent.name} size="sm" />
-                          <div className="flex flex-col">
-                            <span className="text-white text-xs font-light">{agent.name}</span>
-                            <span className="text-[10px] text-gray-500">agente_id_{i+1}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-4 pr-6">
-                        <span className="text-gray-400 text-xs">{agent.role}</span>
-                      </td>
-                      <td className="py-4 pr-6">
-                        <div className="flex items-center gap-2">
-                          <span className={`w-1.5 h-1.5 rounded-full ${agent.status === 'En línea' ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                          <span className="text-gray-400 text-xs">{agent.status}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 pr-6 text-gray-400 text-xs">{agent.chats} activas</td>
-                      <td className="py-4">
-                        <button className="text-[10px] text-[#10dffd]/60 hover:text-[#10dffd] transition-colors underline cursor-pointer">
-                          Configurar
-                        </button>
+                  {inventoryItems.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="text-center py-10">
+                        <p className="text-gray-600 text-xs">Sin productos en el inventario</p>
+                        <p className="text-gray-700 text-[10px] mt-1">Agrega productos para que el chatbot pueda consultarlos.</p>
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    inventoryItems
+                      .filter((item) =>
+                        item.name.toLowerCase().includes(inventorySearch.toLowerCase()) ||
+                        item.category.toLowerCase().includes(inventorySearch.toLowerCase()) ||
+                        item.description.toLowerCase().includes(inventorySearch.toLowerCase())
+                      )
+                      .map((item) => (
+                      <tr key={item.id} className="border-b border-[#10dffd]/5 hover:bg-[#10dffd]/[0.02] transition-colors">
+                        <td className="py-3 pr-4 w-12">
+                          {item.image_url ? (
+                            <img src={item.image_url} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-[#10dffd]/20" />
+                          ) : (
+                            <div className="w-10 h-10 rounded-lg bg-[#10dffd]/5 border border-[#10dffd]/20 flex items-center justify-center">
+                              <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                              </svg>
+                            </div>
+                          )}
+                        </td>
+                        <td className="py-3 pr-6">
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-white text-xs font-light">{item.name}</span>
+                            {item.description && (
+                              <span className="text-gray-600 text-[10px] max-w-[180px] truncate">{item.description.split('\n')[0]}</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3 pr-6">
+                          <span className="bg-[#10dffd]/10 text-[#10dffd] text-[10px] px-2 py-0.5 rounded-full whitespace-nowrap">{item.category}</span>
+                        </td>
+                        <td className={`py-3 pr-6 text-xs tabular-nums ${(item.quantity ?? 0) <= 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                          {item.quantity ?? 0}
+                        </td>
+                        <td className="py-3 pr-6 text-gray-400 text-xs tabular-nums">
+                          {item.price > 0 ? `$${item.price.toLocaleString()}` : '—'}
+                        </td>
+                        <td className="py-3">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <button
+                              onClick={() => setInventoryDetailItem(item)}
+                              className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors underline cursor-pointer"
+                            >
+                              Ver specs
+                            </button>
+                            <button
+                              onClick={() => handleEditInventory(item)}
+                              className="text-[10px] text-[#10dffd]/60 hover:text-[#10dffd] transition-colors underline cursor-pointer"
+                            >
+                              Editar
+                            </button>
+                            <button
+                              onClick={() => handleDeleteInventory(item.id)}
+                              className="text-[10px] text-red-400/60 hover:text-red-400 transition-colors underline cursor-pointer"
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {!loading && activeTab === 'team' && (
+          <div className="p-4 md:p-6 overflow-y-auto h-full">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-5 h-px bg-[#10dffd]" />
+                  <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">Redirección</span>
+                </div>
+                <h2 className="font-banner font-light text-white text-xl">Gestión de Equipo</h2>
+                <p className="text-gray-500 text-xs mt-1">Agentes en rotación. n8n llama al endpoint para obtener el siguiente y se incrementa su contador.</p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {isAdmin && agents.length > 0 && (
+                  <button
+                    onClick={() => void resetCounters()}
+                    className="text-[10px] text-gray-500 border border-[#10dffd]/22 px-3 py-2 rounded-lg hover:text-gray-300 hover:border-[#10dffd]/40 transition-colors cursor-pointer"
+                  >
+                    Resetear contadores
+                  </button>
+                )}
+                <button
+                  onClick={() => { setShowTeamForm(true); setEditingAgentId(null); setTeamForm({ name: '', phone: '', role: 'Agente', is_active: true }); }}
+                  className="flex items-center gap-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
+                >
+                  <PlusIcon className="w-3.5 h-3.5" />
+                  Agregar Agente
+                </button>
+              </div>
+            </div>
+
+            {/* Stats row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              {[
+                { label: 'Total redirecciones', value: redirects.length },
+                { label: 'Empresas / B2B',      value: totalByReason['b2b']     ?? 0, color: 'text-violet-400' },
+                { label: 'Cierres de pago',     value: totalByReason['payment'] ?? 0, color: 'text-emerald-400' },
+                { label: 'Cierres activos',     value: totalByReason['closing'] ?? 0, color: 'text-amber-400' },
+              ].map((s) => (
+                <div key={s.label} className="border border-[#10dffd]/15 rounded-xl px-4 py-3 bg-white/[0.02]">
+                  <div className="text-[9px] text-gray-600 uppercase tracking-widest mb-1">{s.label}</div>
+                  <div className={`text-2xl font-light tabular-nums ${s.color ?? 'text-[#10dffd]'}`}>{s.value}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Next agent card */}
+            {nextAgent && (
+              <div className="mb-6 border border-[#10dffd]/30 rounded-xl px-4 py-3 bg-[#10dffd]/[0.04] flex items-center justify-between gap-4">
+                <div>
+                  <div className="text-[9px] text-[#10dffd]/60 tracking-widest uppercase mb-1">Siguiente en rotación</div>
+                  <div className="text-white text-sm font-light">{nextAgent.name}</div>
+                  <div className="text-gray-500 text-[11px] mt-0.5 font-mono">+{nextAgent.phone}</div>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <div className="text-[9px] text-gray-600 uppercase tracking-widest mb-1">Redirecciones</div>
+                  <div className="text-[#10dffd] text-2xl font-light tabular-nums">{nextAgent.conversation_count}</div>
+                </div>
+              </div>
+            )}
+
+            {/* Endpoint info (admin only) */}
+            {isAdmin && (
+              <div className="mb-6 flex flex-col gap-3">
+                {/* next-agent */}
+                <div className="border border-[#10dffd]/15 rounded-xl px-4 py-3 bg-white/[0.02]">
+                  <div className="text-[9px] text-[#10dffd]/50 tracking-widest uppercase mb-2">① Antes de la IA — contexto del agente</div>
+                  <div className="font-mono text-[10px] text-gray-400 bg-black/30 rounded-lg px-3 py-2 break-all">
+                    POST .../functions/v1/next-agent
+                  </div>
+                  <div className="font-mono text-[10px] text-gray-600 mt-2 bg-black/20 rounded-lg px-3 py-2 leading-relaxed">
+                    <span className="text-[#10dffd]/70">"sender_phone"</span>{`: "`}<span className="text-amber-400">{workflow.phone_number ?? 'número del bot'}</span>{`",`}<br />
+                    <span className="text-gray-500">"from"</span>{': "número del cliente", '}<span className="text-gray-500">"name"</span>{': "nombre"'}
+                  </div>
+                  <p className="text-[10px] text-gray-600 mt-1.5">Siempre. Retorna el agente asignado para inyectarlo en el contexto de la IA.</p>
+                </div>
+                {/* workflow-ingest */}
+                <div className="border border-[#10dffd]/15 rounded-xl px-4 py-3 bg-white/[0.02]">
+                  <div className="text-[9px] text-[#10dffd]/50 tracking-widest uppercase mb-2">② Al final del flujo — siempre</div>
+                  <div className="font-mono text-[10px] text-gray-400 bg-black/30 rounded-lg px-3 py-2 break-all">
+                    POST .../functions/v1/workflow-ingest
+                  </div>
+                  <div className="font-mono text-[10px] text-gray-600 mt-2 bg-black/20 rounded-lg px-3 py-2 leading-relaxed">
+                    <span className="text-[#10dffd]/70">"sender_phone"</span>{`, `}<span className="text-[#10dffd]/70">"user_phone"</span>{`, "name",`}<br />
+                    <span className="text-gray-500">"user_message"</span>{`, "output",`}<br />
+                    <span className="text-gray-500">"agent_id"</span>{`: `}{'{{'}HTTP Request1.agent.id{'}}'}{`,`}<br />
+                    <span className="text-amber-400/70">"agent_redirect"</span>{`: { "triggered": bool, "reason": "b2b|payment|closing" },`}<br />
+                    <span className="text-amber-400/70">"qualification"</span>{`: { "status", "pain_identified", "budget_signals", "industry" }`}
+                  </div>
+                  <p className="text-[10px] text-gray-600 mt-1.5">Registra mensajes, analítica, citas y — si <code className="text-amber-400/70">agent_redirect.triggered</code> es true — el log de redirección.</p>
+                </div>
+              </div>
+            )}
+
+            {/* Add / edit form */}
+            {showTeamForm && (
+              <div className="mb-6 border border-[#10dffd]/30 rounded-xl p-4 bg-white/[0.02]">
+                <div className="text-[10px] text-[#10dffd] tracking-widest uppercase mb-4">
+                  {editingAgentId ? 'Editar Agente' : 'Nuevo Agente'}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1.5">Nombre *</label>
+                    <input
+                      value={teamForm.name}
+                      onChange={(e) => setTeamForm((p) => ({ ...p, name: e.target.value }))}
+                      placeholder="Juan Pérez"
+                      className="w-full px-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1.5">WhatsApp * (sin +)</label>
+                    <input
+                      value={teamForm.phone}
+                      onChange={(e) => setTeamForm((p) => ({ ...p, phone: e.target.value }))}
+                      placeholder="573001234567"
+                      className="w-full px-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1.5">Rol</label>
+                    <input
+                      value={teamForm.role}
+                      onChange={(e) => setTeamForm((p) => ({ ...p, role: e.target.value }))}
+                      placeholder="Agente"
+                      className="w-full px-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 pt-5">
+                    <button
+                      type="button"
+                      onClick={() => setTeamForm((p) => ({ ...p, is_active: !p.is_active }))}
+                      className={`relative w-9 h-5 rounded-full border transition-colors cursor-pointer flex-shrink-0 ${teamForm.is_active ? 'bg-[#10dffd]/30 border-[#10dffd]/50' : 'bg-white/5 border-[#10dffd]/22'}`}
+                    >
+                      <span className={`absolute top-0.5 w-4 h-4 rounded-full transition-transform ${teamForm.is_active ? 'translate-x-4 bg-[#10dffd]' : 'translate-x-0.5 bg-gray-600'}`} />
+                    </button>
+                    <span className="text-xs text-gray-400">Activo en rotación</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 mt-4">
+                  <button
+                    onClick={() => void handleSaveAgent()}
+                    disabled={!teamForm.name.trim() || !teamForm.phone.trim()}
+                    className="bg-[#10dffd] text-black text-xs px-5 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-40 cursor-pointer"
+                  >
+                    {editingAgentId ? 'Guardar cambios' : 'Agregar'}
+                  </button>
+                  <button
+                    onClick={() => { setShowTeamForm(false); setEditingAgentId(null); }}
+                    className="text-gray-500 text-xs hover:text-gray-300 transition-colors cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Search */}
+            <div className="mb-4">
+              <div className="relative max-w-xs">
+                <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  value={teamSearch}
+                  onChange={(e) => setTeamSearch(e.target.value)}
+                  placeholder="Buscar agente..."
+                  className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                />
+              </div>
+            </div>
+
+            {/* Agents table */}
+            {agentsLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#10dffd]" />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-[#10dffd]/22 text-left">
+                      {['Agente', 'WhatsApp', 'Rol', 'Conversaciones', 'Estado', 'Acciones'].map((col) => (
+                        <th key={col} className="pb-3 pr-6 text-[10px] text-[#10dffd] tracking-widest uppercase font-normal">
+                          {col}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAgents.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="py-10 text-center text-gray-600 text-xs">
+                          Sin agentes registrados. Agrega el primero para activar la rotación.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredAgents.map((agent) => {
+                        const isNext = nextAgent?.id === agent.id;
+                        return (
+                          <tr key={agent.id} className="border-b border-[#10dffd]/5 hover:bg-[#10dffd]/[0.02] transition-colors">
+                            <td className="py-4 pr-6">
+                              <div className="flex items-center gap-3">
+                                <Avatar name={agent.name} size="sm" />
+                                <div className="flex flex-col gap-0.5">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-white text-xs font-light">{agent.name}</span>
+                                    {isNext && (
+                                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#10dffd]/15 border border-[#10dffd]/40 text-[#10dffd] leading-none">
+                                        Siguiente
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="text-[10px] text-gray-600 font-mono">{agent.id.slice(0, 8)}</span>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-4 pr-6">
+                              <span className="text-gray-400 text-[11px] font-mono">+{agent.phone}</span>
+                            </td>
+                            <td className="py-4 pr-6">
+                              <span className="text-gray-400 text-xs">{agent.role}</span>
+                            </td>
+                            <td className="py-4 pr-6">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-white text-sm font-light tabular-nums">{agent.conversation_count}</span>
+                                <span className="text-gray-600 text-[10px]">conv.</span>
+                              </div>
+                            </td>
+                            <td className="py-4 pr-6">
+                              <div className="flex items-center gap-2">
+                                <span className={`w-1.5 h-1.5 rounded-full ${agent.is_active ? 'bg-emerald-400' : 'bg-gray-600'}`} />
+                                <span className="text-gray-400 text-xs">{agent.is_active ? 'Activo' : 'Inactivo'}</span>
+                              </div>
+                            </td>
+                            <td className="py-4">
+                              <div className="flex items-center gap-3">
+                                <button
+                                  onClick={() => handleEditAgent(agent)}
+                                  className="text-[10px] text-[#10dffd]/60 hover:text-[#10dffd] transition-colors underline cursor-pointer"
+                                >
+                                  Editar
+                                </button>
+                                <button
+                                  onClick={() => void deleteAgent(agent.id)}
+                                  className="text-[10px] text-red-400/60 hover:text-red-400 transition-colors underline cursor-pointer"
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Redirects log */}
+            <div className="mt-8">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-5 h-px bg-[#10dffd]" />
+                <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase">Historial de redirecciones</span>
+              </div>
+              {redirectsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#10dffd]" />
+                </div>
+              ) : redirects.length === 0 ? (
+                <p className="text-gray-600 text-xs py-4">Sin redirecciones registradas aún.</p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {redirects.map((r) => (
+                    <RedirectCard key={r.id} r={r} />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -40,6 +40,7 @@ export interface AiWorkflow {
   status: string;
   n8n_webhook_url: string | null;
   phone_number: string | null;
+  sender_phone: string | null;
   created_at: string;
   updated_at: string;
 }
