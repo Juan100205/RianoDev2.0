@@ -28,6 +28,12 @@ interface Props {
 
 type Tab = "automatizaciones" | "documentos" | "proyectos" | "profile" | "settings" | "admin" | "blog-admin";
 
+function sanitizeText(text: string | null | undefined): string {
+  if (!text) return '';
+  const trimmed = text.trim();
+  return trimmed.startsWith('=') ? trimmed.substring(1).trim() : trimmed;
+}
+
 
 
 import { useAuth } from "../context/AuthContext";
@@ -37,7 +43,7 @@ import { useUserRepos } from "../hooks/useUserRepos";
 import { useGitHubRepos, LIVE_URL_OVERRIDES } from "../hooks/useGitHubRepos";
 import { useUserWorkflows } from "../hooks/useUserWorkflows";
 import { useWorkflows, type AiWorkflow } from "../hooks/useWorkflows";
-import WorkflowDashboard from "../Components/WorkflowDashboard";
+import WorkflowDashboard, { type DashTab } from "../Components/WorkflowDashboard";
 import ClientDocPanel from "../Components/ClientDocPanel";
 import ClientDocViewer from "../Components/ClientDocViewer";
 
@@ -50,12 +56,12 @@ function WorkflowNameRow({
   wf: { id: string; name: string; phone_number: string | null };
   onSave: (id: string, name: string) => Promise<void>;
 }) {
-  const [value, setValue] = useState(wf.name);
+  const [value, setValue] = useState(sanitizeText(wf.name));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  const isDirty = value.trim() !== wf.name;
+  const isDirty = value.trim() !== sanitizeText(wf.name);
 
   const handleSave = async () => {
     if (!value.trim()) return;
@@ -154,7 +160,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
       </>
     );
   }
-  const displayName = user.user_metadata?.full_name || user.email?.split("@")[0] || "Cliente";
+  const displayName = sanitizeText(user.user_metadata?.full_name || user.email?.split("@")[0] || "Cliente");
 
   const renderContent = () => {
     switch (activeTab) {
@@ -387,7 +393,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-2">
                         <BoltIcon className="w-4 h-4 text-[#10dffd] shrink-0" />
-                        <span className="text-white text-sm font-light">{wf.name}</span>
+                        <span className="text-white text-sm font-light">{sanitizeText(wf.name)}</span>
                       </div>
                       <span className={`text-[10px] px-2.5 py-0.5 rounded-full border shrink-0 ${STATUS_COLOR[wf.status] ?? "text-white/40 border-gray-400/20"}`}>
                         {wf.status}
@@ -479,7 +485,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                         </div>
                         <div className="min-w-0 w-full">
                           <p className="text-white text-sm font-light truncate">
-                            {client.full_name || client.email}
+                            {sanitizeText(client.full_name) || client.email}
                           </p>
                           {client.full_name && (
                             <p className="text-white/25 text-[10px] truncate mt-0.5">{client.email}</p>
@@ -507,7 +513,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       <UserCircleIcon className="w-4 h-4 text-[#10dffd]/60" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-white text-sm font-light">{selectedClient.full_name || selectedClient.email}</p>
+                      <p className="text-white text-sm font-light">{sanitizeText(selectedClient.full_name) || selectedClient.email}</p>
                       {selectedClient.full_name && (
                         <p className="text-white/25 text-[10px]">{selectedClient.email}</p>
                       )}
@@ -799,15 +805,15 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       }`}
                     >
                       <UserCircleIcon className="w-5 h-5 flex-shrink-0 opacity-50" />
-                      <div className="min-w-0">
-                        <div className="text-xs font-light truncate">{u.full_name || u.email}</div>
-                        {u.full_name && (
-                          <div className="text-[10px] text-white/25 truncate">{u.email}</div>
-                        )}
-                      </div>
-                      <span className="ml-auto text-[10px] text-white/25 shrink-0">
-                        {adminPanel.reposForUser(u.id).size} repos
-                      </span>
+                        <div className="min-w-0">
+                          <div className="text-xs font-light truncate">{sanitizeText(u.full_name) || u.email}</div>
+                          {u.full_name && (
+                            <div className="text-[10px] text-white/25 truncate">{u.email}</div>
+                          )}
+                        </div>
+                        <span className="ml-auto text-[10px] text-white/25 shrink-0">
+                          {adminPanel.reposForUser(u.id).size} repos
+                        </span>
                     </button>
                   ))}
                   {adminPanel.users.filter((u) => !u.is_admin).length === 0 && !adminPanel.loading && (
@@ -921,15 +927,15 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                       }`}
                     >
                       <UserCircleIcon className="w-5 h-5 flex-shrink-0 opacity-50" />
-                      <div className="min-w-0">
-                        <div className="text-xs font-light truncate">{u.full_name || u.email}</div>
-                        {u.full_name && (
-                          <div className="text-[10px] text-white/25 truncate">{u.email}</div>
-                        )}
-                      </div>
-                      <span className="ml-auto text-[10px] text-white/25 shrink-0">
-                        {adminPanel.workflowsForUser(u.id).size} flows
-                      </span>
+                        <div className="min-w-0">
+                          <div className="text-xs font-light truncate">{sanitizeText(u.full_name) || u.email}</div>
+                          {u.full_name && (
+                            <div className="text-[10px] text-white/25 truncate">{u.email}</div>
+                          )}
+                        </div>
+                        <span className="ml-auto text-[10px] text-white/25 shrink-0">
+                          {adminPanel.workflowsForUser(u.id).size} flows
+                        </span>
                     </button>
                   ))}
                   {adminPanel.users.filter((u) => !u.is_admin).length === 0 && !adminPanel.loading && (
@@ -970,9 +976,9 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
                         return (
                           <div key={wf.id} className="flex items-center justify-between border border-[#10dffd]/18 rounded-xl px-3 py-2">
                             <div className="min-w-0 mr-2">
-                              <span className="text-xs text-white/50 font-light truncate block">{wf.name}</span>
+                              <span className="text-xs text-white/50 font-light truncate block">{sanitizeText(wf.name)}</span>
                               {wf.description && (
-                                <span className="text-[10px] text-white/25 truncate block">{wf.description}</span>
+                                <span className="text-[10px] text-white/25 truncate block">{sanitizeText(wf.description)}</span>
                               )}
                             </div>
                             <button
@@ -1021,6 +1027,10 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
   const allTabs = [...mainTabs, ...accountTabs];
 
   if (openWorkflow) {
+    const workflowHideTabs: DashTab[] = [];
+    if (openWorkflow.name.toLowerCase().includes('marketplaces') || openWorkflow.name.toLowerCase().includes('siilla')) {
+      workflowHideTabs.push('appointments', 'credentials', 'prompt');
+    }
     return (
       <WorkflowDashboard
         workflow={openWorkflow}
@@ -1030,6 +1040,7 @@ const Portal = ({ languageState, setLanguageState, scrollRef }: Props) => {
         getCredentials={getCredentials}
         saveCredential={saveCredential}
         deleteCredential={deleteCredential}
+        hideTabs={workflowHideTabs}
       />
     );
   }

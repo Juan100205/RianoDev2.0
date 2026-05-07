@@ -49,6 +49,14 @@ export interface WorkflowAccessEntry {
   workflow_id: string;
 }
 
+// ── Helpers ─────────────────────────────────────────────────────────────────────
+
+function sanitize(text: string | null | undefined): string {
+  if (!text) return '';
+  const t = text.trim();
+  return t.startsWith('=') ? t.substring(1).trim() : t;
+}
+
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 export function useAdminPanel(enabled = false) {
@@ -81,9 +89,17 @@ export function useAdminPanel(enabled = false) {
       if (wfAccessRes.error) throw wfAccessRes.error;
 
       setRepos((reposRes.data as DbRepo[]) ?? []);
-      setUsers((usersRes.data as Profile[]) ?? []);
+      setUsers(((usersRes.data as Profile[]) ?? []).map((u) => ({
+        ...u,
+        full_name: u.full_name ? sanitize(u.full_name) : null,
+      })));
       setAccess((accessRes.data as AccessEntry[]) ?? []);
-      setWorkflows((workflowsRes.data as AiWorkflow[]) ?? []);
+      setWorkflows(((workflowsRes.data as AiWorkflow[]) ?? []).map((wf) => ({
+        ...wf,
+        name: sanitize(wf.name),
+        description: wf.description ? sanitize(wf.description) : null,
+        phone_number: wf.phone_number ? sanitize(wf.phone_number) : null,
+      })));
       setWorkflowAccess((wfAccessRes.data as WorkflowAccessEntry[]) ?? []);
     } catch (e: any) {
       setError(e.message ?? "Error loading admin data");

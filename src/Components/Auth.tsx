@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
-import { supabase } from '../lib/supabase'
+import { supabase, isConfigured } from '../lib/supabase'
 import { LockClosedIcon, UserIcon } from '@heroicons/react/24/outline'
 
 const PORTAL_DOMAIN = 'portal.rianodevz.com'
@@ -32,6 +32,9 @@ export default function Auth() {
     setMessage(null)
 
     try {
+      if (!isConfigured) {
+        throw new Error('La conexión con el servidor no está configurada correctamente. (VITE_SUPABASE_URL)')
+      }
       const email = toEmail(username.trim())
 
       if (isLogin) {

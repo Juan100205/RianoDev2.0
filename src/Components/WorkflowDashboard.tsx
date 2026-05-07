@@ -14,7 +14,7 @@ import { timeAgo, formatDate } from '../lib/utils';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type DashTab = 'conversations' | 'clients' | 'appointments' | 'analytics' | 'credentials' | 'prompt';
+export type DashTab = 'conversations' | 'clients' | 'appointments' | 'analytics' | 'credentials' | 'prompt' | 'team';
 
 interface Props {
   workflow: AiWorkflow;
@@ -24,6 +24,7 @@ interface Props {
   getCredentials: (workflowId: string) => Promise<WorkflowCredential[]>;
   saveCredential: (workflowId: string, keyName: string, keyValue: string) => Promise<void>;
   deleteCredential: (id: string) => Promise<void>;
+  hideTabs?: DashTab[];
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -58,13 +59,20 @@ const ANALYTICS_LABEL: Record<string, string> = {
   appointment_created: 'Cita creada',
 };
 
+function sanitizeText(text: string | null | undefined): string {
+  if (!text) return '';
+  const trimmed = text.trim();
+  return trimmed.startsWith('=') ? trimmed.substring(1).trim() : trimmed;
+}
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function Avatar({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) {
+  const sanitizedName = sanitizeText(name);
   const sz = size === 'sm' ? 'w-7 h-7 text-[10px]' : size === 'lg' ? 'w-12 h-12 text-base' : 'w-9 h-9 text-xs';
   return (
     <div className={`${sz} rounded-full bg-[#10dffd]/15 border border-[#10dffd]/45 flex items-center justify-center flex-shrink-0`}>
-      <span className="text-[#10dffd] font-light">{initials(name)}</span>
+      <span className="text-[#10dffd] font-light">{initials(sanitizedName)}</span>
     </div>
   );
 }
@@ -84,7 +92,9 @@ function AudioBubble({ transcription }: { transcription: string | null }) {
         </button>
       </div>
       {show && transcription && (
-        <p className="text-xs text-gray-300 italic border-l-2 border-[#10dffd]/50 pl-2">{transcription}</p>
+        <p className="text-xs text-gray-300 italic border-l-2 border-[#10dffd]/50 pl-2">
+          {sanitizeText(transcription)}
+        </p>
       )}
     </div>
   );
@@ -100,6 +110,7 @@ export default function WorkflowDashboard({
   getCredentials,
   saveCredential,
   deleteCredential,
+  hideTabs = [],
 }: Props) {
   const [activeTab, setActiveTab] = useState<DashTab>('conversations');
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
@@ -216,6 +227,7 @@ export default function WorkflowDashboard({
   const totalMsgsReceived = analytics.filter((a) => a.type === 'message_received').length;
   const totalAudioTranscribed = analytics.filter((a) => a.type === 'audio_transcribed').length;
   const totalAppointments = appointments.length;
+  const showAppointments = !hideTabs.includes('appointments');
 
   // Daily bar chart (last 7 days)
   const dailyData = (() => {
@@ -240,14 +252,14 @@ export default function WorkflowDashboard({
   // ── Filtered clients list ─────────────────────────────────────────────────
   const filteredClients = clients.filter(
     (c) =>
-      c.name.toLowerCase().includes(clientSearch.toLowerCase()) ||
+      sanitizeText(c.name).toLowerCase().includes(clientSearch.toLowerCase()) ||
       c.phone.includes(clientSearch),
   );
 
   // ── Appointment stats ─────────────────────────────────────────────────────
-  const apptScheduled = appointments.filter((a) => a.status === 'scheduled').length;
-  const apptCompleted = appointments.filter((a) => a.status === 'completed').length;
-  const apptCancelled = appointments.filter((a) => a.status === 'cancelled').length;
+  const apptScheduled = showAppointments ? appointments.filter((a) => a.status === 'scheduled').length : 0;
+  const apptCompleted = showAppointments ? appointments.filter((a) => a.status === 'completed').length : 0;
+  const apptCancelled = showAppointments ? appointments.filter((a) => a.status === 'cancelled').length : 0;
 
   const selectedClient = clients.find((c) => c.id === selectedClientId);
 
@@ -269,14 +281,17 @@ export default function WorkflowDashboard({
     }
   };
 
-  const tabs: { id: DashTab; label: string }[] = [
+  const allTabs: { id: DashTab; label: string }[] = [
     { id: 'conversations', label: 'Conversaciones' },
     { id: 'clients', label: 'Clientes' },
     { id: 'appointments', label: 'Citas' },
     { id: 'analytics', label: 'Analytics' },
+    { id: 'team', label: 'Equipo' },
     ...(isAdmin ? [{ id: 'credentials' as DashTab, label: 'Credenciales' }] : []),
     { id: 'prompt', label: 'Prompt' },
   ];
+
+  const tabs = allTabs.filter((t) => !hideTabs.includes(t.id));
 
   return (
     <div className="flex flex-col bg-white dark:bg-black" style={{ height: "100vh", overflow: "hidden" }}>
@@ -428,7 +443,7 @@ export default function WorkflowDashboard({
                           {msg.type === 'audio' ? (
                             <AudioBubble transcription={msg.transcription} />
                           ) : (
-                            <p className="text-xs leading-relaxed">{msg.message}</p>
+                            <p className="text-xs leading-relaxed">{sanitizeText(msg.message)}</p>
                           )}
                           <div className="text-[9px] text-gray-500 mt-1 text-right">
                             {timeAgo(msg.timestamp)}
@@ -551,12 +566,12 @@ export default function WorkflowDashboard({
         {!loading && activeTab === 'analytics' && (
           <div className="p-4 md:p-6 overflow-y-auto h-full">
             {/* KPI cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className={`grid gap-4 mb-8 ${showAppointments ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'}`}>
               {[
                 { label: 'Conversaciones', value: totalConversations },
                 { label: 'Msgs recibidos', value: totalMsgsReceived },
                 { label: 'Audios transcritos', value: totalAudioTranscribed },
-                { label: 'Citas creadas', value: totalAppointments },
+                ...(showAppointments ? [{ label: 'Citas creadas', value: totalAppointments }] : []),
               ].map((kpi) => (
                 <div key={kpi.label} className="border border-[#10dffd]/30 rounded-xl p-4 bg-[#10dffd]/[0.02]">
                   <div className="text-[#10dffd] text-xl font-light">{kpi.value}</div>
@@ -599,7 +614,10 @@ export default function WorkflowDashboard({
             <div className="border border-[#10dffd]/30 rounded-xl p-5">
               <div className="text-[10px] text-[#10dffd] tracking-widest uppercase mb-4">Eventos recientes</div>
               <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
-                {analytics.slice(0, 20).map((ev) => (
+                {analytics
+                  .filter((ev) => showAppointments || ev.type !== 'appointment_created')
+                  .slice(0, 20)
+                  .map((ev) => (
                   <div key={ev.id} className="flex items-center gap-3 text-xs">
                     <span className="text-base">{ANALYTICS_EMOJI[ev.type] ?? '📊'}</span>
                     <span className="text-gray-400 flex-1">{ANALYTICS_LABEL[ev.type] ?? ev.type}</span>
@@ -611,6 +629,85 @@ export default function WorkflowDashboard({
                   <p className="text-gray-600 text-xs text-center py-4">Sin eventos</p>
                 )}
               </div>
+            </div>
+          </div>
+        )}
+
+
+
+        {!loading && activeTab === 'team' && (
+          <div className="p-4 md:p-6 overflow-y-auto h-full">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-5 h-px bg-[#10dffd]" />
+                  <span className="text-[#10dffd]/50 text-[9px] tracking-[0.35em] uppercase font-display">Redirección</span>
+                </div>
+                <h2 className="font-banner font-light text-white text-xl">Gestión de Equipo</h2>
+                <p className="text-gray-500 text-xs mt-1">Administra los agentes disponibles para la atención personalizada.</p>
+              </div>
+              
+              <button className="flex items-center gap-2 bg-[#10dffd] text-black text-xs px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity cursor-pointer w-fit">
+                <PlusIcon className="w-3.5 h-3.5" />
+                Agregar Agente
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <div className="relative max-w-xs">
+                <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  placeholder="Buscar agente..."
+                  className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                />
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[#10dffd]/22 text-left">
+                    {['Agente', 'Rol', 'Estado', 'Conversaciones', 'Acciones'].map((col) => (
+                      <th key={col} className="pb-3 pr-6 text-[10px] text-[#10dffd] tracking-widest uppercase font-normal">
+                        {col}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { name: 'Admin RianoDev', role: 'Administrador', status: 'En línea', chats: 12 },
+                    { name: 'Juan José', role: 'Agente Senior', status: 'Ocupado', chats: 5 },
+                  ].map((agent, i) => (
+                    <tr key={i} className="border-b border-[#10dffd]/5 hover:bg-[#10dffd]/[0.02] transition-colors">
+                      <td className="py-4 pr-6">
+                        <div className="flex items-center gap-3">
+                          <Avatar name={agent.name} size="sm" />
+                          <div className="flex flex-col">
+                            <span className="text-white text-xs font-light">{agent.name}</span>
+                            <span className="text-[10px] text-gray-500">agente_id_{i+1}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 pr-6">
+                        <span className="text-gray-400 text-xs">{agent.role}</span>
+                      </td>
+                      <td className="py-4 pr-6">
+                        <div className="flex items-center gap-2">
+                          <span className={`w-1.5 h-1.5 rounded-full ${agent.status === 'En línea' ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                          <span className="text-gray-400 text-xs">{agent.status}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 pr-6 text-gray-400 text-xs">{agent.chats} activas</td>
+                      <td className="py-4">
+                        <button className="text-[10px] text-[#10dffd]/60 hover:text-[#10dffd] transition-colors underline cursor-pointer">
+                          Configurar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

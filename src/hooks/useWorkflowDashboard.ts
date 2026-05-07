@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 
+function sanitize(text: string | null | undefined): string {
+  if (!text) return '';
+  const t = text.trim();
+  return t.startsWith('=') ? t.substring(1).trim() : t;
+}
+
 export interface WorkflowClient {
   id: string;
   workflow_id: string;
@@ -78,7 +84,13 @@ export function useWorkflowDashboard(workflowId: string | null) {
       if (apptsRes.error) throw apptsRes.error;
       if (analyticsRes.error) throw analyticsRes.error;
 
-      setClients((clientsRes.data as WorkflowClient[]) ?? []);
+      const sanitizedClients = ((clientsRes.data as WorkflowClient[]) ?? []).map((c) => ({
+        ...c,
+        name: sanitize(c.name),
+        phone: sanitize(c.phone),
+      }));
+
+      setClients(sanitizedClients);
       setAppointments((apptsRes.data as WorkflowAppointment[]) ?? []);
       setAnalytics((analyticsRes.data as WorkflowAnalyticsEvent[]) ?? []);
     } catch (err) {
@@ -99,7 +111,12 @@ export function useWorkflowDashboard(workflowId: string | null) {
         setError(err.message);
         return;
       }
-      setMessages((data as WorkflowMessage[]) ?? []);
+      const sanitized = ((data as WorkflowMessage[]) ?? []).map((m) => ({
+        ...m,
+        message: sanitize(m.message),
+        transcription: m.transcription ? sanitize(m.transcription) : null,
+      }));
+      setMessages(sanitized);
     },
     [workflowId],
   );
