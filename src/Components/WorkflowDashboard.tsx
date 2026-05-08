@@ -108,16 +108,16 @@ function AudioBubble({ transcription }: { transcription: string | null }) {
 function RedirectCard({ r }: { r: import('../hooks/useWorkflowRedirects').WorkflowRedirect }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-[#10dffd]/10 rounded-xl bg-white/[0.015] overflow-hidden">
+    <div className="border border-[#10dffd]/10 rounded-xl bg-gray-50/50 overflow-hidden">
       <div className="px-4 py-3 flex flex-col md:flex-row md:items-center gap-3">
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className={`text-[9px] px-2 py-0.5 rounded-full border font-medium ${REASON_COLOR[r.reason] ?? 'text-gray-400 bg-white/5 border-white/10'}`}>
+          <span className={`text-[9px] px-2 py-0.5 rounded-full border font-medium ${REASON_COLOR[r.reason] ?? 'text-gray-400 bg-gray-50 border-gray-200'}`}>
             {REASON_LABEL[r.reason] ?? r.reason}
           </span>
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-white text-xs font-light">{r.client_name ?? 'Sin nombre'}</span>
+            <span className="text-gray-800 text-xs font-light">{r.client_name ?? 'Sin nombre'}</span>
             <span className="text-gray-600 text-[10px] font-mono">+{r.client_phone}</span>
             {r.qualification_status && (
               <span className="text-[9px] text-gray-500 border border-white/10 px-1.5 py-0.5 rounded-full">{r.qualification_status}</span>
@@ -150,14 +150,57 @@ function RedirectCard({ r }: { r: import('../hooks/useWorkflowRedirects').Workfl
         </div>
       </div>
       {open && r.conversation_summary && (
-        <div className="border-t border-[#10dffd]/10 px-4 py-3 bg-black/20">
+        <div className="border-t border-[#10dffd]/10 px-4 py-3 bg-gray-50">
           <p className="text-[10px] text-[#10dffd]/40 uppercase tracking-widest mb-1.5">Resumen de conversación</p>
-          <p className="text-xs text-gray-300 leading-relaxed">{r.conversation_summary}</p>
+          <p className="text-xs text-gray-600 leading-relaxed">{r.conversation_summary}</p>
         </div>
       )}
     </div>
   );
 }
+
+function ConversationSummaryButton({ summary }: { summary: string | null }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex-shrink-0 relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className={`flex items-center gap-1.5 text-[10px] border rounded-lg px-2.5 py-1.5 transition-colors cursor-pointer ${
+          open
+            ? 'text-[#10dffd] border-[#10dffd]/60 bg-[#10dffd]/10'
+            : summary
+            ? 'text-[#10dffd] border-[#10dffd]/40 hover:border-[#10dffd]/70 bg-[#10dffd]/[0.07]'
+            : 'text-gray-400 border-gray-300 hover:border-gray-400 bg-transparent'
+        }`}
+      >
+        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>Resumen</span>
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white border border-gray-200 rounded-xl shadow-lg shadow-black/10 z-20 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100">
+            <span className="text-[9px] text-[#10dffd] uppercase tracking-widest font-medium">Resumen de conversación</span>
+            <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="px-4 py-3">
+            {summary ? (
+              <p className="text-[11px] text-gray-700 leading-relaxed">{summary}</p>
+            ) : (
+              <p className="text-[10px] text-gray-400 py-1">Sin resumen disponible aún.</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 // ── Main component ─────────────────────────────────────────────────────────────
 
@@ -265,8 +308,9 @@ export default function WorkflowDashboard({
   );
 
 
-  const { clients, messages, appointments, analytics, loading, fetchMessages } =
+  const { clients, messages, appointments, analytics, loading, fetchMessages, clearMessages } =
     useWorkflowDashboard(workflow.id);
+  const [clearingHistory, setClearingHistory] = useState(false);
 
   // Auto-select first client
   useEffect(() => {
@@ -428,7 +472,7 @@ export default function WorkflowDashboard({
   const tabs = allTabs.filter((t) => !hideTabs.includes(t.id));
 
   return (
-    <div className="flex flex-col bg-white dark:bg-black" style={{ height: "100vh", overflow: "hidden" }}>
+    <div className="dark flex flex-col bg-black" style={{ height: "100vh", overflow: "hidden" }}>
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-[#10dffd]/30 flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
@@ -465,7 +509,7 @@ export default function WorkflowDashboard({
             className={`flex-shrink-0 px-5 py-3 text-xs tracking-widest uppercase transition-colors cursor-pointer border-b-2 ${
               activeTab === tab.id
                 ? 'text-[#10dffd] border-[#10dffd]'
-                : 'text-gray-500 border-transparent hover:text-gray-300'
+                : 'text-gray-500 border-transparent hover:text-gray-700'
             }`}
           >
             {tab.label}
@@ -496,7 +540,7 @@ export default function WorkflowDashboard({
                     value={clientSearch}
                     onChange={(e) => setClientSearch(e.target.value)}
                     placeholder="Buscar cliente..."
-                    className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                    className="w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#10dffd]/50"
                   />
                 </div>
               </div>
@@ -551,10 +595,30 @@ export default function WorkflowDashboard({
                       </svg>
                     </button>
                     <Avatar name={selectedClient.name} />
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="text-white text-sm font-light truncate">{selectedClient.name}</div>
                       <div className="text-gray-500 text-xs truncate">{selectedClient.phone}</div>
                     </div>
+                    {/* Conversation summary — always visible, reads from client record */}
+                    <ConversationSummaryButton summary={selectedClient.conversation_summary ?? null} />
+                    {/* Clear history */}
+                    <button
+                      onClick={async () => {
+                        if (!window.confirm(`¿Borrar todo el historial de ${selectedClient.name}? Esta acción no se puede deshacer.`)) return;
+                        setClearingHistory(true);
+                        await clearMessages(selectedClient.id);
+                        setClearingHistory(false);
+                      }}
+                      disabled={clearingHistory || messages.length === 0}
+                      title="Borrar historial"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg border border-red-300 text-red-400 hover:text-red-500 hover:border-red-400 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
+                    >
+                      {clearingHistory ? (
+                        <div className="w-3.5 h-3.5 border border-red-400/50 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <TrashIcon className="w-3.5 h-3.5" />
+                      )}
+                    </button>
                   </div>
 
                   {/* Messages */}
@@ -604,7 +668,7 @@ export default function WorkflowDashboard({
                   value={clientSearch}
                   onChange={(e) => setClientSearch(e.target.value)}
                   placeholder="Buscar por nombre o teléfono..."
-                  className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                  className="w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#10dffd]/50"
                 />
               </div>
             </div>
@@ -775,33 +839,33 @@ export default function WorkflowDashboard({
             {/* Detail modal */}
             {inventoryDetailItem && (
               <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setInventoryDetailItem(null)}>
-                <div className="bg-[#0a0a0a] border border-[#10dffd]/30 rounded-xl p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                <div className="bg-white border border-gray-200 rounded-xl p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-xl" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-start justify-between mb-4 gap-3">
                     <div>
-                      <div className="text-white text-sm font-light">{inventoryDetailItem.name}</div>
+                      <div className="text-gray-800 text-sm font-light">{inventoryDetailItem.name}</div>
                       <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#10dffd]/10 text-[#10dffd] border border-[#10dffd]/20 mt-1 inline-block">{inventoryDetailItem.category}</span>
                     </div>
-                    <button onClick={() => setInventoryDetailItem(null)} className="text-gray-500 hover:text-white transition-colors cursor-pointer flex-shrink-0">
+                    <button onClick={() => setInventoryDetailItem(null)} className="text-gray-400 hover:text-gray-700 transition-colors cursor-pointer flex-shrink-0">
                       <XMarkIcon className="w-5 h-5" />
                     </button>
                   </div>
                   {inventoryDetailItem.image_url && (
-                    <img src={inventoryDetailItem.image_url} alt={inventoryDetailItem.name} className="w-full h-40 object-cover rounded-lg border border-[#10dffd]/20 mb-4" />
+                    <img src={inventoryDetailItem.image_url} alt={inventoryDetailItem.name} className="w-full h-40 object-cover rounded-lg border border-gray-200 mb-4" />
                   )}
                   <div className="flex gap-4 mb-4">
-                    <div className="border border-[#10dffd]/15 rounded-lg px-3 py-2 flex-1 text-center">
-                      <div className="text-[9px] text-gray-600 uppercase tracking-widest mb-0.5">Stock</div>
-                      <div className={`text-sm font-light ${inventoryDetailItem.quantity <= 0 ? 'text-red-400' : 'text-white'}`}>{inventoryDetailItem.quantity}</div>
+                    <div className="border border-gray-200 rounded-lg px-3 py-2 flex-1 text-center bg-gray-50">
+                      <div className="text-[9px] text-gray-500 uppercase tracking-widest mb-0.5">Stock</div>
+                      <div className={`text-sm font-light ${inventoryDetailItem.quantity <= 0 ? 'text-red-400' : 'text-gray-800'}`}>{inventoryDetailItem.quantity}</div>
                     </div>
-                    <div className="border border-[#10dffd]/15 rounded-lg px-3 py-2 flex-1 text-center">
-                      <div className="text-[9px] text-gray-600 uppercase tracking-widest mb-0.5">Precio</div>
-                      <div className="text-sm font-light text-white">{inventoryDetailItem.price > 0 ? `$${inventoryDetailItem.price.toLocaleString()}` : '—'}</div>
+                    <div className="border border-gray-200 rounded-lg px-3 py-2 flex-1 text-center bg-gray-50">
+                      <div className="text-[9px] text-gray-500 uppercase tracking-widest mb-0.5">Precio</div>
+                      <div className="text-sm font-light text-gray-800">{inventoryDetailItem.price > 0 ? `$${inventoryDetailItem.price.toLocaleString()}` : '—'}</div>
                     </div>
                   </div>
-                  <div className="text-[9px] text-[#10dffd]/50 tracking-widest uppercase mb-2">Especificaciones</div>
-                  <div className="bg-black/30 rounded-lg p-3">
+                  <div className="text-[9px] text-[#10dffd] tracking-widest uppercase mb-2">Especificaciones</div>
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
                     {inventoryDetailItem.description.split('\n').map((line, i) => (
-                      <p key={i} className="text-gray-400 text-[11px] leading-relaxed">{line}</p>
+                      <p key={i} className="text-gray-600 text-[11px] leading-relaxed">{line}</p>
                     ))}
                   </div>
                 </div>
@@ -837,7 +901,7 @@ export default function WorkflowDashboard({
                   value={inventorySearch}
                   onChange={(e) => setInventorySearch(e.target.value)}
                   placeholder="Buscar producto..."
-                  className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                  className="w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#10dffd]/50"
                 />
               </div>
             </div>
@@ -845,12 +909,12 @@ export default function WorkflowDashboard({
             {/* Inventory form modal */}
             {showInventoryForm && (
               <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-                <div className="bg-[#0a0a0a] border border-[#10dffd]/30 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
                   <div className="flex items-center justify-between mb-6">
-                    <span className="text-white text-sm font-light">
+                    <span className="text-gray-800 text-sm font-light">
                       {editingInventoryId ? 'Editar Producto' : 'Nuevo Producto'}
                     </span>
-                    <button onClick={() => setShowInventoryForm(false)} className="text-gray-500 hover:text-white transition-colors cursor-pointer">
+                    <button onClick={() => setShowInventoryForm(false)} className="text-gray-400 hover:text-gray-700 transition-colors cursor-pointer">
                       <XMarkIcon className="w-5 h-5" />
                     </button>
                   </div>
@@ -859,20 +923,20 @@ export default function WorkflowDashboard({
                       value={inventoryForm.name}
                       onChange={(e) => setInventoryForm({ ...inventoryForm, name: e.target.value })}
                       placeholder="Nombre del producto"
-                      className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                      className="border border-gray-300 bg-gray-50 text-gray-800 text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-400"
                     />
                     <input
                       value={inventoryForm.category}
                       onChange={(e) => setInventoryForm({ ...inventoryForm, category: e.target.value })}
                       placeholder="Categoría (ej. Software, Consultoría, Hardware)"
-                      className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                      className="border border-gray-300 bg-gray-50 text-gray-800 text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-400"
                     />
                     {/* Image upload */}
                     <div className="flex flex-col gap-2">
                       <label className="text-[10px] text-gray-500 tracking-widest uppercase">Imagen</label>
                       {inventoryForm.image_url ? (
                         <div className="relative w-fit">
-                          <img src={inventoryForm.image_url} alt="Preview" className="h-20 w-20 object-cover rounded-lg border border-[#10dffd]/30" />
+                          <img src={inventoryForm.image_url} alt="Preview" className="h-20 w-20 object-cover rounded-lg border border-gray-200" />
                           <button
                             onClick={() => setInventoryForm({ ...inventoryForm, image_url: '' })}
                             className="absolute -top-2 -right-2 w-5 h-5 bg-red-500/80 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-500 transition-colors"
@@ -881,8 +945,8 @@ export default function WorkflowDashboard({
                           </button>
                         </div>
                       ) : (
-                        <label className="flex items-center gap-2 border border-dashed border-[#10dffd]/30 rounded-lg px-4 py-3 cursor-pointer hover:border-[#10dffd]/60 transition-colors">
-                          <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <label className="flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-4 py-3 cursor-pointer hover:border-[#10dffd]/60 transition-colors bg-gray-50">
+                          <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
                           <span className="text-xs text-gray-500">Subir imagen</span>
@@ -893,7 +957,7 @@ export default function WorkflowDashboard({
                         value={inventoryForm.image_url?.startsWith('data:') ? '' : inventoryForm.image_url}
                         onChange={(e) => setInventoryForm({ ...inventoryForm, image_url: e.target.value })}
                         placeholder="O pega una URL de imagen..."
-                        className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                        className="border border-gray-300 bg-gray-50 text-gray-800 text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-400"
                       />
                     </div>
 
@@ -904,7 +968,7 @@ export default function WorkflowDashboard({
                         placeholder="Cantidad"
                         type="number"
                         min={0}
-                        className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                        className="border border-gray-300 bg-gray-50 text-gray-800 text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-400"
                       />
                       <input
                         value={inventoryForm.price}
@@ -913,7 +977,7 @@ export default function WorkflowDashboard({
                         type="number"
                         min={0}
                         step={0.01}
-                        className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600"
+                        className="border border-gray-300 bg-gray-50 text-gray-800 text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-400"
                       />
                     </div>
                     <textarea
@@ -921,7 +985,7 @@ export default function WorkflowDashboard({
                       onChange={(e) => setInventoryForm({ ...inventoryForm, description: e.target.value })}
                       placeholder="Descripción del producto o servicio"
                       rows={3}
-                      className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600 resize-y"
+                      className="border border-gray-300 bg-gray-50 text-gray-800 text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-400 resize-y"
                     />
                     <div className="flex gap-3 mt-2">
                       <button
@@ -934,7 +998,7 @@ export default function WorkflowDashboard({
                       </button>
                       <button
                         onClick={() => setShowInventoryForm(false)}
-                        className="text-gray-500 hover:text-white text-xs transition-colors cursor-pointer px-3"
+                        className="text-gray-500 hover:text-gray-700 text-xs transition-colors cursor-pointer px-3"
                       >
                         Cancelar
                       </button>
@@ -1005,7 +1069,7 @@ export default function WorkflowDashboard({
                           <div className="flex items-center gap-2 flex-wrap">
                             <button
                               onClick={() => setInventoryDetailItem(item)}
-                              className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors underline cursor-pointer"
+                              className="text-[10px] text-gray-500 hover:text-gray-700 transition-colors underline cursor-pointer"
                             >
                               Ver specs
                             </button>
@@ -1048,7 +1112,7 @@ export default function WorkflowDashboard({
                 {isAdmin && agents.length > 0 && (
                   <button
                     onClick={() => void resetCounters()}
-                    className="text-[10px] text-gray-500 border border-[#10dffd]/22 px-3 py-2 rounded-lg hover:text-gray-300 hover:border-[#10dffd]/40 transition-colors cursor-pointer"
+                    className="text-[10px] text-gray-500 border border-gray-300 px-3 py-2 rounded-lg hover:text-gray-700 hover:border-gray-400 transition-colors cursor-pointer"
                   >
                     Resetear contadores
                   </button>
@@ -1093,42 +1157,9 @@ export default function WorkflowDashboard({
               </div>
             )}
 
-            {/* Endpoint info (admin only) */}
-            {isAdmin && (
-              <div className="mb-6 flex flex-col gap-3">
-                {/* next-agent */}
-                <div className="border border-[#10dffd]/15 rounded-xl px-4 py-3 bg-white/[0.02]">
-                  <div className="text-[9px] text-[#10dffd]/50 tracking-widest uppercase mb-2">① Antes de la IA — contexto del agente</div>
-                  <div className="font-mono text-[10px] text-gray-400 bg-black/30 rounded-lg px-3 py-2 break-all">
-                    POST .../functions/v1/next-agent
-                  </div>
-                  <div className="font-mono text-[10px] text-gray-600 mt-2 bg-black/20 rounded-lg px-3 py-2 leading-relaxed">
-                    <span className="text-[#10dffd]/70">"sender_phone"</span>{`: "`}<span className="text-amber-400">{workflow.phone_number ?? 'número del bot'}</span>{`",`}<br />
-                    <span className="text-gray-500">"from"</span>{': "número del cliente", '}<span className="text-gray-500">"name"</span>{': "nombre"'}
-                  </div>
-                  <p className="text-[10px] text-gray-600 mt-1.5">Siempre. Retorna el agente asignado para inyectarlo en el contexto de la IA.</p>
-                </div>
-                {/* workflow-ingest */}
-                <div className="border border-[#10dffd]/15 rounded-xl px-4 py-3 bg-white/[0.02]">
-                  <div className="text-[9px] text-[#10dffd]/50 tracking-widest uppercase mb-2">② Al final del flujo — siempre</div>
-                  <div className="font-mono text-[10px] text-gray-400 bg-black/30 rounded-lg px-3 py-2 break-all">
-                    POST .../functions/v1/workflow-ingest
-                  </div>
-                  <div className="font-mono text-[10px] text-gray-600 mt-2 bg-black/20 rounded-lg px-3 py-2 leading-relaxed">
-                    <span className="text-[#10dffd]/70">"sender_phone"</span>{`, `}<span className="text-[#10dffd]/70">"user_phone"</span>{`, "name",`}<br />
-                    <span className="text-gray-500">"user_message"</span>{`, "output",`}<br />
-                    <span className="text-gray-500">"agent_id"</span>{`: `}{'{{'}HTTP Request1.agent.id{'}}'}{`,`}<br />
-                    <span className="text-amber-400/70">"agent_redirect"</span>{`: { "triggered": bool, "reason": "b2b|payment|closing" },`}<br />
-                    <span className="text-amber-400/70">"qualification"</span>{`: { "status", "pain_identified", "budget_signals", "industry" }`}
-                  </div>
-                  <p className="text-[10px] text-gray-600 mt-1.5">Registra mensajes, analítica, citas y — si <code className="text-amber-400/70">agent_redirect.triggered</code> es true — el log de redirección.</p>
-                </div>
-              </div>
-            )}
-
             {/* Add / edit form */}
             {showTeamForm && (
-              <div className="mb-6 border border-[#10dffd]/30 rounded-xl p-4 bg-white/[0.02]">
+              <div className="mb-6 border border-gray-200 rounded-xl p-4 bg-gray-50">
                 <div className="text-[10px] text-[#10dffd] tracking-widest uppercase mb-4">
                   {editingAgentId ? 'Editar Agente' : 'Nuevo Agente'}
                 </div>
@@ -1139,7 +1170,7 @@ export default function WorkflowDashboard({
                       value={teamForm.name}
                       onChange={(e) => setTeamForm((p) => ({ ...p, name: e.target.value }))}
                       placeholder="Juan Pérez"
-                      className="w-full px-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#10dffd]/50"
                     />
                   </div>
                   <div>
@@ -1148,7 +1179,7 @@ export default function WorkflowDashboard({
                       value={teamForm.phone}
                       onChange={(e) => setTeamForm((p) => ({ ...p, phone: e.target.value }))}
                       placeholder="573001234567"
-                      className="w-full px-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50 font-mono"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#10dffd]/50 font-mono"
                     />
                   </div>
                   <div>
@@ -1157,18 +1188,18 @@ export default function WorkflowDashboard({
                       value={teamForm.role}
                       onChange={(e) => setTeamForm((p) => ({ ...p, role: e.target.value }))}
                       placeholder="Agente"
-                      className="w-full px-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#10dffd]/50"
                     />
                   </div>
                   <div className="flex items-center gap-3 pt-5">
                     <button
                       type="button"
                       onClick={() => setTeamForm((p) => ({ ...p, is_active: !p.is_active }))}
-                      className={`relative w-9 h-5 rounded-full border transition-colors cursor-pointer flex-shrink-0 ${teamForm.is_active ? 'bg-[#10dffd]/30 border-[#10dffd]/50' : 'bg-white/5 border-[#10dffd]/22'}`}
+                      className={`relative w-9 h-5 rounded-full border transition-colors cursor-pointer flex-shrink-0 ${teamForm.is_active ? 'bg-[#10dffd]/30 border-[#10dffd]/50' : 'bg-gray-200 border-gray-300'}`}
                     >
-                      <span className={`absolute top-0.5 w-4 h-4 rounded-full transition-transform ${teamForm.is_active ? 'translate-x-4 bg-[#10dffd]' : 'translate-x-0.5 bg-gray-600'}`} />
+                      <span className={`absolute top-0.5 w-4 h-4 rounded-full transition-transform ${teamForm.is_active ? 'translate-x-4 bg-[#10dffd]' : 'translate-x-0.5 bg-gray-400'}`} />
                     </button>
-                    <span className="text-xs text-gray-400">Activo en rotación</span>
+                    <span className="text-xs text-gray-500">Activo en rotación</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 mt-4">
@@ -1181,7 +1212,7 @@ export default function WorkflowDashboard({
                   </button>
                   <button
                     onClick={() => { setShowTeamForm(false); setEditingAgentId(null); }}
-                    className="text-gray-500 text-xs hover:text-gray-300 transition-colors cursor-pointer"
+                    className="text-gray-500 text-xs hover:text-gray-700 transition-colors cursor-pointer"
                   >
                     Cancelar
                   </button>
@@ -1192,12 +1223,12 @@ export default function WorkflowDashboard({
             {/* Search */}
             <div className="mb-4">
               <div className="relative max-w-xs">
-                <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   value={teamSearch}
                   onChange={(e) => setTeamSearch(e.target.value)}
                   placeholder="Buscar agente..."
-                  className="w-full pl-8 pr-3 py-2 bg-white/5 border border-[#10dffd]/22 rounded-lg text-xs text-white placeholder-gray-600 outline-none focus:border-[#10dffd]/50"
+                  className="w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#10dffd]/50"
                 />
               </div>
             </div>
@@ -1324,8 +1355,8 @@ export default function WorkflowDashboard({
             <div className="mb-4">
               <div className="text-[10px] text-gray-500 tracking-widest uppercase mb-1.5">Webhook n8n</div>
               {workflow.n8n_webhook_url ? (
-                <div className="flex items-center gap-2 border border-[#10dffd]/22 rounded-lg px-3 py-2 bg-white/[0.02]">
-                  <span className="text-[10px] text-[#10dffd]/60 font-mono truncate flex-1">{workflow.n8n_webhook_url}</span>
+                <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 bg-gray-50">
+                  <span className="text-[10px] text-[#10dffd] font-mono truncate flex-1">{workflow.n8n_webhook_url}</span>
                 </div>
               ) : (
                 <p className="text-amber-400 text-xs">No hay webhook configurado para este flujo.</p>
@@ -1340,7 +1371,7 @@ export default function WorkflowDashboard({
                 onChange={(e) => { setPromptText(e.target.value); setPromptStatus('idle'); }}
                 placeholder="Eres un asistente de atención al cliente para... Responde siempre en español..."
                 rows={12}
-                className="w-full border border-[#10dffd]/30 bg-white/[0.02] text-white text-xs px-4 py-3 rounded-xl outline-none focus:border-[#10dffd]/60 placeholder-gray-600 resize-y font-mono leading-relaxed"
+                className="w-full border border-gray-300 bg-gray-50 text-gray-800 text-xs px-4 py-3 rounded-xl outline-none focus:border-[#10dffd]/60 placeholder-gray-400 resize-y font-mono leading-relaxed"
               />
             </div>
 
@@ -1391,7 +1422,7 @@ export default function WorkflowDashboard({
                 {credentials.map((cred) => (
                   <div
                     key={cred.id}
-                    className="flex items-center justify-between border border-[#10dffd]/22 rounded-xl px-4 py-3 gap-3"
+                    className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3 gap-3 bg-white"
                   >
                     <div className="min-w-0">
                       <div className="text-xs text-[#10dffd]/70 font-mono">{cred.key_name}</div>
@@ -1402,7 +1433,7 @@ export default function WorkflowDashboard({
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <button
                         onClick={() => toggleReveal(cred.id)}
-                        className="text-gray-500 hover:text-gray-300 transition-colors cursor-pointer"
+                        className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                         title={revealedIds.has(cred.id) ? 'Ocultar' : 'Revelar'}
                       >
                         {revealedIds.has(cred.id) ? (
@@ -1425,21 +1456,21 @@ export default function WorkflowDashboard({
             )}
 
             {/* Add credential form */}
-            <div className="border border-[#10dffd]/30 rounded-xl p-4">
+            <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
               <div className="text-[10px] text-gray-500 tracking-widest uppercase mb-3">Agregar credencial</div>
               <div className="flex flex-col gap-3">
                 <input
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
                   placeholder="Nombre (ej. OPENAI_API_KEY)"
-                  className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600 font-mono"
+                  className="border border-gray-300 bg-white text-gray-800 text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-400 font-mono"
                 />
                 <input
                   value={newKeyValue}
                   onChange={(e) => setNewKeyValue(e.target.value)}
                   placeholder="Valor"
                   type="password"
-                  className="border border-[#10dffd]/30 bg-transparent text-white text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-600 font-mono"
+                  className="border border-gray-300 bg-white text-gray-800 text-xs px-3 py-2 rounded-lg outline-none focus:border-[#10dffd]/60 placeholder-gray-400 font-mono"
                 />
                 <button
                   onClick={() => void handleSaveCred()}

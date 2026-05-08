@@ -26,16 +26,27 @@ Deno.serve(async (req) => {
   try {
     const body = await req.json()
 
-    const sender_phone   = body.sender_phone
-    const user_phone     = body.user_phone
-    const name           = body.name
-    const user_message   = body.user_message
-    const output         = body.output
-    const appointment    = body.appointment
-    const agent_redirect = body.agent_redirect
-    const qualification  = body.qualification
-    const agent_id       = body.agent_id ?? null
-    const conversation_summary = body.conversation_summary ?? null
+    const sender_phone = body.sender_phone
+    const user_phone   = body.user_phone
+    const name         = body.name
+    const user_message = body.user_message
+    const output       = body.output
+    const agent_id     = body.agent_id ?? null
+
+    const safeParse = (v: unknown) => {
+      if (!v) return null
+      if (typeof v === 'object') return v
+      try { return JSON.parse(v as string) } catch { return null }
+    }
+
+    const appointment    = safeParse(body.appointment)
+    const agent_redirect = safeParse(body.agent_redirect) as Record<string, unknown> | null
+    const qualification  = safeParse(body.qualification)
+
+    const conversation_summary: string | null =
+      (agent_redirect?.conversation_summary as string | null) ??
+      (body.conversation_summary as string | null) ??
+      null
 
     if (!sender_phone || !user_phone) {
       return new Response(
@@ -76,7 +87,13 @@ Deno.serve(async (req) => {
     const { data: clientData, error: clientErr } = await supabase
       .from('workflow_clients')
       .upsert(
-        { workflow_id, phone: user_phone, name: name ?? user_phone, last_interaction: now },
+        {
+          workflow_id,
+          phone: user_phone,
+          name: name ?? user_phone,
+          last_interaction: now,
+          ...(conversation_summary ? { conversation_summary } : {}),
+        },
         { onConflict: 'workflow_id,phone' }
       )
       .select('id, message_count')

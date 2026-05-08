@@ -15,6 +15,7 @@ export interface WorkflowClient {
   created_at: string;
   last_interaction: string | null;
   message_count: number;
+  conversation_summary: string | null;
 }
 
 export interface WorkflowMessage {
@@ -139,6 +140,16 @@ export function useWorkflowDashboard(workflowId: string | null) {
     };
   }, [workflowId, fetchData]);
 
+  const clearMessages = useCallback(async (clientId: string) => {
+    if (!workflowId) return;
+    await supabase
+      .from('workflow_messages')
+      .delete()
+      .eq('workflow_id', workflowId)
+      .eq('client_id', clientId);
+    setMessages([]);
+  }, [workflowId]);
+
   return {
     clients,
     messages,
@@ -147,5 +158,6 @@ export function useWorkflowDashboard(workflowId: string | null) {
     loading,
     error,
     fetchMessages,
+    clearMessages,
   };
 }
