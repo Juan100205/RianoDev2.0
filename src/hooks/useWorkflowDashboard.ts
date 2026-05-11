@@ -1,11 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-
-function sanitize(text: string | null | undefined): string {
-  if (!text) return '';
-  const t = text.trim();
-  return t.startsWith('=') ? t.substring(1).trim() : t;
-}
+import { sanitize } from '../lib/sanitize';
 
 export interface WorkflowClient {
   id: string;

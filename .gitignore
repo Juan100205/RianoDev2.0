@@ -28,3 +28,4 @@ Metodo-Levantate/
 
 # Claude Code local settings — may contain API keys or tokens
 .claude/settings.local.json
+.vercel
