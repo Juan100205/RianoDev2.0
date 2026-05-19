@@ -36,7 +36,7 @@ const Footer = ({ languageState }: Props) => {
         {
           en: "Technical support",
           es: "Soporte técnico",
-          action: () => window.open("mailto:juanriza@rianodevz.net?subject=Soporte%20Técnico", "_blank"),
+          action: () => window.open("mailto:juanjorianozabaleta@gmail.com?subject=Soporte%20Técnico", "_blank"),
         },
         {
           en: "WhatsApp",
@@ -113,11 +113,11 @@ const Footer = ({ languageState }: Props) => {
               +57 312 450 8591
             </button>
             <button
-              onClick={() => window.open("mailto:juanriza@rianodevz.net", "_blank")}
+              onClick={() => window.open("mailto:juanjorianozabaleta@gmail.com", "_blank")}
               className="flex items-center gap-2 text-white/30 hover:text-white/70 transition-colors text-xs cursor-pointer"
             >
               <EnvelopeIcon className="w-3 h-3 text-[#10dffd]/50" />
-              juanriza@rianodevz.net
+              juanjorianozabaleta@gmail.com
             </button>
           </div>
         </div>

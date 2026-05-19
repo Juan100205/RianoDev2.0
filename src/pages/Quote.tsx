@@ -166,7 +166,7 @@ const Quote = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
               {status === "error" && (
                 <p className="text-red-400 text-xs">
-                  {l ? "Something went wrong. Try again or write to juanriza@rianodevz.net" : "Algo salió mal. Intenta de nuevo o escribe a juanriza@rianodevz.net"}
+                  {l ? "Something went wrong. Try again or write to juanjorianozabaleta@gmail.com" : "Algo salió mal. Intenta de nuevo o escribe a juanjorianozabaleta@gmail.com"}
                 </p>
               )}
 

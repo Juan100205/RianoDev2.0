@@ -39,8 +39,8 @@ const PrivacyPolicy = ({ languageState, setLanguageState, scrollRef }: PrivacyPo
             {
                 title: { en: "4. Contact Information", es: "4. Información de Contacto" },
                 text: {
-                    en: "If you have any questions about this Privacy Policy, please contact RIANODEVZ at juanriza@rianodevz.net.",
-                    es: "Si tiene alguna pregunta sobre esta Política de Privacidad, por favor contáctenos en juanriza@rianodevz.net.",
+                    en: "If you have any questions about this Privacy Policy, please contact RIANODEVZ at juanjorianozabaleta@gmail.com.",
+                    es: "Si tiene alguna pregunta sobre esta Política de Privacidad, por favor contáctenos en juanjorianozabaleta@gmail.com.",
                 },
             },
         ],

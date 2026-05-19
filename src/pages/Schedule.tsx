@@ -53,8 +53,8 @@ const Schedule = ({ languageState, setLanguageState, scrollRef }: Props) => {
 
           <p className="text-gray-600 text-xs text-center mt-6">
             {l
-              ? "Prefer another channel? Write to us at juanriza@rianodevz.net or via WhatsApp."
-              : "¿Prefieres otro canal? Escríbenos a juanriza@rianodevz.net o por WhatsApp."}
+              ? "Prefer another channel? Write to us at juanjorianozabaleta@gmail.com or via WhatsApp."
+              : "¿Prefieres otro canal? Escríbenos a juanjorianozabaleta@gmail.com o por WhatsApp."}
           </p>
 
         </div>

@@ -114,7 +114,7 @@ const About_me = ({ languageState }: Props) => {
               <motion.button
                 whileHover={{ scale: 1.06, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.open("mailto:juanriza@rianodevz.net", "_blank")}
+                onClick={() => window.open("mailto:juanjorianozabaleta@gmail.com", "_blank")}
                 className="w-14 h-14 rounded-xl bg-[#10dffd] hover:opacity-90 transition-all duration-300
                   flex items-center justify-center cursor-pointer
                   shadow-[0_0_20px_rgba(16,223,253,0.25)] hover:shadow-[0_0_30px_rgba(16,223,253,0.65)]"

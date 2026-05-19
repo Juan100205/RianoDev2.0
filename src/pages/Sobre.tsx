@@ -129,7 +129,7 @@ const Sobre = ({ languageState, setLanguageState, scrollRef }: Props) => {
               </h3>
               <div className="flex flex-wrap gap-4 items-center">
                 <a
-                  href="mailto:juanriza@rianodevz.net"
+                  href="mailto:juanjorianozabaleta@gmail.com"
                   className="flex items-center gap-2 bg-[#10dffd] text-black text-xs font-light px-4 py-2 rounded-xl hover:opacity-90 transition-opacity"
                 >
                   <EnvelopeIcon className="w-4 h-4" />

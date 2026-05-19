@@ -57,8 +57,8 @@ const faqs = [
   {
     q: { en: "How do I request a quote?", es: "¿Cómo solicito una cotización?" },
     a: {
-      en: "You can schedule a consultation directly or send us an email at juanriza@rianodevz.net. We'll review your context and send you a technical proposal.",
-      es: "Puedes agendar una consultoría directamente o enviarnos un correo a juanriza@rianodevz.net. Revisamos tu contexto y te enviamos una propuesta técnica.",
+      en: "You can schedule a consultation directly or send us an email at juanjorianozabaleta@gmail.com. We'll review your context and send you a technical proposal.",
+      es: "Puedes agendar una consultoría directamente o enviarnos un correo a juanjorianozabaleta@gmail.com. Revisamos tu contexto y te enviamos una propuesta técnica.",
     },
   },
 ];
