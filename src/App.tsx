@@ -93,26 +93,45 @@ function App() {
     <AuthProvider>
       <div className="bg-white dark:bg-transparent min-h-screen overflow-x-hidden">
         {isDark && <div className="ambient-bg" aria-hidden="true" />}
-        <motion.button
-          onClick={() => setIsDark(!isDark)}
-          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-          className="fixed left-4 bottom-4 z-50 opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-pointer border-none bg-transparent p-2"
-          whileHover={{ scale: 1.15 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <motion.div
-            key={isDark ? "sun" : "moon"}
-            initial={{ rotate: -30, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            transition={{ duration: 0.3 }}
+        <div className="fixed left-4 bottom-4 z-50 flex flex-col items-center gap-2">
+          <motion.button
+            onClick={() => setIsEnglish(!isEnglish)}
+            title={isEnglish ? "Cambiar a Español" : "Switch to English"}
+            className="opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-pointer border-none bg-transparent p-2"
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.9 }}
           >
-            {isDark ? (
-              <SunIcon className="w-6 h-6 text-white" />
-            ) : (
-              <MoonIcon className="w-6 h-6 text-gray-500" />
-            )}
-          </motion.div>
-        </motion.button>
+            <motion.span
+              key={isEnglish ? "en" : "es"}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+              className={`text-xs font-bold tracking-widest uppercase ${isDark ? "text-white" : "text-gray-500"}`}
+            >
+              {isEnglish ? "EN" : "ES"}
+            </motion.span>
+          </motion.button>
+          <motion.button
+            onClick={() => setIsDark(!isDark)}
+            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            className="opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-pointer border-none bg-transparent p-2"
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <motion.div
+              key={isDark ? "sun" : "moon"}
+              initial={{ rotate: -30, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {isDark ? (
+                <SunIcon className="w-6 h-6 text-white" />
+              ) : (
+                <MoonIcon className="w-6 h-6 text-gray-500" />
+              )}
+            </motion.div>
+          </motion.button>
+        </div>
         <BrowserRouter>
           <AppRoutes isEnglish={isEnglish} setIsEnglish={setIsEnglish} scrollContainerRef={scrollContainerRef} />
         </BrowserRouter>
